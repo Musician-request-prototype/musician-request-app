@@ -33,7 +33,7 @@ const SUPABASE_KEY="sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8";
 const MUSICIAN_ID="adbce7b8-424e-4de3-84ed-7c4e68c64559";
 async function loadSongs(){
   const url=SUPABASE_URL+"/rest/v1/songs?select=id,title,artist,decade&musician_id=eq."+encodeURIComponent(MUSICIAN_ID)+"&public_request_enabled=eq.true&is_active=eq.true&order=title.asc";
-  const r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}});
+  const r=await fetch(url,{headers:{apikey:SUPABASE_KEY}});
   if(!r.ok)throw new Error("Could not load songs from Supabase ("+r.status+")");
   const rows=await r.json();
   return rows.map(x=>({id:x.id,song:x.title,artist:x.artist,decade:x.decade}));
