@@ -38,7 +38,30 @@ async function loadSongs(){
   const rows=await r.json();
   return rows.map(x=>({id:x.id,song:x.title,artist:x.artist,decade:x.decade}));
 }
-async function init(){
+async function submitSupabaseRequest(payload) {
+  const response = await fetch(SUPABASE_URL + "/rest/v1/requests", {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({
+      musician_id: MUSICIAN_ID,
+      song_id: selected.id,
+      requester_name: payload.name || null,
+      notes: payload.notes || null,
+      status: "pending"
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Request failed: " + response.status);
+  }
+
+  return { ok: true };
+}
+  async function init(){
   try{songs=await loadSongs()}catch(e){console.error(e);document.getElementById("notice").innerHTML='<div class="notice"><strong>Song list unavailable</strong>Please try again shortly.</div>';songs=[]}
   renderFilters();await refresh();render();
 }
@@ -51,7 +74,7 @@ function key(x){return (x.artist+"||"+x.song+"||"+x.decade).toLowerCase()}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function openRequest(x){if(!state.open)return;selected=x;document.getElementById("name").value="";document.getElementById("notes").value="";document.getElementById("selected").textContent=x.song+" — "+x.artist+" ("+x.decade+")";document.getElementById("modal").classList.add("open");document.getElementById("formView").style.display="block";document.getElementById("success").style.display="none"}
 document.getElementById("search").oninput=render;document.getElementById("cancel").onclick=()=>document.getElementById("modal").classList.remove("open");document.getElementById("done").onclick=()=>document.getElementById("modal").classList.remove("open");
-document.getElementById("send").onclick=async()=>{if(!selected)return;const b=document.getElementById("send");b.disabled=true;b.textContent="Sending…";const payload={song:selected.song,artist:selected.artist,decade:selected.decade,name:document.getElementById("name").value.trim(),notes:document.getElementById("notes").value.trim()};const r=await api("request",payload);if(r&&r.ok){state=r.state||state;document.getElementById("successSong").textContent=selected.song+" — "+selected.artist;document.getElementById("historyMsg").innerHTML=r.already?"This song was already requested/played tonight. Your request has also been recorded.":"You’re the first request for this song tonight.";document.getElementById("formView").style.display="none";document.getElementById("success").style.display="block";render()}else{alert(r?.message||"Please try again.")}b.disabled=false;b.textContent="Send Request"};
+document.getElementById("send").onclick=async()=>{if(!selected)return;const b=document.getElementById("send");b.disabled=true;b.textContent="Sending…";const payload={song:selected.song,artist:selected.artist,decade:selected.decade,name:document.getElementById("name").value.trim(),notes:document.getElementById("notes").value.trim()};const r=await submitSupabaseRequest(payload);if(r&&r.ok){state=r.state||state;document.getElementById("successSong").textContent=selected.song+" — "+selected.artist;document.getElementById("historyMsg").innerHTML=r.already?"This song was already requested/played tonight. Your request has also been recorded.":"You’re the first request for this song tonight.";document.getElementById("formView").style.display="none";document.getElementById("success").style.display="block";render()}else{alert(r?.message||"Please try again.")}b.disabled=false;b.textContent="Send Request"};
 function tipChoices(amount){const note=encodeURIComponent("Phil Smith Live tip");const a=encodeURIComponent(amount||"");return {venmo:"https://venmo.com/u/"+encodeURIComponent(VENMO_USER)+"?txn=pay&amount="+a+"&note="+note,cash:"https://cash.app/$"+encodeURIComponent(CASHAPP_USER.replace(/^\$/,""))+"/"+a}}
 function chooseTip(amount){pendingTip=String(amount);document.getElementById("payAmount").textContent="$"+pendingTip+" tip";document.getElementById("payModal").classList.add("open")}
 function finishTip(method){if(!pendingTip)return;const amount=pendingTip;const links=tipChoices(amount);const url=method==="Venmo"?links.venmo:links.cash;window.location.href=url;document.getElementById("payModal").classList.remove("open");api("tip",{song:selected?.song||"",artist:selected?.artist||"",amount,method}).catch(()=>{});pendingTip=null}
