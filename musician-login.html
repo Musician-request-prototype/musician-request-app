@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Musician Login</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial,sans-serif;display:grid;place-items:center;min-height:100dvh;padding:20px}
+main{width:100%;max-width:420px;background:#191919;padding:28px;border-radius:16px}
+h1{text-align:center;font-size:26px}
+p{color:#aaa;text-align:center}
+label{display:block;margin:18px 0 7px}
+input{width:100%;padding:14px;background:#292929;color:white;border:1px solid #555;border-radius:8px;font-size:16px}
+button{width:100%;padding:14px;margin-top:22px;background:#2563eb;color:white;border:0;border-radius:8px;font-size:17px}
+button:disabled{opacity:.5}
+#message{margin-top:16px;line-height:1.5}
+a{color:#93c5fd}
+</style>
+</head>
+<body>
+<main>
+<h1>🎸 Musician Login</h1>
+<p>Sign in to your musician account</p>
+<form id="loginForm">
+<label for="email">Email</label>
+<input id="email" type="email" autocomplete="email" required>
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="current-password" required>
+<button id="loginButton" type="submit">Sign In</button>
+</form>
+<div id="message" role="status" aria-live="polite"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const client=window.supabase.createClient(
+  "https://sluffhedekxnoasndnid.supabase.co",
+  "sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8"
+);
+const form=document.getElementById("loginForm");
+const message=document.getElementById("message");
+const button=document.getElementById("loginButton");
+
+form.addEventListener("submit",async event=>{
+  event.preventDefault();
+  button.disabled=true;
+  message.textContent="Signing in...";
+
+  try{
+    const {data,error}=await client.auth.signInWithPassword({
+      email:document.getElementById("email").value.trim(),
+      password:document.getElementById("password").value
+    });
+    if(error)throw error;
+    message.textContent="Signed in successfully!";
+    form.reset();
+    const {data:musician,error:lookupError}=await client
+      .from("musicians")
+      .select("id")
+      .eq("user_id",data.user.id)
+      .maybeSingle();
+
+    if(lookupError)throw lookupError;
+    if(!musician){
+      message.textContent="Signed in, but no musician account is linked.";
+      return;
+    }
+    message.innerHTML="Account connected. <a href='import-preview.html'>Open Song Import Preview</a>";
+  }catch(error){
+    message.textContent=error.message||"Unable to sign in.";
+  }finally{
+    button.disabled=false;
+  }
+});
+</script>
+</body>
+</html>
