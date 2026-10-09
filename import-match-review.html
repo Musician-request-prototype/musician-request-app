@@ -1,0 +1,104 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Song Import Match Preview</title><style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#080b11;color:#f3f6ff;font:16px -apple-system,BlinkMacSystemFont,Arial,sans-serif}header{background:#152033;padding:18px}main{max-width:980px;margin:auto;padding:16px}.panel{background:#151d2c;border:1px solid #33445b;padding:16px;border-radius:14px;margin-bottom:14px}h1{font-size:23px;margin:0 0 8px}h2{font-size:18px;margin:0 0 12px}p,small{color:#b9c7db;line-height:1.5}label{display:block;margin:10px 0 6px}input{max-width:100%;background:#253249;color:white;border:1px solid #526582;border-radius:8px;padding:12px;font-size:16px}input[type=email],input[type=password],input[type=file],input[type=search]{width:100%}button{background:#245cbb;color:white;border:0;border-radius:8px;padding:12px 15px;font-size:16px;margin-top:10px}button:disabled{opacity:.55}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{background:#243046;padding:12px;border-radius:10px}.number{font-weight:700;font-size:25px}.good{color:#96eab7}.warn{color:#ffce85}.err{color:#ff9898}.review-actions{display:flex;gap:7px;flex-wrap:wrap}.review-actions button{margin:0;padding:8px 10px;font-size:14px}.review-actions button.chosen{outline:2px solid #abf3c5;background:#1c704b}.review-actions button.different.chosen{outline-color:#ffe0a4;background:#744a22}.review-note{margin:7px 0 0;font-size:12px;color:#b9c7db}.summary{background:#253249;padding:12px;border-radius:9px;margin:10px 0}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid #39465b;padding:10px;text-align:left}th{color:#bcd6fa}.scroll{max-height:440px;overflow:auto}#results{display:none}#message,#loginMessage{white-space:pre-wrap}#search{margin:12px 0}select{background:#253249;color:white;padding:10px;border-radius:7px;border:1px solid #526582}
+</style></head><body><header><h1>🎸 Song Library Match — Review Decisions</h1><small>Read-only comparison • No database changes • Ready to Play songs protected</small></header><main>
+<section class="panel"><h2>1. Musician account</h2><p id="loginMessage">Checking your signed-in account (up to 8 seconds)...</p><div id="loginBox" hidden><label>Email</label><input id="email" type="email" autocomplete="email"><label>Password</label><input id="password" type="password" autocomplete="current-password"><button id="login">Sign in</button></div></section>
+<section class="panel"><h2>2. BandHelper ZIP</h2><p>Choose the ZIP file from your Phil Solo export. It is read on this device; its charts are not uploaded.</p><input type="file" id="file" accept=".zip,application/zip"><p id="message">Choose export_zxy5jy.zip.</p><button id="compare" disabled>Compare with My Songs</button></section>
+<section class="panel" id="results"><h2>3. Read-only match results</h2><div class="metrics"><div class="metric"><div class="number" id="dbCount">0</div><small>Existing database songs visible</small></div><div class="metric"><div class="number" id="newCount">0</div><small>New songs → Still Learning</small></div><div class="metric"><div class="number" id="matchCount">0</div><small>Confirmed title + artist matches</small></div><div class="metric"><div class="number" id="reviewCount">0</div><small>Uncertain matches to review</small></div></div><p id="warning" class="warn"></p><div class="summary" id="decisionSummary">Review decisions will appear here.</div><button id="exportDecisions" type="button" disabled>Download Review Decisions</button><small>Save a copy of your decisions before leaving this page. No database writes.</small><label for="filter">Show songs</label><select id="filter"><option value="all">All</option><option value="matched">Confirmed matches</option><option value="review">Possible matches</option><option value="new">New</option></select><input type="search" id="search" placeholder="Search title or artist"><div class="scroll"><table><thead><tr><th>Imported song</th><th>Status</th><th>Existing song</th></tr></thead><tbody id="rows"></tbody></table></div><p><strong>Nothing has been saved or changed.</strong> This is a matching preview only.</p></section>
+</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script><script>
+const SUPABASE_URL='https://sluffhedekxnoasndnid.supabase.co';const KEY='sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8';const $=id=>document.getElementById(id);let client=null,user=null,musician=null,imported=[],compared=[],decisions=new Map();try{if(!window.supabase?.createClient)throw Error('Supabase library did not load. Check internet access or content blockers.');client=window.supabase.createClient(SUPABASE_URL,KEY)}catch(e){$('loginMessage').textContent='Connection setup error: '+e.message; $('loginBox').hidden=true;}
+const normalize=s=>String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+// Conservative, explicit aliases: never merge different artists merely because titles match.
+const artistAliases = new Map([
+  ['rem','r e m'],
+  ['dave matthews','dave matthews band'],
+  ['elvis','elvis presley'],
+  ['bob seger','bob seger and the silver bullet band'],
+  ['john cougar','john mellencamp'],
+  ['john cougar mellencamp','john mellencamp'],
+  ['tom petty and the heartbreakers','tom petty'],
+  ['prince and the revolution','prince'],
+]);
+function canonicalArtist(s){
+  const a=normalize(s).replace(/\bfeat(?:uring)?\b.*$/,'').trim();
+  // Only aliases we have explicitly reviewed are changed.
+  return artistAliases.get(a)||a;
+}
+const keyOf=s=>normalize(s.title)+'|'+canonicalArtist(s.artist);
+
+const waitLimit=(promise,ms=8000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('Login check timed out. You can sign in below.')),ms))]);
+async function connect(signedInUser=null){
+  $('loginMessage').textContent='Checking account...';
+  try{
+    let u=signedInUser;
+    if(!u){
+      // getSession is local and normally avoids an unnecessary server call.
+      const {data,error}=await waitLimit(client.auth.getSession());
+      if(error)throw error;
+      u=data.session?.user||null;
+    }
+    if(!u){
+      user=null;musician=null;
+      $('loginBox').hidden=false;
+      $('loginMessage').textContent='Please sign in to compare with your existing library.';
+      update();return;
+    }
+    user=u;
+    const {data,error:e}=await waitLimit(client.from('musicians').select('id').eq('user_id',u.id).maybeSingle());
+    if(e)throw e;
+    if(!data)throw Error('No musician account is linked to this login.');
+    musician=data;
+    $('loginBox').hidden=true;
+    $('loginMessage').textContent='✅ Account connected. Choose your ZIP, then tap Compare.';
+    update();
+  }catch(e){
+    musician=null;
+    $('loginBox').hidden=false;
+    $('loginMessage').textContent='Automatic account check unavailable: '+e.message+'\nSign in below to try again.';
+    update();
+  }
+}
+$('login').onclick=async()=>{if(!client)return;const b=$('login');b.disabled=true;$('loginMessage').textContent='Signing in...';try{const {data,error}=await waitLimit(client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value}),15000);if(error)throw error;$('password').value='';await connect(data.user)}catch(e){$('loginMessage').textContent=e.message}finally{b.disabled=false}};
+function update(){$('compare').disabled=!(client&&musician&&imported.length);}
+function parse(raw,path){const metadata={};const body=[];for(const line of raw.replace(/\r\n?/g,'\n').split('\n')){const m=line.match(/^\{\s*([^:}]+)\s*:\s*(.*?)\s*\}$/);if(m){const k=m[1].trim().toLowerCase();if(!metadata[k]&&m[2])metadata[k]=m[2].trim()}else body.push(line)}return{title:metadata.title||path.split('/').pop().replace(/\.cho$/i,''),artist:metadata.artist||'',chart:body.join('\n').trim()}}
+$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;$('message').textContent='Reading ZIP...';$('results').style.display='none';imported=[];compared=[];decisions.clear();update();try{if(!window.JSZip)throw Error('ZIP library unavailable — reload while connected to internet');const zip=await JSZip.loadAsync(f);const files=Object.values(zip.files).filter(x=>!x.dir&&/\.cho$/i.test(x.name));imported=await Promise.all(files.map(async x=>parse(await x.async('string'),x.name)));$('message').textContent=`✅ ${imported.length} songs loaded (${imported.filter(s=>!s.chart).length} empty charts). No data uploaded.`;update()}catch(e){$('message').textContent='Error: '+e.message}};
+async function fetchSongs(){const all=[];for(let from=0;from<20000;from+=500){const {data,error}=await client.from('songs').select('id,title,artist,song_status,public_request_enabled').eq('musician_id',musician.id).order('id').range(from,from+499);if(error)throw Error('Cannot read existing songs: '+error.message);all.push(...data);if(data.length<500)break;}return all;}
+$('compare').onclick=async()=>{const b=$('compare');b.disabled=true;$('message').textContent='Comparing with existing Supabase songs...';try{const existing=await fetchSongs();const exact=new Map(),titles=new Map();for(const s of existing){const k=keyOf(s),t=normalize(s.title);if(!exact.has(k))exact.set(k,[]);exact.get(k).push(s);if(!titles.has(t))titles.set(t,[]);titles.get(t).push(s)}compared=imported.map(s=>{const eq=exact.get(keyOf(s))||[],possible=titles.get(normalize(s.title))||[];if(eq.length===1)return{...s,status:'matched',existing:eq[0]};if(eq.length>1)return{...s,status:'review',existing:eq[0],reason:'Multiple exact matches'};if(possible.length)return{...s,status:'review',existing:possible[0],reason:'Same title; artist must be reviewed'};return{...s,status:'new',existing:null}});$('dbCount').textContent=existing.length;$('newCount').textContent=compared.filter(x=>x.status==='new').length;$('matchCount').textContent=compared.filter(x=>x.status==='matched').length;$('reviewCount').textContent=compared.filter(x=>x.status==='review').length;$('warning').textContent=existing.length<236?'⚠️ Fewer than the previously reported 236 songs are visible. Row-level permissions or filtering may prevent a complete comparison. Do not import until resolved.':'Confirmed matches require the same normalized title and artist (including a small list of reviewed artist aliases). Same-title songs by other artists still require review.';$('results').style.display='block';decisions.clear();$('exportDecisions').disabled=false;draw();$('message').textContent='✅ Comparison finished. Nothing changed in Supabase.';$('results').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){$('message').textContent='Error: '+e.message}finally{update()}};
+function decisionKey(s){return normalize(s.title)+'|'+canonicalArtist(s.artist)}
+function countSummary(){
+  const uncertain=compared.filter(s=>s.status==='review');
+  const yes=uncertain.filter(s=>decisions.get(decisionKey(s))==='same').length;
+  const no=uncertain.filter(s=>decisions.get(decisionKey(s))==='different').length;
+  $('decisionSummary').textContent=`Reviewed ${yes+no} of ${uncertain.length}: ${yes} same song, ${no} different song, ${uncertain.length-yes-no} remaining. Total planned new songs: ${compared.filter(x=>x.status==='new').length+no}. Nothing saved to Supabase.`;
+}
+function setDecision(s,decision){decisions.set(decisionKey(s),decision);draw()}
+function draw(){
+  const status=$('filter').value,q=normalize($('search').value),tbody=$('rows');tbody.replaceChildren();
+  for(const s of compared){
+    if(status!=='all'&&s.status!==status)continue;
+    if(q&&!normalize(s.title+' '+s.artist).includes(q))continue;
+    const tr=document.createElement('tr');
+    const td1=document.createElement('td');td1.textContent=s.title+' — '+s.artist;tr.append(td1);
+    const td2=document.createElement('td');
+    if(s.status==='review'){
+      const div=document.createElement('div');div.className='review-actions';
+      for(const [key,label,cls] of [['same','Same Song',''],['different','Different Song','different']]){
+        const btn=document.createElement('button');btn.type='button';btn.textContent=label;
+        btn.className=cls+(decisions.get(decisionKey(s))===key?' chosen':'');
+        btn.setAttribute('aria-pressed',String(decisions.get(decisionKey(s))===key));
+        btn.onclick=()=>setDecision(s,key);div.append(btn);
+      }
+      td2.append(div);const note=document.createElement('div');note.className='review-note';note.textContent=decisions.get(decisionKey(s))==='same'?'Will use existing record':decisions.get(decisionKey(s))==='different'?'Will create a separate Still Learning song':'Decision needed';td2.append(note);
+    }else {td2.textContent=(s.status==='matched'?'Existing / status preserved':'Still Learning')+(s.chart?'':' • Empty chart');td2.className=s.status==='matched'?'good':'';}
+    tr.append(td2);
+    const td3=document.createElement('td');td3.textContent=s.existing?s.existing.title+' — '+s.existing.artist:'—';tr.append(td3);tbody.append(tr);
+  }
+  countSummary();
+}
+$('exportDecisions').onclick=()=>{
+  const remaining=compared.filter(s=>s.status==='review'&&!decisions.has(decisionKey(s))).length;
+  const payload={format:'musician-song-match-decisions-v1',createdAt:new Date().toISOString(),note:'Read-only decisions, no database changes',totalBandHelperSongs:imported.length,unresolved:remaining,rows:compared.map(s=>({title:s.title,artist:s.artist,action:s.status==='review'?(decisions.get(decisionKey(s))||'review'):s.status,existingSongId:s.existing?.id||null,existingTitle:s.existing?.title||null,existingArtist:s.existing?.artist||null}))};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+  const a=document.createElement('a');a.href=url;a.download='song-match-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);
+};
+$('filter').onchange=draw;$('search').oninput=draw;if(client){connect();}
+</script></body></html>
