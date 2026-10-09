@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Musician Performance Mode</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial,sans-serif}
+header{height:64px;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#161616;border-bottom:1px solid #333}
+button{background:#292929;color:white;border:1px solid #444;border-radius:8px;padding:10px 14px;font-size:15px;cursor:pointer}
+button:active{background:#444}
+main{display:flex;height:calc(100dvh - 64px)}
+aside{width:38%;max-width:400px;min-width:220px;background:#171717;border-right:1px solid #333;overflow:auto;padding:14px}
+input{width:100%;padding:13px;background:#292929;border:1px solid #555;border-radius:8px;color:white;font-size:16px;margin-bottom:14px}
+.song{padding:14px;border-bottom:1px solid #333;cursor:pointer}
+.song:active,.song.selected{background:#24436b;border-radius:7px}
+.artist{font-size:13px;color:#aaa;margin-top:5px}
+#stage{flex:1;min-width:0;overflow:auto;padding:24px}
+#title{font-size:25px;font-weight:bold;text-align:center}
+#artist{text-align:center;color:#aaa;margin:7px 0 30px}
+#lyrics{white-space:pre-wrap;overflow-wrap:anywhere;font-size:26px;line-height:1.75}
+.chord{color:#ffba54;font-weight:bold}
+#toolbar{display:flex;gap:8px;align-items:center}
+.hidden{display:none!important}
+@media(max-width:650px){
+aside{width:85%;max-width:none}
+#stage{padding:16px}
+#lyrics{font-size:21px}
+header{padding:8px}
+button{padding:9px}
+}
+</style>
+</head>
+<body>
+<header>
+<strong>Performance Mode</strong>
+<div id="toolbar">
+<button onclick="toggleLibrary()">Songs</button>
+<button onclick="changeSize(-2)">A−</button>
+<button onclick="changeSize(2)">A+</button>
+</div>
+</header>
+<main>
+<aside id="library">
+<input id="search" placeholder="Search songs or artists..." oninput="drawLibrary()">
+<div id="songList"></div>
+</aside>
+<section id="stage">
+<div id="title">Your Songbook</div>
+<div id="artist">Select a song to begin</div>
+<div id="lyrics">Your lyrics and chords will appear here.</div>
+</section>
+</main>
+<script>
+const songs=[
+{id:1,title:"Example Song",artist:"Demo",lyrics:"G                 C\nThis is an example lyric line.\n\nAm                D\nYour imported songs will appear here."}
+];
+let selected=1;
+let fontSize=26;
+
+function drawLibrary(){
+const query=document.getElementById("search").value.toLowerCase();
+const list=document.getElementById("songList");
+list.innerHTML="";
+songs.filter(s=>
+(s.title+" "+s.artist).toLowerCase().includes(query)
+).forEach(song=>{
+const item=document.createElement("div");
+item.className="song"+(song.id===selected?" selected":"");
+const name=document.createElement("div");
+name.textContent=song.title;
+const artist=document.createElement("div");
+artist.className="artist";
+artist.textContent=song.artist;
+item.append(name,artist);
+item.onclick=()=>openSong(song.id);
+list.appendChild(item);
+});
+}
+
+function openSong(id){
+const song=songs.find(s=>s.id===id);
+if(!song)return;
+selected=id;
+document.getElementById("title").textContent=song.title;
+document.getElementById("artist").textContent=song.artist;
+document.getElementById("lyrics").textContent=song.lyrics||"No lyrics yet.";
+document.getElementById("stage").scrollTop=0;
+document.getElementById("library").classList.add("hidden");
+drawLibrary();
+}
+
+function toggleLibrary(){
+document.getElementById("library").classList.toggle("hidden");
+}
+
+function changeSize(amount){
+fontSize=Math.max(14,Math.min(60,fontSize+amount));
+document.getElementById("lyrics").style.fontSize=fontSize+"px";
+}
+
+drawLibrary();
+openSong(1);
+</script>
+</body>
+</html>
