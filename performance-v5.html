@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Performance Mode v5 — Column-Locked Alignment</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#252525;color:#fff;border:1px solid #484848;border-radius:10px;padding:10px 13px;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #87baff;outline-offset:2px}button:disabled{opacity:.5}header{height:64px;background:#171717;border-bottom:1px solid #343434;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;gap:12px}.head-title{font-size:17px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-shrink:0}#layout{display:flex;height:calc(100dvh - 64px);min-height:0}aside{width:min(42%,420px);min-width:240px;flex-shrink:0;display:flex;flex-direction:column;background:#171717;border-right:1px solid #353535}aside[hidden]{display:none}#browser-top{padding:12px;display:grid;gap:9px;border-bottom:1px solid #333}input,select{background:#272727;color:white;border:1px solid #555;border-radius:9px;padding:11px;width:100%;font-size:16px}#song-list{overflow:auto;flex:1;min-height:0}.song-row{display:block;text-align:left;border:0;border-bottom:1px solid #333;border-radius:0;padding:13px 15px;width:100%;background:none}.song-row.active{background:#264267}.song-name{font-size:17px;font-weight:600}.song-meta{font-size:13px;color:#bbb;margin-top:4px}.muted{color:#aaa}.missing{color:#efbd79}#stage{min-width:0;flex:1;overflow:auto;padding:25px 30px 80px;overscroll-behavior:contain}#song-title{text-align:center;font-size:28px;margin:0;font-weight:700}#song-artist{text-align:center;color:#b5b5b5;margin:8px 0 4px}#song-status{text-align:center;color:#9e9e9e;font-size:13px;margin:7px 0 25px}#chart{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;line-height:1.25;overflow-x:auto;overflow-y:visible;margin:0;min-height:50vh;overscroll-behavior-x:contain;font-variant-ligatures:none;letter-spacing:0;font-weight:400}
+/* Chords and their lyrics use EXACTLY the same font, size, character advance and whitespace rules. */
+.chart-line{display:block;white-space:pre;width:max-content;min-width:100%;min-height:1.28em;font-family:inherit;font-size:1em;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.chart-line.chords{color:#a8dfb3;line-height:1.15;min-height:1.15em}
+.chart-line.lyric{color:#fff;line-height:1.3;min-height:1.3em}
+.chart-line.section{color:#d6b8ff;font-weight:700;margin-top:.6em}
+.chart-line.blank{min-height:.65em}
+.chart-line.tab{color:#c2c6ce;font-size:.82em;line-height:1.25;font-family:inherit}
+.chart-line.note{color:#cbd5e1}
+.chart-line.empty{color:#cbd5e1;white-space:normal;width:auto}
+.locked-pair{display:block;width:max-content;min-width:100%;margin:0 0 .18em;white-space:pre;font-family:inherit;font-size:1em;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.locked-pair .chord-line{display:block;color:#a8dfb3;line-height:1.12;white-space:pre;font-family:inherit;font-size:inherit;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.locked-pair .lyric-line{display:block;color:#fff;line-height:1.28;white-space:pre;font-family:inherit;font-size:inherit;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+#message{font-size:16px;line-height:1.5;color:#ddd;margin:28px auto;max-width:570px}a{color:#9fcbff}#count{font-size:12px;color:#bbb}#busy{font-size:12px;color:#ddd;white-space:nowrap}#restore{display:none}#library{touch-action:pan-y}@media(max-width:780px){aside{position:absolute;left:0;top:64px;bottom:0;width:min(88vw,420px);max-width:none;min-width:0;z-index:5;box-shadow:14px 0 30px #0009}#stage{padding:22px 17px 60px}#song-title{font-size:25px}#chart{font-size:21px}header{padding:8px}.head-title{font-size:14px}}
+</style>
+</head>
+<body>
+<header><span class="head-title">🎸 Performance Mode · Alignment v5</span><div class="actions"><span id="busy"></span><button id="songs-btn" type="button">Songs</button><button id="smaller" type="button" aria-label="Smaller text">A−</button><button id="larger" type="button" aria-label="Larger text">A+</button></div></header>
+<div id="layout"><aside id="library" hidden><div id="browser-top"><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="all">All Songs</option><option value="ready">Ready to Play</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list"></div></aside>
+<main id="stage"><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div id="chart" aria-label="Lyrics and chords"></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+'use strict';
+const SUPABASE_URL='https://sluffhedekxnoasndnid.supabase.co';
+const SUPABASE_KEY='sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8';
+const $=id=>document.getElementById(id);
+let db=null, musician=null, songs=[], currentId=null;
+let fontSize=Number(localStorage.getItem('performance-font-size'))||24;
+const safeNumber=x=>Number.isFinite(x)?x:24;
+fontSize=Math.max(14,Math.min(48,safeNumber(fontSize)));
+$('chart').style.fontSize=fontSize+'px';
+const delayLimit=(promise,ms=15000)=>Promise.race([Promise.resolve(promise),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Connection timed out. Try reloading the page.')),ms))]);
+function statusOf(s){return s.song_status==='ready'?'Ready to Play':s.song_status==='learning'?'Still Learning':(s.public_request_enabled?'Ready to Play':'Still Learning')}
+function chartOf(s){return typeof s.lyrics_chords==='string'?s.lyrics_chords:''}
+function showMessage(t){$('message').hidden=false;$('message').textContent=t}
+function hideMessage(){$('message').hidden=true}
+function setBusy(t){$('busy').textContent=t}
+// BandHelper ChordPro exports have chord and lyric text on successive lines.
+// Each source column represents the same horizontal position in BOTH lines.
+// v4 used Arial prefix measurements, which caused adjacent chords such as
+// "Em Em7" to collide. V5 never estimates column positions from proportional
+// text. Instead it displays the original paired lines with precisely the same
+// monospace glyph metrics. Horizontal overflow scrolls; lines never reflow.
+const chordToken=/^(?:[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M|ø|°|\+|\-)?(?:\d{0,2})?(?:\([^\s)]*\))?(?:\/[A-G](?:#|b)?)?|N\/?C|NC|\||:|%|\/|\(|\)|\.|\-)+$/;
+function chartLineKind(line){
+  const t=line.trim();
+  if(!t)return 'blank';
+  if(/^\[[^\]]+\]$/.test(t)||/^(?:verse|chorus|bridge|intro|outro|solo|instrumental|pre-chorus|refrain)(?:\s|:|$)/i.test(t))return 'section';
+  if(/^[eBGDAE]\|[-0-9hbp\/~xX| ]+/.test(t)||/^[eBGDAE]\s*\|/.test(t))return 'tab';
+  if(/^(?:\{[^}]+\}|\/\/)/.test(t))return 'note';
+  const pieces=t.split(/\s+/);
+  if(pieces.length&&pieces.every(p=>chordToken.test(p))&&pieces.some(p=>/^[A-G]/.test(p)))return 'chords';
+  return 'lyric';
+}
+function displaySpaces(s){return s.replace(/[\u00a0\u2007\u202f]/g,' ')}
+function renderChart(raw){
+  const chart=$('chart');chart.replaceChildren();
+  const lines=raw.replace(/\r\n?/g,'\n').split('\n').map(displaySpaces);
+  const fragment=document.createDocumentFragment();
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i],kind=chartLineKind(line);
+    if(kind==='chords'&&i+1<lines.length&&chartLineKind(lines[i+1])==='lyric'){
+      const lyric=lines[++i];
+      const pair=document.createElement('div');pair.className='locked-pair';
+      const chord=document.createElement('span');chord.className='chord-line';chord.textContent=line;
+      const words=document.createElement('span');words.className='lyric-line';words.textContent=lyric;
+      pair.append(chord,words);fragment.appendChild(pair);
+    }else{
+      const row=document.createElement('span');row.className='chart-line '+kind;
+      row.textContent=line||' ';fragment.appendChild(row);
+    }
+  }
+  chart.appendChild(fragment);
+}
+function showSong(s){currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();$('library').hidden=true;drawList()}
+function drawList(){const term=$('search').value.trim().toLocaleLowerCase();const filter=$('filter').value;const shown=songs.filter(s=>(`${s.title||''} ${s.artist||''}`).toLocaleLowerCase().includes(term)).filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()));$('count').textContent=`${shown.length} of ${songs.length} songs`;$('song-list').replaceChildren();const frag=document.createDocumentFragment();for(const s of shown){const btn=document.createElement('button');btn.type='button';btn.className='song-row'+(s.id===currentId?' active':'');const title=document.createElement('div');title.className='song-name';title.textContent=s.title||'Untitled';const meta=document.createElement('div');meta.className='song-meta';meta.textContent=(s.artist||'Unknown artist')+' · '+statusOf(s)+(chartOf(s).trim()?'':' · Needs chart');btn.append(title,meta);btn.onclick=()=>showSong(s);frag.append(btn)}$('song-list').append(frag)}
+async function connect(){try{setBusy('Connecting…');if(!window.supabase?.createClient)throw new Error('Supabase library could not load. Check your internet connection.');db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data:sessionData,error:authError}=await delayLimit(db.auth.getSession());if(authError)throw authError;const user=sessionData?.session?.user;if(!user){showMessage('Please sign in to your musician account first: ');const link=document.createElement('a');link.href='musician-login.html';link.textContent='Open Musician Login';$('message').append(link);setBusy('Sign in needed');return}const {data:m,error:lookupError}=await delayLimit(db.from('musicians').select('id').eq('user_id',user.id).maybeSingle());if(lookupError)throw lookupError;if(!m)throw new Error('No musician account linked to this login.');musician=m;setBusy('Loading songs…');const loaded=[];for(let offset=0;offset<20000;offset+=500){const {data,error}=await delayLimit(db.from('songs').select('id,title,artist,lyrics_chords,song_status,public_request_enabled').eq('musician_id',m.id).order('title').order('id').range(offset,offset+499),20000);if(error)throw error;loaded.push(...(data||[]));if(!data||data.length<500)break}songs=loaded;setBusy(`${songs.length} songs`);drawList();if(!songs.length){showMessage('No songs found for this musician account.');return}showSong(songs[0]);$('library').hidden=false}catch(e){setBusy('Connection issue');showMessage('Could not load your library: '+(e?.message||String(e))+' If you just signed in, return to Musician Login and sign in again.') }}
+$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('search').oninput=drawList;$('filter').onchange=drawList;
+function changeFont(delta){fontSize=Math.max(14,Math.min(48,fontSize+delta));$('chart').style.fontSize=fontSize+'px';if(currentId){const active=songs.find(s=>s.id===currentId);if(active)renderChart(chartOf(active))}localStorage.setItem('performance-font-size',String(fontSize))}
+$('smaller').onclick=()=>changeFont(-2);$('larger').onclick=()=>changeFont(2);
+connect();
+</script>
+</body></html>
