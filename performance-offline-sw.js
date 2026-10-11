@@ -1,6 +1,6 @@
 // Offline songbook shell — preserve original offline beta and new clean-stage test.
-const SHELL='performance-offline-shell-v2';
-const PATHS=['performance-offline-beta.html','performance-clean-stage-az-test.html'];
+const SHELL='performance-offline-shell-v4';
+const PATHS=['performance-offline-beta.html','performance-clean-stage-az-test.html','performance-three-requests-test.html','performance-movable-toolbar-test.html'];
 const PAGES=PATHS.map(x=>new URL('./'+x,self.registration.scope).href);
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(SHELL).then(cache=>cache.addAll(PAGES.map(url=>new Request(url,{cache:'reload'})))).then(()=>self.skipWaiting()));

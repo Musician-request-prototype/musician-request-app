@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Performance Mode — Full Screen Beta Test</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#252525;color:#fff;border:1px solid #484848;border-radius:10px;padding:10px 13px;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #87baff;outline-offset:2px}button:disabled{opacity:.5}header{height:64px;background:#171717;border-bottom:1px solid #343434;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;gap:12px}.head-title{font-size:17px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-shrink:0}#layout{display:flex;height:calc(100dvh - 64px);min-height:0}aside{width:min(42%,420px);min-width:240px;flex-shrink:0;display:flex;flex-direction:column;background:#171717;border-right:1px solid #353535}aside[hidden]{display:none}#browser-top{padding:12px;display:grid;gap:9px;border-bottom:1px solid #333}input,select{background:#272727;color:white;border:1px solid #555;border-radius:9px;padding:11px;width:100%;font-size:16px}#song-list{overflow:auto;flex:1;min-height:0}.song-row{display:block;text-align:left;border:0;border-bottom:1px solid #333;border-radius:0;padding:13px 15px;width:100%;background:none}.song-row.active{background:#264267}.song-name{font-size:17px;font-weight:600}.song-meta{font-size:13px;color:#bbb;margin-top:4px}.muted{color:#aaa}.missing{color:#efbd79}#stage{min-width:0;flex:1;overflow:auto;padding:25px 30px 80px;overscroll-behavior:contain}#song-title{text-align:center;font-size:28px;margin:0;font-weight:700}#song-artist{text-align:center;color:#b5b5b5;margin:8px 0 4px}#song-status{text-align:center;color:#9e9e9e;font-size:13px;margin:7px 0 25px}#chart{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;line-height:1.25;overflow-x:auto;overflow-y:visible;margin:0;min-height:50vh;overscroll-behavior-x:contain;font-variant-ligatures:none;letter-spacing:0;font-weight:400}
+/* Chords and their lyrics use EXACTLY the same font, size, character advance and whitespace rules. */
+.chart-line{display:block;white-space:pre;width:max-content;min-width:100%;min-height:1.28em;font-family:inherit;font-size:1em;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.chart-line.chords{color:#a8dfb3;line-height:1.15;min-height:1.15em}
+.chart-line.lyric{color:#fff;line-height:1.3;min-height:1.3em}
+.chart-line.section{color:#d6b8ff;font-weight:700;margin-top:.6em}
+.chart-line.blank{min-height:.65em}
+.chart-line.tab{color:#c2c6ce;font-size:.82em;line-height:1.25;font-family:inherit}
+.chart-line.note{color:#cbd5e1}
+.chart-line.empty{color:#cbd5e1;white-space:normal;width:auto}
+.locked-pair{display:block;width:max-content;min-width:100%;margin:0 0 .18em;white-space:pre;font-family:inherit;font-size:1em;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.locked-pair .chord-line{display:block;color:#a8dfb3;line-height:1.12;white-space:pre;font-family:inherit;font-size:inherit;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.locked-pair .lyric-line{display:block;color:#fff;line-height:1.28;white-space:pre;font-family:inherit;font-size:inherit;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+#message{font-size:16px;line-height:1.5;color:#ddd;margin:28px auto;max-width:570px}a{color:#9fcbff}#count{font-size:12px;color:#bbb}#busy{font-size:12px;color:#ddd;white-space:nowrap}#restore{display:none}#library{touch-action:pan-y}@media(max-width:780px){aside{position:absolute;left:0;top:64px;bottom:0;width:min(88vw,420px);max-width:none;min-width:0;z-index:5;box-shadow:14px 0 30px #0009}#stage{padding:22px 17px 60px}#song-title{font-size:25px}#chart{font-size:21px}header{padding:8px}.head-title{font-size:14px}}
+
+/* BandHelper-style fidelity: preserve raw column whitespace, but make all
+   printed text and its whitespace use the same proportional glyph metrics.
+   Never anchor chords against a monospace approximation of the lyric. */
+#chart{font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:1.25;font-variant-ligatures:none;overflow-x:auto}
+.bandhelper-pair{display:block;width:max-content;min-width:100%;margin:0 0 .16em;font:inherit;white-space:pre;letter-spacing:0;}
+.bandhelper-pair .chord-line,.bandhelper-pair .lyric-line{display:block;font:inherit;font-weight:400;white-space:pre;letter-spacing:0;font-variant-ligatures:none}
+.bandhelper-pair .chord-line{color:#a8dfb3;line-height:1.14}
+.bandhelper-pair .lyric-line{color:#fff;line-height:1.25}
+.chart-line{font-family:Arial,Helvetica,sans-serif;font-size:1em}
+.chart-line.tab{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.81em}
+@media(max-width:780px){#chart{font-size:23px}}
+
+/* Beta request controls: additions do not change chart formatting. */
+.actions{align-items:center;flex-wrap:wrap;justify-content:flex-end}
+header{min-height:64px;height:auto;flex-wrap:wrap}
+#layout{height:calc(100dvh - 64px)}
+.mode{display:flex;gap:2px;background:#232323;border:1px solid #555;border-radius:10px;padding:3px}
+.mode button{padding:8px 10px;background:transparent;border:0;font-size:13px}
+.mode button.chosen{background:#35648c;color:#fff}
+#request-panel{position:fixed;z-index:8;right:12px;top:72px;width:min(390px,calc(100vw - 24px));max-height:min(70vh,650px);overflow:auto;background:#191919;border:1px solid #666;border-radius:14px;box-shadow:0 12px 35px #000b;padding:14px}
+#request-panel[hidden],#dice-panel[hidden]{display:none}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.request-item{border:1px solid #444;padding:10px;border-radius:10px;margin:8px 0;background:#242424}
+.request-title{font-weight:700;margin-bottom:5px}.request-details{font-size:13px;color:#bbb;white-space:pre-wrap;margin-bottom:8px}
+.request-item button{width:100%;text-align:left}.request-item button:disabled{cursor:default}
+#requests-btn.has-requests{border-color:#8bcd9b}
+#request-info{font-size:13px;color:#b8b8b8;line-height:1.4}
+#dice-panel{position:fixed;z-index:8;right:12px;top:72px;width:min(350px,calc(100vw - 24px));background:#191919;border:1px solid #666;border-radius:14px;box-shadow:0 12px 35px #000b;padding:14px}
+#dice-choice{font-size:22px;font-weight:700;margin:16px 0 5px}.dice-controls{display:flex;gap:8px;margin-top:14px}.dice-controls button{flex:1}
+#mode-hint{font-size:12px;color:#a7c3e0}
+#pin-setup{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:10px 0}
+#show-pin{width:135px;max-width:100%;padding:9px;font-size:16px}
+#show-state{font-size:12px;color:#b9dbb9}
+#request-info{margin:8px 0}
+#request-list .request-item button{margin-top:7px}
+#request-list .request-item .played-button{width:auto;background:#242f28;border-color:#5b936a}
+
+@media(max-width:780px){header{gap:5px}.head-title{width:100%;font-size:13px}.actions{width:100%;gap:4px}.actions button{padding:6px 8px;font-size:13px}.mode button{padding:6px 8px}#layout{height:calc(100dvh - 104px)}aside{top:104px}}
+
+/* Show controls stay entirely inside the Requests panel. */
+#show-controls{margin:12px 0;padding:12px;border:1px solid #4b4b4b;border-radius:12px;background:#202020}
+#show-controls[hidden]{display:none}
+#show-controls .show-control-heading{font-size:15px;font-weight:700;margin-bottom:8px}
+#show-controls .show-control-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#show-controls button{padding:11px 8px;font-size:14px;min-height:43px}
+#show-controls .end-show{border-color:#a36a6a}
+#show-controls-feedback{font-size:13px;line-height:1.4;margin-top:9px;color:#c5c5c5}
+@media(max-width:400px){#show-controls .show-control-buttons{grid-template-columns:1fr}}
+
+#save-offline{font-size:12px;padding:7px 10px;border-color:#5a8869}
+/* Playing screen: full-height chart and small floating controls. */
+html,body{height:100%;overflow:hidden}
+body{height:100dvh;display:flex;flex-direction:column}
+header{flex:0 0 auto}
+#layout{flex:1 1 auto;height:auto!important;min-height:0}
+#stage{min-height:0}
+body.toolbar-hidden header{display:none}
+body.toolbar-hidden #layout{height:100dvh!important}
+#restore-controls{display:none;position:fixed;z-index:12;top:0;left:50%;transform:translateX(-50%);border-radius:0 0 11px 11px;padding:3px 14px;min-height:26px;font-size:12px;background:#202020e8;color:#fff;border:1px solid #555;border-top:0;opacity:.72}
+body.toolbar-hidden #restore-controls{display:block}
+#hide-controls{font-size:13px;padding:7px 9px}
+#playing-floats{display:none;position:fixed;inset:0;z-index:6;pointer-events:none}
+body.mode-playing #playing-floats{display:block}
+.float-control{pointer-events:auto;position:absolute;background:#171717e8;border:1px solid #666;border-radius:12px;box-shadow:0 4px 20px #0009;padding:6px;display:flex;gap:5px;align-items:center}
+.float-control button{font-size:13px;padding:7px 9px;min-height:37px;min-width:38px}
+#float-requests{right:12px;bottom:18px;width:min(244px,calc(100vw - 24px));min-width:0;max-height:190px;display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:9px 10px;border-color:#53765c;text-align:left;cursor:pointer}
+#float-requests .request-float-head{font-size:11px;color:#c8e0cc;font-weight:700;letter-spacing:.03em;margin-bottom:3px}
+#float-requests .request-float-row{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0;font-size:13px;line-height:1.3;padding:3px 0;border-top:1px solid #ffffff12}
+#float-requests .request-float-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#float-requests .request-float-tip{color:#9ee0a5;font-weight:800;flex-shrink:0}
+#float-requests .request-float-empty{font-size:12px;color:#b7b7b7}
+#float-requests:focus-visible{outline:2px solid #87baff;outline-offset:3px}
+#float-requests.has-requests{background:#24402bea;border-color:#85d49c}
+#float-transport{left:12px;bottom:18px;flex-direction:row;max-width:calc(100vw - 16px);touch-action:none}
+#float-transport.edge-left,#float-transport.edge-right{flex-direction:column;max-width:none;max-height:calc(100dvh - 16px)}
+#float-transport .drag-grip{background:#333;border:1px dashed #888;border-radius:7px;color:#ddd;display:grid;place-items:center;min-width:30px;min-height:37px;padding:5px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+#float-transport .drag-grip:active{cursor:grabbing;background:#425265}
+#float-transport .drag-grip:focus-visible{outline:2px solid #87baff;outline-offset:2px}
+#float-transport.edge-left .drag-grip,#float-transport.edge-right .drag-grip{width:100%}
+#auto-status{font-size:11px;min-width:40px;color:#ccc;text-align:center}
+#auto-status{font-size:11px;min-width:40px;color:#ccc;text-align:center}
+body:not(.mode-playing) #hide-controls{display:none}
+body.mode-playing #dice-btn{display:none}
+#request-panel{z-index:10}
+#dice-panel{z-index:10}
+@media(max-width:780px){aside{top:var(--header-height,104px)}body.toolbar-hidden aside{top:0}#float-requests{right:8px;bottom:8px}.float-control{padding:4px;gap:2px}.float-control button{padding:6px 8px;min-width:33px}}
+@media(max-width:580px){#float-requests{bottom:8px}}
+
+/* Compact stage: title, artist, status never occupy Playing Mode space. */
+body.mode-playing #song-title,body.mode-playing #song-artist,body.mode-playing #song-status{display:none!important}
+body.mode-playing #stage{padding-top:12px}
+/* Browser list scrolls independently; alphabet stays on its right edge. */
+#song-list-wrap{display:flex;flex:1;min-height:0;overflow:hidden}
+#song-list{min-width:0;flex:1;overflow-y:auto;scroll-behavior:auto}
+#az-rail{display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;flex:0 0 27px;padding:3px 1px;background:#20242a;border-left:1px solid #434955;overflow:hidden;min-height:0}
+#az-rail button{border:0;background:transparent;color:#b9d5f4;border-radius:5px;min-height:0;min-width:23px;flex:1;padding:0;font-size:clamp(9px,1.13vh,12px);font-weight:700;line-height:1;touch-action:manipulation}
+#az-rail button:active,#az-rail button:focus-visible{background:#35648c;color:white}
+.az-heading{position:sticky;top:0;z-index:1;background:#303e50;color:#f1f5f9;font-weight:750;padding:5px 10px;font-size:13px;border-bottom:1px solid #627088}
+@media(max-height:620px){#az-rail button{font-size:9px}}
+</style>
+</head>
+<body>
+<header><span class="head-title">🎸 Performance Mode · Movable Toolbar Test</span><div class="actions"><span id="busy"></span><button id="save-offline" type="button" title="Save songs for offline use">Save Offline</button><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" class="chosen" aria-pressed="true">Playing</button><button id="between-btn" type="button" aria-pressed="false">Between Songs</button></div><button id="requests-btn" type="button">Requests (0)</button><button id="dice-btn" type="button" aria-label="Pick random song">🎲</button><button id="songs-btn" type="button">Songs</button><button id="smaller" type="button" aria-label="Smaller text">A−</button><button id="larger" type="button" aria-label="Larger text">A+</button><button id="hide-controls" type="button" aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
+<button id="restore-controls" type="button" aria-label="Show top controls">Controls ▾</button>
+<div id="playing-floats" aria-label="Playing controls"><div id="float-transport" class="float-control" aria-label="Movable performance controls">
+<span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls">⠿</span>
+<button id="float-smaller" type="button" aria-label="Smaller lyrics">A−</button><button id="float-larger" type="button" aria-label="Larger lyrics">A+</button>
+<button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button>
+<button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
+</div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span></button></div>
+<div id="layout"><aside id="library" hidden><div id="browser-top"><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="all">All Songs</option><option value="ready">Ready to Play</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside>
+<main id="stage"><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div id="chart" aria-label="Lyrics and chords"></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
+<section id="request-panel" hidden aria-label="Incoming requests"><div class="panel-head"><strong>Incoming Requests</strong><div><button id="refresh-requests" type="button">Refresh</button> <button id="close-requests" type="button" aria-label="Close requests">✕</button></div></div><p id="mode-hint">Playing: requests can't replace your song.</p><div id="pin-setup"><label for="show-pin">Show PIN</label><input id="show-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Admin PIN"><button id="connect-show" type="button">Connect</button></div><div id="show-state" aria-live="polite">Connect to your existing Show Controls requests.</div><section id="show-controls" hidden aria-label="Show Controls"><div class="show-control-heading">Show Controls</div><div class="show-control-buttons"><button id="start-new-show" type="button">Start New Show</button><button id="reopen-show" type="button">Reopen Show</button><button id="end-current-show" class="end-show" type="button">End Show</button></div><div id="show-controls-feedback" role="status" aria-live="polite">Manage your show without leaving Performance Mode.</div></section><div id="request-info">Waiting for connection…</div><div id="request-list"></div></section>
+<section id="dice-panel" hidden aria-label="Random song picker"><div class="panel-head"><strong>🎲 What should I play?</strong><button id="close-dice" type="button" aria-label="Close dice">✕</button></div><p class="muted">Picks from Ready to Play songs, avoiding recent suggestions.</p><div id="dice-choice">Roll the dice!</div><div id="dice-artist" class="muted"></div><div class="dice-controls"><button id="reroll" type="button">🎲 Roll Again</button><button id="play-dice" type="button" disabled>Open Song</button></div></section>
+
+<script>
+'use strict';
+const SUPABASE_URL='https://sluffhedekxnoasndnid.supabase.co';
+const SUPABASE_KEY='sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8';
+const $=id=>document.getElementById(id);
+let db=null, musician=null, songs=[], currentId=null;
+const LIBRARY_DB='performance-offline-library-v1';
+const OFFLINE_CDN='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+let offlineSnapshot=null;
+function openLibraryDb(){
+ return new Promise((resolve,reject)=>{
+  if(!window.indexedDB){reject(new Error('Offline database is unavailable in this browser.'));return;}
+  const req=indexedDB.open(LIBRARY_DB,1);
+  req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('data'))req.result.createObjectStore('data')};
+  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('Cannot open offline database'));
+ });
+}
+async function readOfflineLibrary(){
+ const idb=await openLibraryDb();
+ try{return await new Promise((resolve,reject)=>{const t=idb.transaction('data','readonly');const q=t.objectStore('data').get('current');q.onsuccess=()=>resolve(q.result||null);q.onerror=()=>reject(q.error);});}
+ finally{idb.close()}
+}
+async function writeOfflineLibrary(user,m,songList){
+ const idb=await openLibraryDb();
+ try{await new Promise((resolve,reject)=>{const t=idb.transaction('data','readwrite');t.objectStore('data').put({userId:user.id,musicianId:m.id,savedAt:Date.now(),songs:songList},'current');t.oncomplete=resolve;t.onerror=()=>reject(t.error);t.onabort=()=>reject(t.error);});}
+ finally{idb.close()}
+}
+function fillLibrary(list,fromCache=false){
+ songs=list;setBusy(`${list.length} songs · ${fromCache?'OFFLINE COPY':'ONLINE'}`);
+ $('save-offline').textContent=fromCache?'Offline Copy':'Saved ✓';
+ drawList();setMode(showMode);drawRequests();
+ if(!requestTimer)requestTimer=setInterval(()=>{if(!document.hidden&&navigator.onLine&&showPin)refreshRequests()},10000);
+ if(!songs.length){showMessage('No songs in this library.');return;}
+ const remembered=songs.find(s=>s.id===currentId);
+ showSong(remembered||songs[0]);$('library').hidden=false;
+}
+function ensureSupabaseSdk(){
+ if(window.supabase?.createClient)return Promise.resolve();
+ return new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=OFFLINE_CDN;el.onload=()=>window.supabase?.createClient?resolve():reject(new Error('Supabase library did not load'));el.onerror=()=>reject(new Error('Internet required to sync songs'));document.head.append(el)});
+}
+async function registerOfflineShell(){
+ if(!('serviceWorker' in navigator))return false;
+ try{
+  const registration=await navigator.serviceWorker.register('./performance-offline-sw.js');
+  await navigator.serviceWorker.ready;
+  return Boolean(registration.active);
+ }catch(e){console.warn('Offline app shell setup failed:',e);return false}
+}
+
+let showMode=localStorage.getItem('performance-start-mode')==='between'?'between':'playing';
+let incomingRequests=[], requestsError='', diceSuggestion=null, recentDiceIds=[], requestLoading=false, requestTimer=null, showActionBusy=false;
+// Legacy Google Apps Script is the source of truth for your current live shows.
+// Store validated PIN in sessionStorage only until 3 hours after unlock.
+// This persists across reloads of the SAME tab, but closes with that tab.
+const SHOW_API_URL='https://script.google.com/macros/s/AKfycbwCVYb78lADt8BH_FoNuqQYM-5RpWSB0UT2L2AQBE2NCU3nCzNQFMDl4RWwk542SCkr/exec';
+let showPin='', showIsOpen=null, showLabel='';
+const SHOW_UNLOCK_KEY='phil-performance-show-unlock-v1';
+const SHOW_UNLOCK_MS=3*60*60*1000;
+let showUnlockExpiry=0;
+function forgetShowPin(){
+ showPin='';showUnlockExpiry=0;
+ try{sessionStorage.removeItem(SHOW_UNLOCK_KEY)}catch{}
+}
+function saveShowPin(){
+ showUnlockExpiry=Date.now()+SHOW_UNLOCK_MS;
+ try{sessionStorage.setItem(SHOW_UNLOCK_KEY,JSON.stringify({pin:showPin,expires:showUnlockExpiry}))}catch{}
+}
+function restoreShowPin(){
+ try{
+  const saved=JSON.parse(sessionStorage.getItem(SHOW_UNLOCK_KEY)||'null');
+  if(saved&&typeof saved.pin==='string'&&saved.pin&&Number(saved.expires)>Date.now()){
+   showPin=saved.pin;showUnlockExpiry=Number(saved.expires);return true;
+  }
+ }catch{}
+ forgetShowPin();return false;
+}
+function unlockValid(){
+ if(!showPin)return false;
+ if(showUnlockExpiry&&Date.now()>=showUnlockExpiry){
+  forgetShowPin();incomingRequests=[];showIsOpen=null;requestsError='3-hour unlock expired. Re-enter your Show Controls PIN.';
+  drawRequests();return false;
+ }
+ return true;
+}
+restoreShowPin();
+async function showApi(action, extra={}){
+ if(!unlockValid())throw new Error('Show PIN unlock expired. Enter it again.');
+ const response=await delayLimit(fetch(SHOW_API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action,...extra,pin:showPin})}),15000);
+ if(!response.ok)throw new Error('Show Controls connection failed ('+response.status+').');
+ return await delayLimit(response.json(),10000);
+}
+
+let fontSize=Number(localStorage.getItem('performance-font-size'))||24;
+const safeNumber=x=>Number.isFinite(x)?x:24;
+fontSize=Math.max(14,Math.min(48,safeNumber(fontSize)));
+$('chart').style.fontSize=fontSize+'px';
+const delayLimit=(promise,ms=15000)=>Promise.race([Promise.resolve(promise),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Connection timed out. Try reloading the page.')),ms))]);
+function statusOf(s){return s.song_status==='ready'?'Ready to Play':s.song_status==='learning'?'Still Learning':(s.public_request_enabled?'Ready to Play':'Still Learning')}
+function chartOf(s){return typeof s.lyrics_chords==='string'?s.lyrics_chords:''}
+function showMessage(t){$('message').hidden=false;$('message').textContent=t}
+function hideMessage(){$('message').hidden=true}
+function setBusy(t){$('busy').textContent=t}
+// BandHelper exports preserve chord line whitespace, including NBSP.
+// BandHelper's display uses a proportional font: the width of a space is
+ // smaller than a monospace cell. Chord lines and lyric lines therefore need
+ // the SAME proportional font and white-space:pre to reproduce source layout.
+ // Unlike v4, no independent absolute-positioned chords can collide.
+const chordToken=/^(?:[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M|ø|°|\+|\-)?(?:\d{0,2})?(?:\([^\s)]*\))?(?:\/[A-G](?:#|b)?)?|N\/?C|NC|\||:|%|\/|\(|\)|\.|\-)+$/;
+function chartLineKind(line){
+  const t=line.trim();
+  if(!t)return 'blank';
+  if(/^\[[^\]]+\]$/.test(t)||/^(?:verse|chorus|bridge|intro|outro|solo|instrumental|pre-chorus|refrain)(?:\s|:|$)/i.test(t))return 'section';
+  if(/^[eBGDAE]\|[-0-9hbp\/~xX| ]+/.test(t)||/^[eBGDAE]\s*\|/.test(t))return 'tab';
+  if(/^(?:\{[^}]+\}|\/\/)/.test(t))return 'note';
+  const pieces=t.split(/\s+/);
+  if(pieces.length&&pieces.every(p=>chordToken.test(p))&&pieces.some(p=>/^[A-G]/.test(p)))return 'chords';
+  return 'lyric';
+}
+function displaySpaces(s){return s.replace(/[\u00a0\u2007\u202f]/g,' ')}
+function renderChart(raw){
+  const chart=$('chart');chart.replaceChildren();
+  const lines=raw.replace(/\r\n?/g,'\n').split('\n').map(displaySpaces);
+  const fragment=document.createDocumentFragment();
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i],kind=chartLineKind(line);
+    if(kind==='chords'&&i+1<lines.length&&chartLineKind(lines[i+1])==='lyric'){
+      const lyric=lines[++i];
+      const pair=document.createElement('div');pair.className='bandhelper-pair';
+      const chord=document.createElement('span');chord.className='chord-line';chord.textContent=line;
+      const words=document.createElement('span');words.className='lyric-line';words.textContent=lyric;
+      pair.append(chord,words);fragment.appendChild(pair);
+    }else{
+      const row=document.createElement('span');row.className='chart-line '+kind;
+      row.textContent=line||' ';fragment.appendChild(row);
+    }
+  }
+  chart.appendChild(fragment);
+}
+function showSong(s){pauseAutoScroll();currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();$('library').hidden=true;drawList()}
+function drawList(){
+ const term=$('search').value.trim().toLocaleLowerCase(), filter=$('filter').value;
+ const shown=songs.filter(s=>(`${s.title||''} ${s.artist||''}`).toLocaleLowerCase().includes(term)).filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()));
+ $('count').textContent=`${shown.length} of ${songs.length} songs`;
+ const list=$('song-list'),rail=$('az-rail');list.replaceChildren();rail.replaceChildren();
+ const sections=new Map(), frag=document.createDocumentFragment();
+ // Same title ordering as the existing songbook, including symbols/numbers in #.
+ const letterFor=s=>{const a=String(s.title||'').trim().charAt(0).toUpperCase();return /^[A-Z]$/.test(a)?a:'#'};
+ for(const s of shown){
+  const letter=letterFor(s);
+  if(!sections.has(letter)){
+   const heading=document.createElement('div');heading.className='az-heading';heading.textContent=letter;
+   sections.set(letter,heading);frag.append(heading);
+  }
+  const btn=document.createElement('button');btn.type='button';btn.className='song-row'+(s.id===currentId?' active':'');
+  const title=document.createElement('div');title.className='song-name';title.textContent=s.title||'Untitled';
+  const meta=document.createElement('div');meta.className='song-meta';meta.textContent=(s.artist||'Unknown artist')+' · '+statusOf(s)+(chartOf(s).trim()?'':' · Needs chart');
+  btn.append(title,meta);btn.onclick=()=>showSong(s);frag.append(btn);
+ }
+ list.append(frag);
+ for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){
+  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;btn.setAttribute('aria-label','Jump to '+letter);
+  btn.disabled=!sections.has(letter);if(btn.disabled)btn.style.opacity='.28';
+  btn.onclick=()=>{const heading=sections.get(letter);if(heading)list.scrollTop+=heading.getBoundingClientRect().top-list.getBoundingClientRect().top;};
+  rail.append(btn);
+ }
+}
+
+async function connect(){
+ // Show the last downloaded library immediately, even with airplane mode on.
+ try{
+  offlineSnapshot=await readOfflineLibrary();
+  if(offlineSnapshot?.songs?.length){
+   musician={id:offlineSnapshot.musicianId};
+   fillLibrary(offlineSnapshot.songs,true);
+  }else{setBusy('No offline copy yet');showMessage('Connect to the internet once, sign in, and tap Save Offline before your gig.');}
+ }catch(e){console.warn('Offline library unavailable:',e);setBusy('Offline storage unavailable')}
+ // A service worker can reopen this page offline after its first successful installation.
+ const shellReady=registerOfflineShell();
+ if(!navigator.onLine){
+  if(offlineSnapshot?.songs?.length)setBusy(`${songs.length} songs · OFFLINE`);
+  else showMessage('No saved offline library. Connect once to download your songs.');
+  await shellReady;return;
+ }
+ try{
+  setBusy(offlineSnapshot?.songs?.length?'Refreshing online…':'Connecting…');
+  await ensureSupabaseSdk();
+  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  const {data:sessionData,error:authError}=await delayLimit(db.auth.getSession());
+  if(authError)throw authError;
+  const user=sessionData?.session?.user;
+  if(!user){
+   // Never show the cached library for a DIFFERENT signed-in user.
+   if(!offlineSnapshot?.songs?.length){showMessage('Please sign in to your musician account first. ');const a=document.createElement('a');a.href='musician-login.html';a.textContent='Open Musician Login';$('message').append(a)}
+   setBusy(offlineSnapshot?.songs?.length?'Offline copy · Sign in to sync':'Sign in needed');return;
+  }
+  if(offlineSnapshot?.userId&&offlineSnapshot.userId!==user.id){
+   songs=[];offlineSnapshot=null;currentId=null;$('chart').replaceChildren();$('song-list').replaceChildren();
+   throw new Error('Offline copy belongs to another musician. Please use a separate device or clear its saved website data.');
+  }
+  const {data:m,error:lookupError}=await delayLimit(db.from('musicians').select('id').eq('user_id',user.id).maybeSingle());
+  if(lookupError)throw lookupError;if(!m)throw new Error('No musician account linked to this login.');
+  musician=m;
+  const loaded=[];
+  for(let offset=0;offset<20000;offset+=500){
+   const {data,error}=await delayLimit(db.from('songs').select('id,title,artist,lyrics_chords,song_status,public_request_enabled').eq('musician_id',m.id).order('title').order('id').range(offset,offset+499),20000);
+   if(error)throw error;loaded.push(...(data||[]));if(!data||data.length<500)break;
+  }
+  // Don't accidentally overwrite a complete local library with an empty remote query.
+  if(!loaded.length&&offlineSnapshot?.songs?.length)throw new Error('Online library returned no songs. Kept your offline copy.');
+  // Save before presenting Online status. Data is in IndexedDB, not a temporary JS variable.
+  await writeOfflineLibrary(user,m,loaded);
+  offlineSnapshot={userId:user.id,musicianId:m.id,savedAt:Date.now(),songs:loaded};
+  fillLibrary(loaded,false);
+  if(showPin)refreshRequests();
+  await shellReady;
+ }catch(e){
+  const explanation=e?.message||String(e);
+  if(offlineSnapshot?.songs?.length){setBusy(`${songs.length} songs · OFFLINE COPY`);console.warn('Sync failed; using offline library:',explanation)}
+  else{setBusy('Connection issue');showMessage('Could not download library: '+explanation+' Connect online and sign in before testing offline.')}
+ }
+}
+$('save-offline').onclick=async()=>{
+ if(!navigator.onLine){alert('You are offline. Your last saved library is available; connect to refresh it.');return;}
+ $('save-offline').disabled=true;$('save-offline').textContent='Saving…';
+ await connect();
+ $('save-offline').disabled=false;
+};
+
+$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('search').oninput=drawList;$('filter').onchange=drawList;
+function changeFont(delta){fontSize=Math.max(14,Math.min(48,fontSize+delta));$('chart').style.fontSize=fontSize+'px';if(currentId){const active=songs.find(s=>s.id===currentId);if(active)renderChart(chartOf(active))}localStorage.setItem('performance-font-size',String(fontSize))}
+$('smaller').onclick=()=>changeFont(-2);$('larger').onclick=()=>changeFont(2);
+// Only the musician's account can be queried; Supabase RLS remains authoritative.
+function requestTitle(r){return String(r.song_title||r.title||r.song_name||r.song?.title||'Requested song')}
+function requestArtist(r){return String(r.artist||r.song_artist||r.song?.artist||'')}
+function isPending(r){const v=String(r.status||r.request_status||'pending').toLowerCase();return !['played','rejected','declined','cancelled','canceled','completed','done'].includes(v)}
+function requestSong(r){
+ const id=r.song_id||r.requested_song_id;
+ if(id){const found=songs.find(s=>String(s.id)===String(id));if(found)return found;}
+ const title=requestTitle(r).trim().toLocaleLowerCase();
+ const artist=requestArtist(r).trim().toLocaleLowerCase();
+ let hits=songs.filter(s=>String(s.title||'').trim().toLocaleLowerCase()===title);
+ if(artist)hits=hits.filter(s=>String(s.artist||'').trim().toLocaleLowerCase()===artist);
+ return hits.length===1?hits[0]:null;
+}
+function setMode(mode){showMode=mode==='between'?'between':'playing';document.body.classList.toggle('mode-playing',showMode==='playing');if(showMode!=='playing'){pauseAutoScroll();setToolbarHidden(false);}else{$('dice-panel').hidden=true;} localStorage.setItem('performance-start-mode',showMode);$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('mode-hint').textContent=showMode==='playing'?"Playing: requests are visible, but can't replace your current chart.":'Between Songs: tap a request to open its chart. Requests are not automatically marked played.';drawRequests()}
+// Compact, non-interrupting song titles on the Playing screen.
+// The legacy Show Controls returns grouped requests; preserve its supplied order.
+// A tip is a recorded note, not verification of an external payment.
+function requestHasTip(value){
+ if(value===null||value===undefined||value===false)return false;
+ if(typeof value==='number')return Number.isFinite(value)&&value>0;
+ const t=String(value).trim().toLowerCase();
+ if(!t||['0','0.00','$0','$0.00','no','none','false','n/a','not tipped','no tip'].includes(t))return false;
+ if(/^\$?0(?:\.0+)?$/.test(t))return false;
+ return true;
+}
+function drawFloatingRequests(pending){
+ const floating=$('float-requests');floating.replaceChildren();
+ const heading=document.createElement('span');heading.className='request-float-head';heading.textContent='SONG REQUESTS';floating.append(heading);
+ if(!showPin){const e=document.createElement('span');e.className='request-float-empty';e.textContent='Tap to connect';floating.append(e);return;}
+ if(!navigator.onLine){const e=document.createElement('span');e.className='request-float-empty';e.textContent='Offline · saved requests';floating.append(e);}
+ // Legacy response contains one row per requested song, with count/played status.
+ // Its array order is the only guaranteed sequencing signal in this API.
+ const unique=new Map();for(const r of pending){const key=(String(r.song||'').trim()+'|'+String(r.artist||'').trim()).toLocaleLowerCase();if(key)unique.set(key,r);}
+ const latest=Array.from(unique.values()).slice(-3).reverse();
+ if(!latest.length){const empty=document.createElement('span');empty.className='request-float-empty';empty.textContent='No unplayed requests';floating.append(empty);return;}
+ for(const r of latest){
+   const row=document.createElement('span');row.className='request-float-row';
+   const name=document.createElement('span');name.className='request-float-title';name.textContent=String(r.song||'Unknown song');row.append(name);
+   if(requestHasTip(r.tip)){const tip=document.createElement('span');tip.className='request-float-tip';tip.textContent='$';tip.title='Tip noted (payment not verified)';row.append(tip);}
+   floating.append(row);
+ }
+}
+function drawRequests(){
+ const list=$('request-list');list.replaceChildren();
+ const pending=incomingRequests.filter(r=>!r.played);
+ const total=pending.reduce((n,r)=>n+Math.max(1,Number(r.count)||1),0);
+ $('requests-btn').textContent=`Requests (${total})`;drawFloatingRequests(pending);$('float-requests').classList.toggle('has-requests',total>0);
+ $('requests-btn').classList.toggle('has-requests',total>0);
+ $('pin-setup').hidden=Boolean(showPin);
+ $('show-controls').hidden=(!showPin||showMode!=='between');
+ const showReady=Boolean(showPin)&&showIsOpen!==null&&!showActionBusy;
+ $('start-new-show').disabled=!showReady;
+ $('reopen-show').disabled=!showReady||showIsOpen===true;
+ $('end-current-show').disabled=!showReady||showIsOpen===false;
+ $('show-state').textContent=showPin?(showIsOpen===null?'Connected — waiting for show status':(showIsOpen?'Requests OPEN':'Requests CLOSED')+(showLabel?' · '+showLabel:''))+' · PIN remembered up to 3 hours in this tab':'Enter your Show Controls PIN (remembered for 3 hours in this tab).';
+ $('request-info').textContent=!navigator.onLine?'Offline: live requests unavailable. Your saved songs still work.':requestLoading?'Checking the current show…':requestsError?`Could not load show requests: ${requestsError}`:!showPin?'Your current requests are in Show Controls. Connect here to see them.':pending.length?`${total} request${total===1?'':'s'} across ${pending.length} song${pending.length===1?'':'s'}. Updates every 10 seconds.`:'No pending requests in the current show.';
+ for(const r of incomingRequests){
+  const item=document.createElement('div');item.className='request-item';
+  const heading=document.createElement('div');heading.className='request-title';heading.textContent=String(r.song||'Unknown song')+(Number(r.count)>1?' ×'+r.count:'')+(r.played?' · PLAYED':'');
+  const details=document.createElement('div');details.className='request-details';
+  details.textContent=[r.artist||'',r.name?'From: '+r.name:'',r.notes?'Notes: '+r.notes:'',r.tip?'Tip: '+r.tip:''].filter(Boolean).join(' · ');
+  item.append(heading,details);
+  const match=requestSong({title:r.song,artist:r.artist});
+  if(!r.played){
+   const open=document.createElement('button');open.type='button';
+   open.textContent=showMode==='playing'?'🔒 Switch to Between Songs to open chart':match?'Open lyrics & chords':'Song not matched to library';
+   open.disabled=showMode==='playing'||!match;
+   open.onclick=()=>{if(showMode!=='between'||!match)return;showSong(match);$('request-panel').hidden=true};
+   item.append(open);
+   const mark=document.createElement('button');mark.className='played-button';mark.textContent='Mark played';mark.type='button';
+   mark.onclick=async()=>{if(!showPin)return;mark.disabled=true;mark.textContent='Saving…';try{const result=await showApi('played',{key:r.key});if(!result.ok)throw new Error(result.message||'Could not mark played');await refreshRequests()}catch(e){alert(e?.message||String(e));mark.disabled=false;mark.textContent='Mark played'}};
+   item.append(mark);
+  }
+  list.append(item);
+ }
+}
+async function refreshRequests(){
+ if(!navigator.onLine||!showPin||requestLoading||!unlockValid())return;
+ requestLoading=true;requestsError='';drawRequests();
+ try{
+  const result=await showApi('adminStatus');
+  if(!result.ok)throw new Error(result.message||'Invalid PIN or show unavailable.');
+  if(!showUnlockExpiry)saveShowPin();
+  incomingRequests=Array.isArray(result.rows)?result.rows:[];
+  showIsOpen=Boolean(result.open);showLabel=result.showLabel||'';
+ }catch(e){requestsError=e?.message||String(e);showIsOpen=null;
+  if(/invalid pin|not authorized|unauthorized|incorrect pin/i.test(requestsError))forgetShowPin();
+ }
+ finally{requestLoading=false;drawRequests()}
+}
+
+async function runShowAction(action){
+ if(showMode!=='between'||!showPin||showActionBusy||!unlockValid())return;
+ const messages={
+  startShow:'Start a NEW show? Requests and played counts for the new show will start fresh. Previous shows stay in Google Sheets.',
+  endShow:'End the current show? The public request page will stop accepting new requests until you reopen or start a show.'
+ };
+ if(messages[action]&&!confirm(messages[action]))return;
+ showActionBusy=true;
+ $('show-controls-feedback').textContent='Updating show…';drawRequests();
+ try{
+  const result=await showApi(action,action==='setOpen'?{open:true}:{});
+  if(!result.ok)throw new Error(result.message||'Could not update the show.');
+  $('show-controls-feedback').textContent=action==='startShow'?'New show started.':action==='endShow'?'Show ended. Requests are now closed.':'Show reopened. Requests are now open.';
+  await refreshRequests();
+ }catch(e){$('show-controls-feedback').textContent='Show control failed: '+(e?.message||String(e))}
+ finally{showActionBusy=false;drawRequests()}
+}
+$('start-new-show').onclick=()=>runShowAction('startShow');
+$('end-current-show').onclick=()=>runShowAction('endShow');
+$('reopen-show').onclick=()=>runShowAction('setOpen');
+$('connect-show').onclick=()=>{const p=$('show-pin').value.trim();if(!p){$('request-info').textContent='Enter your Show Controls PIN first.';return}showPin=p;showUnlockExpiry=0;$('show-pin').value='';refreshRequests()};
+$('show-pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('connect-show').click()});
+function diceRoll(){const ready=songs.filter(s=>statusOf(s)==='Ready to Play'&&s.id!==currentId);let choices=ready.filter(s=>!recentDiceIds.includes(s.id));if(!choices.length){recentDiceIds=[];choices=ready}if(!choices.length){$('dice-choice').textContent='No other Ready to Play songs';$('dice-artist').textContent='';diceSuggestion=null;$('play-dice').disabled=true;return}diceSuggestion=choices[Math.floor(Math.random()*choices.length)];recentDiceIds.push(diceSuggestion.id);if(recentDiceIds.length>15)recentDiceIds.shift();$('dice-choice').textContent=diceSuggestion.title||'Untitled';$('dice-artist').textContent=diceSuggestion.artist||'';$('play-dice').disabled=false}
+$('playing-btn').onclick=()=>setMode('playing');$('between-btn').onclick=()=>setMode('between');
+function toggleRequestPanel(){$('dice-panel').hidden=true;$('request-panel').hidden=!$('request-panel').hidden;if(!$('request-panel').hidden)refreshRequests()}
+$('requests-btn').onclick=toggleRequestPanel;$('float-requests').onclick=toggleRequestPanel;
+$('refresh-requests').onclick=refreshRequests;$('close-requests').onclick=()=>{$('request-panel').hidden=true};
+$('dice-btn').onclick=()=>{$('request-panel').hidden=true;$('dice-panel').hidden=!$('dice-panel').hidden;if(!$('dice-panel').hidden&&!diceSuggestion)diceRoll()};
+$('close-dice').onclick=()=>{$('dice-panel').hidden=true};$('reroll').onclick=diceRoll;
+$('play-dice').onclick=()=>{if(diceSuggestion){showSong(diceSuggestion);$('dice-panel').hidden=true}};
+
+// Full-screen controls and opt-in per-song auto-scroll. Never starts automatically.
+let autoScrolling=false,scrollFrame=0,lastFrameTime=0;
+let scrollSpeed=Math.max(5,Math.min(100,Number(localStorage.getItem('performance-scroll-speed'))||25));
+function updateScrollButtons(){
+ $('scroll-toggle').textContent=autoScrolling?'⏸ Pause':'▶ Scroll';
+ $('scroll-toggle').setAttribute('aria-label',autoScrolling?'Pause auto-scroll':'Start auto-scroll');
+ $('speed-down').title='Slower auto-scroll ('+scrollSpeed+' px/s)';
+ $('speed-up').title='Faster auto-scroll ('+scrollSpeed+' px/s)';
+}
+function pauseAutoScroll(){autoScrolling=false;if(scrollFrame)cancelAnimationFrame(scrollFrame);scrollFrame=0;lastFrameTime=0;updateScrollButtons()}
+function autoScrollStep(timestamp){
+ if(!autoScrolling||showMode!=='playing'){pauseAutoScroll();return;}
+ if(lastFrameTime){const elapsed=Math.min((timestamp-lastFrameTime)/1000,.1);$('stage').scrollTop+=scrollSpeed*elapsed;}
+ lastFrameTime=timestamp;
+ const stage=$('stage');
+ if(stage.scrollTop+stage.clientHeight>=stage.scrollHeight-2){pauseAutoScroll();return;}
+ scrollFrame=requestAnimationFrame(autoScrollStep);
+}
+function toggleAutoScroll(){
+ if(autoScrolling){pauseAutoScroll();return;}
+ if(showMode!=='playing')return;
+ autoScrolling=true;lastFrameTime=0;updateScrollButtons();scrollFrame=requestAnimationFrame(autoScrollStep);
+}
+function adjustSpeed(delta){scrollSpeed=Math.max(5,Math.min(100,scrollSpeed+delta));localStorage.setItem('performance-scroll-speed',String(scrollSpeed));updateScrollButtons()}
+function setToolbarHidden(hidden){document.body.classList.toggle('toolbar-hidden',Boolean(hidden)&&showMode==='playing');syncHeaderHeight()}
+function syncHeaderHeight(){const h=document.querySelector('header').getBoundingClientRect().height;document.documentElement.style.setProperty('--header-height',h+'px')}
+$('hide-controls').onclick=()=>setToolbarHidden(true);
+$('restore-controls').onclick=()=>setToolbarHidden(false);
+$('float-smaller').onclick=()=>changeFont(-2);
+$('float-larger').onclick=()=>changeFont(2);
+$('scroll-toggle').onclick=toggleAutoScroll;
+$('speed-down').onclick=()=>adjustSpeed(-5);
+$('speed-up').onclick=()=>adjustSpeed(5);
+// The floating transport snaps to an edge: top/bottom horizontal, sides vertical.
+// Its position is saved locally; nothing about movement changes the song or scrolling state.
+const transport=$('float-transport'), transportGrip=$('transport-grip');
+const TRANSPORT_POSITION_KEY='performance-transport-position-v1';
+let transportPlacement={edge:'bottom',fraction:0},transportDrag=null;
+try{const saved=JSON.parse(localStorage.getItem(TRANSPORT_POSITION_KEY)||'null');
+ if(saved&&['top','bottom','left','right'].includes(saved.edge)&&Number.isFinite(saved.fraction))transportPlacement={edge:saved.edge,fraction:Math.max(0,Math.min(1,saved.fraction))};
+}catch{}
+function placeTransport(){
+ const edge=transportPlacement.edge;
+ transport.classList.toggle('edge-left',edge==='left');
+ transport.classList.toggle('edge-right',edge==='right');
+ transport.style.left='0px';transport.style.top='0px';transport.style.right='auto';transport.style.bottom='auto';
+ const rect=transport.getBoundingClientRect();
+ const margin=8,availableX=Math.max(0,innerWidth-rect.width-margin*2),availableY=Math.max(0,innerHeight-rect.height-margin*2);
+ const x=(edge==='left')?margin:(edge==='right')?innerWidth-rect.width-margin:margin+availableX*transportPlacement.fraction;
+ const y=(edge==='top')?margin:(edge==='bottom')?innerHeight-rect.height-margin:margin+availableY*transportPlacement.fraction;
+ transport.style.left=Math.max(0,x)+'px';transport.style.top=Math.max(0,y)+'px';
+}
+function setTransportPlacement(edge,fraction){
+ transportPlacement={edge,fraction:Math.max(0,Math.min(1,fraction))};
+ try{localStorage.setItem(TRANSPORT_POSITION_KEY,JSON.stringify(transportPlacement))}catch{}
+ placeTransport();
+}
+transportGrip.addEventListener('pointerdown',e=>{
+ if(e.button!==0)return;
+ e.preventDefault();
+ const rect=transport.getBoundingClientRect();
+ transportDrag={id:e.pointerId,dx:e.clientX-rect.left,dy:e.clientY-rect.top};
+ transportGrip.setPointerCapture(e.pointerId);
+});
+transportGrip.addEventListener('pointermove',e=>{
+ if(!transportDrag||transportDrag.id!==e.pointerId)return;
+ e.preventDefault();
+ transport.style.left=Math.max(0,Math.min(innerWidth-transport.offsetWidth,e.clientX-transportDrag.dx))+'px';
+ transport.style.top=Math.max(0,Math.min(innerHeight-transport.offsetHeight,e.clientY-transportDrag.dy))+'px';
+});
+function finishTransportDrag(e){
+ if(!transportDrag||transportDrag.id!==e.pointerId)return;
+ transportDrag=null;
+ const rect=transport.getBoundingClientRect();
+ const distances={left:rect.left,right:innerWidth-rect.right,top:rect.top,bottom:innerHeight-rect.bottom};
+ const edge=Object.keys(distances).reduce((best,k)=>distances[k]<distances[best]?k:best,'left');
+ const vertical=(edge==='left'||edge==='right');
+ const extent=vertical?innerHeight:innerWidth, size=vertical?rect.height:rect.width, position=vertical?rect.top:rect.left;
+ const fraction=(position-8)/Math.max(1,extent-size-16);
+ setTransportPlacement(edge,fraction);
+}
+transportGrip.addEventListener('pointerup',finishTransportDrag);
+transportGrip.addEventListener('pointercancel',finishTransportDrag);
+// Keyboard access to placement: arrow keys move to a screen edge.
+transportGrip.addEventListener('keydown',e=>{
+ const edges={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'top',ArrowDown:'bottom'};
+ if(edges[e.key]){e.preventDefault();setTransportPlacement(edges[e.key],.5);}
+});
+window.addEventListener('resize',placeTransport);
+requestAnimationFrame(placeTransport);
+// A deliberate touch, wheel movement, or pointer drag pauses scrolling immediately.
+$('stage').addEventListener('touchstart',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
+$('stage').addEventListener('wheel',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
+$('stage').addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&autoScrolling)pauseAutoScroll()});
+window.addEventListener('resize',syncHeaderHeight);
+updateScrollButtons();syncHeaderHeight();
+
+setMode(showMode);
+if(showPin&&navigator.onLine)refreshRequests();
+window.addEventListener('online',()=>{setBusy(`${songs.length} songs · ONLINE (tap Save Offline to sync)`);if(showPin)refreshRequests()});
+window.addEventListener('offline',()=>{setBusy(`${songs.length} songs · OFFLINE`);requestsError='Requests require internet';drawRequests()});
+connect();
+</script>
+</body></html>
