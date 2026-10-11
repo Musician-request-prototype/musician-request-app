@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Performance Mode — Full Screen Beta Test</title>
+<title>🎸 Performance Mode · Development</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}
 *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#252525;color:#fff;border:1px solid #484848;border-radius:10px;padding:10px 13px;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #87baff;outline-offset:2px}button:disabled{opacity:.5}header{height:64px;background:#171717;border-bottom:1px solid #343434;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;gap:12px}.head-title{font-size:17px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-shrink:0}#layout{display:flex;height:calc(100dvh - 64px);min-height:0}aside{width:min(42%,420px);min-width:240px;flex-shrink:0;display:flex;flex-direction:column;background:#171717;border-right:1px solid #353535}aside[hidden]{display:none}#browser-top{padding:12px;display:grid;gap:9px;border-bottom:1px solid #333}input,select{background:#272727;color:white;border:1px solid #555;border-radius:9px;padding:11px;width:100%;font-size:16px}#song-list{overflow:auto;flex:1;min-height:0}.song-row{display:block;text-align:left;border:0;border-bottom:1px solid #333;border-radius:0;padding:13px 15px;width:100%;background:none}.song-row.active{background:#264267}.song-name{font-size:17px;font-weight:600}.song-meta{font-size:13px;color:#bbb;margin-top:4px}.muted{color:#aaa}.missing{color:#efbd79}#stage{min-width:0;flex:1;overflow:auto;padding:25px 30px 80px;overscroll-behavior:contain}#song-title{text-align:center;font-size:28px;margin:0;font-weight:700}#song-artist{text-align:center;color:#b5b5b5;margin:8px 0 4px}#song-status{text-align:center;color:#9e9e9e;font-size:13px;margin:7px 0 25px}#chart{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;line-height:1.25;overflow-x:auto;overflow-y:visible;margin:0;min-height:50vh;overscroll-behavior-x:contain;font-variant-ligatures:none;letter-spacing:0;font-weight:400}
@@ -275,12 +275,15 @@ function renderChart(raw){
 }
 function showSong(s){pauseAutoScroll();currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();$('library').hidden=true;drawList()}
 function drawList(){
- const term=$('search').value.trim().toLocaleLowerCase(), filter=$('filter').value;
- const shown=songs.filter(s=>(`${s.title||''} ${s.artist||''}`).toLocaleLowerCase().includes(term)).filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()));
+ const term=$('search').value.trim().toLocaleLowerCase();
+ const filter=$('filter').value;
+ const shown=songs.filter(s=>(`${s.title||''} ${s.artist||''}`).toLocaleLowerCase().includes(term))
+   .filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()))
+   .sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),undefined,{numeric:true,sensitivity:'base'}));
  $('count').textContent=`${shown.length} of ${songs.length} songs`;
- const list=$('song-list'),rail=$('az-rail');list.replaceChildren();rail.replaceChildren();
- const sections=new Map(), frag=document.createDocumentFragment();
- // Same title ordering as the existing songbook, including symbols/numbers in #.
+ const list=$('song-list'),rail=$('az-rail');
+ list.replaceChildren();rail.replaceChildren();
+ const sections=new Map(),frag=document.createDocumentFragment();
  const letterFor=s=>{const a=String(s.title||'').trim().charAt(0).toUpperCase();return /^[A-Z]$/.test(a)?a:'#'};
  for(const s of shown){
   const letter=letterFor(s);
@@ -294,12 +297,26 @@ function drawList(){
   btn.append(title,meta);btn.onclick=()=>showSong(s);frag.append(btn);
  }
  list.append(frag);
- for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){
-  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;btn.setAttribute('aria-label','Jump to '+letter);
-  btn.disabled=!sections.has(letter);if(btn.disabled)btn.style.opacity='.28';
-  btn.onclick=()=>{const heading=sections.get(letter);if(heading)list.scrollTop+=heading.getBoundingClientRect().top-list.getBoundingClientRect().top;};
+ const alphabet=['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
+ function jumpToLetter(letter){
+  const available=alphabet.filter(l=>sections.has(l));
+  if(!available.length)return;
+  // When a particular filter has no songs for a letter, jump forward to the nearest occupied section.
+  const target=sections.get(letter)||sections.get(available.find(l=>alphabet.indexOf(l)>alphabet.indexOf(letter))||available[available.length-1]);
+  if(!target)return;
+  // Measure after the filtered DOM is in place; avoid relying on stale positions from All Songs.
+  const offset=target.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop;
+  list.scrollTop=Math.max(0,offset);
+ }
+ for(const letter of alphabet){
+  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;
+  btn.setAttribute('aria-label','Jump to '+letter);
+  btn.disabled=!sections.size;
+  if(!sections.has(letter))btn.style.opacity='.55';
+  btn.onclick=()=>jumpToLetter(letter);
   rail.append(btn);
  }
+ list.scrollTop=0;
 }
 
 async function connect(){
@@ -363,7 +380,7 @@ $('save-offline').onclick=async()=>{
  $('save-offline').disabled=false;
 };
 
-$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('search').oninput=drawList;$('filter').onchange=drawList;
+$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('search').oninput=drawList;$('filter').onchange=()=>{drawList();};
 function changeFont(delta){fontSize=Math.max(14,Math.min(48,fontSize+delta));$('chart').style.fontSize=fontSize+'px';if(currentId){const active=songs.find(s=>s.id===currentId);if(active)renderChart(chartOf(active))}localStorage.setItem('performance-font-size',String(fontSize))}
 $('smaller').onclick=()=>changeFont(-2);$('larger').onclick=()=>changeFont(2);
 // Only the musician's account can be queried; Supabase RLS remains authoritative.
