@@ -1,10 +1,10 @@
 // Offline performance shell, beta + development; live requests still require internet.
-const SHELL='performance-offline-shell-v6';
+const SHELL='performance-offline-shell-v6-clean-stage';
 const PATHS=[
  'performance-beta.html','performance-development.html',
+ 'performance-clean-stage-requests-test.html','performance-setlist-development.html',
  'performance-movable-toolbar-test.html','performance-three-requests-test.html',
- 'performance-clean-stage-az-test.html','performance-offline-beta.html',
- 'performance-setlist-development.html','setlist-manager-cross-set-fix-test.html'
+ 'performance-clean-stage-az-test.html','performance-offline-beta.html'
 ];
 const PAGES=PATHS.map(p=>new URL('./'+p,self.registration.scope).href);
 self.addEventListener('install',event=>{
