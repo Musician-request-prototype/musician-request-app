@@ -1,8 +1,9 @@
 // Offline performance shell, beta + development; live requests still require internet.
-const SHELL='performance-offline-shell-v6-clean-stage';
+const SHELL='performance-offline-shell-v8-shared-font';
 const PATHS=[
  'performance-beta.html','performance-development.html',
- 'performance-clean-stage-requests-test.html','performance-setlist-development.html',
+ 'performance-clean-stage-requests-test.html','performance-studio-theme-test.html',
+ 'performance-shared-font-test.html','setlist-shared-font-test.html','song-manager-shared-font-test.html','performance-setlist-development.html',
  'performance-movable-toolbar-test.html','performance-three-requests-test.html',
  'performance-clean-stage-az-test.html','performance-offline-beta.html'
 ];
