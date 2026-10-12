@@ -1,9 +1,9 @@
 // Offline performance shell, beta + development; live requests still require internet.
-const SHELL='performance-offline-shell-v9-resizable-library';
+const SHELL='performance-offline-shell-v10-keep-library';
 const PATHS=[
  'performance-beta.html','performance-development.html',
  'performance-clean-stage-requests-test.html','performance-studio-theme-test.html',
- 'performance-shared-font-test.html','performance-resizable-library-test.html','setlist-shared-font-test.html','song-manager-shared-font-test.html','performance-setlist-development.html',
+ 'performance-shared-font-test.html','performance-resizable-library-test.html','performance-keep-library-open-test.html','setlist-shared-font-test.html','song-manager-shared-font-test.html','performance-setlist-development.html',
  'performance-movable-toolbar-test.html','performance-three-requests-test.html',
  'performance-clean-stage-az-test.html','performance-offline-beta.html'
 ];
