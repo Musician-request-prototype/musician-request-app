@@ -1,7 +1,7 @@
 // Offline performance shell, beta + development; live requests still require internet.
-const SHELL='performance-offline-shell-v7';
+const SHELL='performance-offline-shell-v8';
 const PATHS=[
- 'performance-beta.html','performance-development.html',
+ 'performance-beta.html','performance-development.html','setlist-manager-test.html',
  'performance-az-filter-fix-test.html',
  'performance-movable-toolbar-test.html','performance-three-requests-test.html',
  'performance-clean-stage-az-test.html','performance-offline-beta.html'
