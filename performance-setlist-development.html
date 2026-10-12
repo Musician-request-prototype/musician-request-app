@@ -135,10 +135,19 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#75e
 .az-heading{background:#19442a;border-bottom-color:#397c4c}
 #mode-hint{color:#a7dfb7}
 #song-title{font-family:"Segoe Print","Bradley Hand",system-ui,sans-serif}
+/* Set break intermission and safe return to setlist after an audience request. */
+#set-break-screen[hidden]{display:none!important}
+#set-break-screen{min-height:55vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:10px;color:#effcf1}
+#set-break-screen .break-symbol{font-size:50px}
+#set-break-screen h2{font-size:clamp(28px,5vw,44px);margin:5px 0}
+#set-break-screen p{color:#bddac4;margin:0 0 12px}
+#set-break-screen button,#setlist-resume{border-color:#58b67b;background:#174c2c;color:#effff2}
+#setlist-resume{white-space:nowrap}
+body.showing-set-break #chart,body.showing-set-break #song-title,body.showing-set-break #song-artist,body.showing-set-break #song-status{display:none!important}
 </style>
 </head>
 <body>
-<header><span class="head-title">🎸 Performance Mode · Setlist Development</span><div class="actions"><span id="busy"></span><button id="save-offline" type="button" title="Save songs for offline use">Save Offline</button><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" class="chosen" aria-pressed="true">Playing</button><button id="between-btn" type="button" aria-pressed="false">Between Songs</button></div><button id="requests-btn" type="button">Requests (0)</button><button id="dice-btn" type="button" aria-label="Pick random song">🎲</button><button id="songs-btn" type="button">Songs</button><button id="setlist-prev" type="button" hidden title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden></span><button id="setlist-next" type="button" hidden title="Next setlist song">Next ▶</button><button id="smaller" type="button" aria-label="Smaller text">A−</button><button id="larger" type="button" aria-label="Larger text">A+</button><button id="hide-controls" type="button" aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
+<header><span class="head-title">🎸 Performance Mode · Setlist Development</span><div class="actions"><span id="busy"></span><button id="save-offline" type="button" title="Save songs for offline use">Save Offline</button><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" class="chosen" aria-pressed="true">Playing</button><button id="between-btn" type="button" aria-pressed="false">Between Songs</button></div><button id="requests-btn" type="button">Requests (0)</button><button id="dice-btn" type="button" aria-label="Pick random song">🎲</button><button id="songs-btn" type="button">Songs</button><button id="setlist-prev" type="button" hidden title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden></span><button id="setlist-next" type="button" hidden title="Next setlist song">Next ▶</button><button id="setlist-resume" type="button" hidden title="Return to your current setlist song">↩ Return to Setlist</button><button id="smaller" type="button" aria-label="Smaller text">A−</button><button id="larger" type="button" aria-label="Larger text">A+</button><button id="hide-controls" type="button" aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
 <button id="restore-controls" type="button" aria-label="Show top controls">Controls ▾</button>
 <div id="playing-floats" aria-label="Playing controls"><div id="float-transport" class="float-control" aria-label="Movable performance controls">
 <span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls">⠿</span>
@@ -147,7 +156,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#75e
 <button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
 </div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span></button></div>
 <div id="layout"><aside id="library" hidden><div id="browser-top"><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="all">All Songs</option><option value="ready">Ready to Play</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside>
-<main id="stage"><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div id="chart" aria-label="Lyrics and chords"></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
+<main id="stage"><div id="set-break-screen" hidden role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div id="chart" aria-label="Lyrics and chords"></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
 <section id="request-panel" hidden aria-label="Incoming requests"><div class="panel-head"><strong>Incoming Requests</strong><div><button id="refresh-requests" type="button">Refresh</button> <button id="close-requests" type="button" aria-label="Close requests">✕</button></div></div><p id="mode-hint">Playing: requests can't replace your song.</p><div id="pin-setup"><label for="show-pin">Show PIN</label><input id="show-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Admin PIN"><button id="connect-show" type="button">Connect</button></div><div id="show-state" aria-live="polite">Connect to your existing Show Controls requests.</div><section id="show-controls" hidden aria-label="Show Controls"><div class="show-control-heading">Show Controls</div><div class="show-control-buttons"><button id="start-new-show" type="button">Start New Show</button><button id="reopen-show" type="button">Reopen Show</button><button id="end-current-show" class="end-show" type="button">End Show</button></div><div id="show-controls-feedback" role="status" aria-live="polite">Manage your show without leaving Performance Mode.</div></section><div id="request-info">Waiting for connection…</div><div id="request-list"></div></section>
 <section id="dice-panel" hidden aria-label="Random song picker"><div class="panel-head"><strong>🎲 What should I play?</strong><button id="close-dice" type="button" aria-label="Close dice">✕</button></div><p class="muted">Picks from Ready to Play songs, avoiding recent suggestions.</p><div id="dice-choice">Roll the dice!</div><div id="dice-artist" class="muted"></div><div class="dice-controls"><button id="reroll" type="button">🎲 Roll Again</button><button id="play-dice" type="button" disabled>Open Song</button></div></section>
 
@@ -290,28 +299,61 @@ function renderChart(raw){
   chart.appendChild(fragment);
 }
 
-let selectedPerformanceSetlist=null, selectedPerformanceIndex=0;
+let selectedPerformanceSetlist=null, selectedPerformanceIndex=0, setBreakPending=null;
+function setNumberAt(index){return 1+(selectedPerformanceSetlist?.breaks||[]).filter(n=>n<=index).length}
+function updateSetlistControls(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const number=setNumberAt(selectedPerformanceIndex);
+ $('setlist-info').textContent=`${sl.name} · Set ${number} · ${selectedPerformanceIndex+1}/${sl.ids.length}`;
+ $('setlist-prev').disabled=selectedPerformanceIndex===0&&!setBreakPending;
+ $('setlist-next').disabled=selectedPerformanceIndex===sl.ids.length-1&&!setBreakPending;
+ $('setlist-next').textContent=setBreakPending?`Begin Set ${number+1} ▶`:'Next ▶';
+ $('setlist-resume').hidden=Boolean(setBreakPending)||String(currentId)===String(sl.ids[selectedPerformanceIndex]);
+}
+function clearSetBreak(){setBreakPending=null;document.body.classList.remove('showing-set-break');$('set-break-screen').hidden=true;}
 function openSelectedSetlist(){
  const id=new URLSearchParams(location.search).get('setlist');
  if(!id||!musician?.id||!songs.length)return false;
  try{
   const lists=JSON.parse(localStorage.getItem('musician-setlists-v1:'+musician.id)||'[]');
   const sl=lists.find(s=>String(s.id)===id);
-  if(!sl)return false;
-  const ids=sl.songIds.map(String).filter(x=>songs.some(s=>String(s.id)===x));
+  if(!sl||!Array.isArray(sl.songIds))return false;
+  // Keep the original index positions so set breaks do not drift if a chart is missing.
+  const ids=sl.songIds.map(String);
+  const breaks=(Array.isArray(sl.breaks)?sl.breaks:(Number.isInteger(sl.breakAfter)?[sl.breakAfter]:[]))
+   .filter(n=>Number.isInteger(n)&&n>0&&n<ids.length).sort((a,b)=>a-b);
   if(!ids.length)return false;
-  selectedPerformanceSetlist={name:sl.name,ids};selectedPerformanceIndex=0;
+  selectedPerformanceSetlist={name:sl.name,ids,breaks};selectedPerformanceIndex=0;
   for(const el of ['setlist-prev','setlist-info','setlist-next'])$(el).hidden=false;
   goToSetlistIndex(0);return true;
  }catch(e){console.warn('Could not open setlist',e);return false}
 }
 function goToSetlistIndex(index){
  const sl=selectedPerformanceSetlist;if(!sl||index<0||index>=sl.ids.length)return;
- selectedPerformanceIndex=index;const song=songs.find(s=>String(s.id)===sl.ids[index]);if(!song)return;
- showSong(song);$('setlist-info').textContent=`${sl.name} · ${index+1}/${sl.ids.length}`;
- $('setlist-prev').disabled=index===0;$('setlist-next').disabled=index===sl.ids.length-1;
+ const song=songs.find(s=>String(s.id)===sl.ids[index]);
+ if(!song){alert('This setlist song was not found in your library. Open the Setlist Manager to correct it.');return}
+ clearSetBreak();selectedPerformanceIndex=index;showSong(song);updateSetlistControls();
 }
-function showSong(s){pauseAutoScroll();currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();$('library').hidden=true;drawList()}
+function setlistNext(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const next=selectedPerformanceIndex+1;
+ if(next>=sl.ids.length)return;
+ if(setBreakPending){goToSetlistIndex(next);return}
+ if(sl.breaks.includes(next)){
+  pauseAutoScroll();setBreakPending=next;document.body.classList.add('showing-set-break');$('set-break-screen').hidden=false;
+  const number=setNumberAt(selectedPerformanceIndex);
+  $('set-break-heading').textContent=`End of Set ${number}`;
+  $('continue-next-set').textContent=`▶ Begin Set ${number+1}`;
+  $('stage').scrollTop=0;updateSetlistControls();return;
+ }
+ goToSetlistIndex(next);
+}
+function setlistPrevious(){
+ if(!selectedPerformanceSetlist)return;
+ if(setBreakPending){goToSetlistIndex(selectedPerformanceIndex);return}
+ goToSetlistIndex(selectedPerformanceIndex-1);
+}
+function showSong(s){clearSetBreak();pauseAutoScroll();currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();$('library').hidden=true;drawList();updateSetlistControls()}
 function drawList(){
  const term=$('search').value.trim().toLocaleLowerCase(), filter=$('filter').value;
  const shown=songs.filter(s=>(`${s.title||''} ${s.artist||''}`).toLocaleLowerCase().includes(term)).filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()));
@@ -401,7 +443,7 @@ $('save-offline').onclick=async()=>{
  $('save-offline').disabled=false;
 };
 
-$('setlist-prev').onclick=()=>goToSetlistIndex(selectedPerformanceIndex-1);$('setlist-next').onclick=()=>goToSetlistIndex(selectedPerformanceIndex+1);
+$('setlist-prev').onclick=setlistPrevious;$('setlist-next').onclick=setlistNext;$('continue-next-set').onclick=setlistNext;$('setlist-resume').onclick=()=>goToSetlistIndex(selectedPerformanceIndex);
 $('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('search').oninput=drawList;$('filter').onchange=drawList;
 function changeFont(delta){fontSize=Math.max(14,Math.min(48,fontSize+delta));$('chart').style.fontSize=fontSize+'px';if(currentId){const active=songs.find(s=>s.id===currentId);if(active)renderChart(chartOf(active))}localStorage.setItem('performance-font-size',String(fontSize))}
 $('smaller').onclick=()=>changeFont(-2);$('larger').onclick=()=>changeFont(2);
