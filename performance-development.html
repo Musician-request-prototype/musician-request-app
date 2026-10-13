@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Performance Mode — Full Screen Beta Test</title>
+<title>Performance Mode — Development</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}
 *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#252525;color:#fff;border:1px solid #484848;border-radius:10px;padding:10px 13px;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #87baff;outline-offset:2px}button:disabled{opacity:.5}header{height:64px;background:#171717;border-bottom:1px solid #343434;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;gap:12px}.head-title{font-size:17px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-shrink:0}#layout{display:flex;height:calc(100dvh - 64px);min-height:0}aside{width:min(42%,420px);min-width:240px;flex-shrink:0;display:flex;flex-direction:column;background:#171717;border-right:1px solid #353535}aside[hidden]{display:none}#browser-top{padding:12px;display:grid;gap:9px;border-bottom:1px solid #333}input,select{background:#272727;color:white;border:1px solid #555;border-radius:9px;padding:11px;width:100%;font-size:16px}#song-list{overflow:auto;flex:1;min-height:0}.song-row{display:block;text-align:left;border:0;border-bottom:1px solid #333;border-radius:0;padding:13px 15px;width:100%;background:none}.song-row.active{background:#264267}.song-name{font-size:17px;font-weight:600}.song-meta{font-size:13px;color:#bbb;margin-top:4px}.muted{color:#aaa}.missing{color:#efbd79}#stage{min-width:0;flex:1;overflow:auto;padding:25px 30px 80px;overscroll-behavior:contain}#song-title{text-align:center;font-size:28px;margin:0;font-weight:700}#song-artist{text-align:center;color:#b5b5b5;margin:8px 0 4px}#song-status{text-align:center;color:#9e9e9e;font-size:13px;margin:7px 0 25px}#chart{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;line-height:1.25;overflow-x:auto;overflow-y:visible;margin:0;min-height:50vh;overscroll-behavior-x:contain;font-variant-ligatures:none;letter-spacing:0;font-weight:400}
@@ -262,10 +262,47 @@ body.mode-playing #song-editor{display:none!important}
 #float-library:active{background:#398958}
 #float-transport.edge-left #float-library,#float-transport.edge-right #float-library{min-width:75px;padding:10px 7px!important;font-size:12px!important}
 @media(max-width:780px){#float-transport .drag-grip{min-width:44px;min-height:44px;width:44px;height:44px}#float-library{min-height:44px;min-width:92px;padding:9px!important;font-size:14px!important}}
+/* Defensive sizing for resized Safari windows and iPad Split View. */
+#float-transport{box-sizing:border-box;max-width:calc(100dvw - 24px);max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+#float-transport.edge-left,#float-transport.edge-right{width:max-content;max-width:calc(100dvw - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;overflow-x:hidden}
+#toolbar-recover{display:none;position:fixed;z-index:25;left:12px;bottom:88px;min-height:46px;padding:9px 15px;background:#296f42;color:#fff;border:2px solid #a5d5b0;border-radius:12px;box-shadow:0 5px 18px #000d;font:700 15px system-ui,-apple-system,sans-serif}
+body.mode-playing.toolbar-needs-recovery #toolbar-recover{display:block}
+
+/* Stage-friendly consolidated header. Keep implementation behavior while simplifying appearance. */
+header{gap:10px!important;min-height:68px!important;padding:10px 14px!important;align-items:center!important;justify-content:space-between!important;flex-wrap:wrap!important;background:linear-gradient(110deg,#08110b,#0c1b10 60%,#061009)!important;border-bottom:1px solid #2d6339!important}
+.performance-brand{display:flex;align-items:center;gap:9px;min-width:145px;flex:0 0 auto}
+.brand-mark{display:grid;place-items:center;width:39px;height:39px;font-size:25px;border-radius:13px;background:#12301d;border:1px solid #438e51;box-shadow:0 0 10px #2c9e4930}
+.brand-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.brand-copy .head-title{font-family:var(--shared-font);font-size:clamp(15px,1.55vw,21px)!important;font-weight:700;color:#f0f9f0}
+.brand-status{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font:500 12px system-ui,sans-serif;white-space:nowrap;color:#bacbbd}
+.connection-ok{color:#a6fa6a;font-weight:750}.connection-offline{color:#ffcf77;font-weight:700}.connection-pending{color:#c7dbce}
+header .actions{min-width:0!important;width:auto!important;flex:1 1 auto;justify-content:flex-end!important;gap:8px!important;flex-wrap:wrap!important;align-items:center}
+header .actions button:not([hidden]){min-height:45px;font:650 15px system-ui,sans-serif;border-radius:13px;padding:10px 13px;border:1px solid #447653;background:linear-gradient(135deg,#18331f,#0b1c12);color:#f3fbf4;box-shadow:0 3px 9px #0007;white-space:nowrap}
+header .actions button:hover{border-color:#9bee95}
+header .actions .mode{padding:4px;border-radius:14px;border:1px solid #426449;background:#111b15;gap:3px}
+header .actions .mode button:not([hidden]){min-height:41px;border:0;box-shadow:none;background:transparent;padding:9px 12px;font-size:14px}
+header .actions .mode button.chosen{background:linear-gradient(125deg,#216c36,#61b94e);border:1px solid #93ea7e;box-shadow:0 0 12px #55e67750;color:white}
+header .actions #dice-btn:not([hidden]){height:64px;min-width:70px;font-size:37px!important;display:grid;place-items:center;padding:5px 10px;background:radial-gradient(circle at 50% 35%,#3c8538,#143d23 65%,#0a1b10);border:2px solid #80ee72;border-radius:18px;box-shadow:0 0 15px #6aff446b,inset 0 0 14px #53c35d30}
+.dice-art{display:block;line-height:1;filter:drop-shadow(0 2px 4px #000c)}
+#dice-btn.is-rolling .dice-art{animation:stageDiceRoll .55s cubic-bezier(.2,.7,.2,1) 1}
+@keyframes stageDiceRoll{0%{transform:rotate(-28deg) scale(.85)}38%{transform:rotate(240deg) scale(1.18)}75%{transform:rotate(480deg) scale(.9)}100%{transform:rotate(720deg) scale(1)}}
+header .actions #requests-btn.has-requests{border:2px solid #a4e361!important;color:#f6ffed!important;background:linear-gradient(120deg,#315326,#152d1e)!important;animation:requestsAttention 2.5s ease-in-out infinite;}
+@keyframes requestsAttention{0%,100%{box-shadow:0 0 2px #9dea5433}50%{box-shadow:0 0 17px #8ff95199;background:#294b25}}
+#requests-btn{display:flex;align-items:center;gap:8px}#settings-btn{font-size:24px!important;min-width:45px}
+#appearance-panel[hidden]{display:none!important}#appearance-panel{position:fixed;z-index:14;top:var(--header-height,72px);right:12px;background:#102016;border:1px solid #578b5e;border-radius:16px;width:min(380px,calc(100vw - 24px));padding:16px;max-height:calc(100dvh - 90px);overflow:auto;box-shadow:0 15px 35px #000d}
+#appearance-panel .panel-head strong{font:700 22px var(--shared-font)}#appearance-panel label{display:block;margin:13px 0 7px;color:#d8e5d9;font-weight:600}
+#settings-font-slot select{display:block;width:100%;max-width:none;padding:10px}
+#appearance-panel p{font-size:13px;line-height:1.5}.settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #2c4d32;padding:12px 0}.settings-row button{background:#245b34;border-color:#549d66}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+/* Hidden controls remain reachable in code but aren't duplicated in the interface. */
+header button[hidden],header select[hidden],header label[hidden],header span[hidden]{display:none!important}
+@media(max-width:920px){header .actions{justify-content:flex-start!important}header .actions button:not([hidden]){font-size:13px;padding:8px 10px}header .actions #dice-btn:not([hidden]){height:52px;min-width:57px;font-size:30px!important}.performance-brand{min-width:100%}}
+@media(max-width:580px){header .actions{gap:5px!important}header .actions .mode button:not([hidden]){padding:8px 7px!important}header .actions #setlists-btn span{display:none}header .actions #requests-btn{font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){#dice-btn.is-rolling .dice-art,#requests-btn.has-requests{animation:none!important}}
 </style>
 </head>
 <body>
-<header><span class="head-title">🎸 Performance Mode · Development</span><div class="actions"><span id="busy"></span><button id="save-offline" type="button" title="Save songs for offline use">Save Offline</button><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" class="chosen" aria-pressed="true">Playing</button><button id="between-btn" type="button" aria-pressed="false">Between Songs</button></div><button id="requests-btn" type="button">Requests (0)</button><button id="dice-btn" type="button" aria-label="Pick random song">🎲</button><button id="songs-btn" type="button">Songs</button><button id="setlists-btn" type="button" title="Choose or edit a setlist">☷ Setlists</button><label id="font-choice-label" for="ui-font-choice">App font</label><select id="ui-font-choice" aria-label="App appearance font"><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select><button id="setlist-prev" type="button" hidden title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden></span><button id="setlist-next" type="button" hidden title="Next setlist song">Next ▶</button><button id="setlist-resume" type="button" hidden title="Return to your current setlist song">↩ Return to Setlist</button><button id="smaller" type="button" aria-label="Smaller text">A−</button><button id="larger" type="button" aria-label="Larger text">A+</button><button id="hide-controls" type="button" aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
+<header><div class="performance-brand"><span class="brand-mark" aria-hidden="true">🎸</span><div class="brand-copy"><span class="head-title">Performance</span><div class="brand-status"><span id="song-count-status">596 songs</span><span id="connection-status" class="connection-pending">● Connecting…</span></div></div></div><div class="actions"><span id="busy" class="visually-hidden" role="status" aria-live="polite"></span><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" aria-pressed="false">Playing</button><button id="between-btn" type="button" class="chosen" aria-pressed="true">Between Songs</button></div><button id="setlists-btn" type="button" title="Choose or edit a setlist">☷ <span>Setlists</span></button><button id="requests-btn" type="button" aria-label="Open incoming requests">◉ <span id="request-button-label">Requests (0)</span></button><button id="dice-btn" type="button" aria-label="Roll for a random Ready to Play song" title="Random Song"><span class="dice-art" aria-hidden="true">🎲</span></button><button id="settings-btn" type="button" aria-label="Appearance and offline settings" title="Settings">⚙</button><button id="songs-btn" type="button" hidden>Open Songs</button><button id="save-offline" type="button" title="Update offline song library" hidden>Save Offline</button><label id="font-choice-label" for="ui-font-choice" hidden>App font</label><select id="ui-font-choice" aria-label="App appearance font" hidden><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select><button id="setlist-prev" type="button" hidden title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden></span><button id="setlist-next" type="button" hidden title="Next setlist song">Next ▶</button><button id="setlist-resume" type="button" hidden title="Return to your current setlist song">↩ Return to Setlist</button><button id="smaller" type="button" hidden aria-label="Smaller text">A−</button><button id="larger" type="button" hidden aria-label="Larger text">A+</button><button id="hide-controls" type="button" hidden aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
 <button id="restore-controls" type="button" aria-label="Show top controls">Controls ▾</button>
 <div id="playing-floats" aria-label="Playing controls"><div id="float-transport" class="float-control" aria-label="Movable performance controls">
 <span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"/></svg></span>
@@ -273,12 +310,14 @@ body.mode-playing #song-editor{display:none!important}
 <button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button>
 <button id="float-library" type="button" title="Open Ready to Play songs" aria-label="Open Ready to Play songs"><span aria-hidden="true">☷</span> SONGS</button><button id="float-between" type="button" title="Between Songs controls">Between</button><button id="float-setlist-prev" type="button" hidden title="Previous setlist song">◀</button><button id="float-setlist-next" type="button" hidden title="Next setlist song">▶</button><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
 </div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span></button></div>
+<button id="toolbar-recover" type="button">☷ SONGS · Reset controls</button>
 <div id="layout"><aside id="library" hidden><div id="browser-top"><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="ready">Ready to Play</option><option value="all">All Songs</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside><button id="library-resizer" type="button" aria-label="Drag to resize the song library" title="Drag to resize song list" tabindex="0"></button>
 <main id="stage"><div id="set-break-screen" hidden role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><button id="editor-launch" type="button">✎ Edit Song</button><section id="song-editor" hidden aria-label="Edit lyrics and chords"><h2>Edit Song</h2><p class="editor-help">Edit the original text, including spaces between chords. Save requires an internet connection. Use Cancel to discard edits.</p><textarea id="editor-text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Song lyrics and chords"></textarea><div class="edit-controls"><button id="editor-save" type="button">Save Changes</button><button id="editor-cancel" type="button">Cancel</button></div><div id="editor-feedback" role="status" aria-live="polite"></div></section><div id="chart" aria-label="Lyrics and chords"></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
 <section id="request-panel" hidden aria-label="Incoming requests"><div class="panel-head"><strong>Incoming Requests</strong><div><button id="refresh-requests" type="button">Refresh</button> <button id="close-requests" type="button" aria-label="Close requests">✕</button></div></div><p id="mode-hint">Playing: requests can't replace your song.</p><div id="pin-setup"><label for="show-pin">Show PIN</label><input id="show-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Admin PIN"><button id="connect-show" type="button">Connect</button></div><div id="show-state" aria-live="polite">Connect to your existing Show Controls requests.</div><section id="show-controls" hidden aria-label="Show Controls"><div class="show-control-heading">Show Controls</div><div class="show-control-buttons"><button id="start-new-show" type="button">Start New Show</button><button id="reopen-show" type="button">Reopen Show</button><button id="end-current-show" class="end-show" type="button">End Show</button></div><div id="show-controls-feedback" role="status" aria-live="polite">Manage your show without leaving Performance Mode.</div></section><div id="request-info">Waiting for connection…</div><div id="request-list"></div></section>
 <section id="setlists-panel" hidden aria-label="Saved setlists"><div class="panel-head"><strong class="hand-heading">Your Setlists</strong><button id="close-setlists" type="button" aria-label="Close setlists">✕</button></div><p class="setlist-subtitle">Choose a saved setlist, or open Setlist Studio to edit one.</p><div id="setlists-choices"></div><div class="setlists-footer"><button id="open-setlist-studio" type="button">✎ Open Setlist Studio</button></div></section>
 <section id="dice-panel" hidden aria-label="Random song picker"><div class="panel-head"><strong>🎲 What should I play?</strong><button id="close-dice" type="button" aria-label="Close dice">✕</button></div><p class="muted">Picks from Ready to Play songs, avoiding recent suggestions.</p><div id="dice-choice">Roll the dice!</div><div id="dice-artist" class="muted"></div><div class="dice-controls"><button id="reroll" type="button">🎲 Roll Again</button><button id="play-dice" type="button" disabled>Open Song</button></div></section>
 
+<section id="appearance-panel" hidden aria-label="Performance settings"><div class="panel-head"><strong>Settings</strong><button id="close-appearance" type="button" aria-label="Close settings">✕</button></div><label for="ui-font-choice" id="appearance-font-label">App Font</label><div id="settings-font-slot"></div><p class="muted">The app font is shared with Song Manager and Setlist Studio. Chart text stays independent to preserve chord alignment.</p><div class="settings-row"><span>Chart size</span><div><button id="settings-smaller" type="button">A−</button> <button id="settings-larger" type="button">A+</button></div></div><div class="settings-row"><span>Offline Library</span><button id="settings-update-offline" type="button">Update Offline Copy</button></div><p id="settings-offline-status" class="muted" role="status">Loading library status…</p></section>
 <script>
 'use strict';
 // Same font preference key already used by Setlist Studio on this origin.
@@ -291,6 +330,14 @@ function useSharedUiFont(value,write=false){
 }
 useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand');
 document.getElementById('ui-font-choice').addEventListener('change',e=>useSharedUiFont(e.target.value,true));
+document.getElementById('settings-font-slot').append(document.getElementById('ui-font-choice'));
+document.getElementById('ui-font-choice').hidden=false;
+document.getElementById('settings-btn').onclick=()=>{const panel=document.getElementById('appearance-panel');panel.hidden=!panel.hidden;document.getElementById('dice-panel').hidden=true;document.getElementById('request-panel').hidden=true;document.getElementById('setlists-panel').hidden=true};
+document.getElementById('close-appearance').onclick=()=>{document.getElementById('appearance-panel').hidden=true};
+document.getElementById('settings-update-offline').onclick=()=>document.getElementById('save-offline').click();
+document.getElementById('settings-smaller').onclick=()=>document.getElementById('smaller').click();
+document.getElementById('settings-larger').onclick=()=>document.getElementById('larger').click();
+
 window.addEventListener('storage',e=>{if(e.key===SHARED_FONT_KEY)useSharedUiFont(e.newValue||'hand')});
 window.addEventListener('pageshow',()=>useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand'));
 
@@ -326,7 +373,8 @@ async function writeOfflineLibrary(user,m,songList){
 function fillLibrary(list,fromCache=false){
  songs=list;setBusy(`${list.length} songs · ${fromCache?'OFFLINE COPY':'CONNECTED'}`);
  $('save-offline').textContent=fromCache?'Offline Copy':'Saved ✓';
- drawList();setMode(showMode);drawRequests();
+ drawList();setMode(showMode);
+requestAnimationFrame(()=>{placeTransport();checkTransportReachable()});drawRequests();
  if(!requestTimer)requestTimer=setInterval(()=>{if(!document.hidden&&navigator.onLine&&showPin)refreshRequests()},10000);
  if(!songs.length){showMessage('No songs in this library.');return;}
  const remembered=songs.find(s=>s.id===currentId);
@@ -397,7 +445,18 @@ function statusOf(s){return s.song_status==='ready'?'Ready to Play':s.song_statu
 function chartOf(s){return typeof s.lyrics_chords==='string'?s.lyrics_chords:''}
 function showMessage(t){$('message').hidden=false;$('message').textContent=t}
 function hideMessage(){$('message').hidden=true}
-function setBusy(t){$('busy').textContent=t}
+function setBusy(t){
+ $('busy').textContent=t;
+ const match=String(t).match(/(\d+)\s+songs?/i);
+ if(match)$('song-count-status').textContent=match[1]+' songs';
+ const label=$('connection-status');
+ const value=String(t).toUpperCase();
+ const connected= value.includes('CONNECTED')||value.includes('SONG SAVED');
+ const offline=value.includes('OFFLINE');
+ label.className=connected?'connection-ok':offline?'connection-offline':'connection-pending';
+ label.textContent=connected?'● Connected':offline?'● Offline Copy':value.includes('SIGN IN')?'● Sign in needed':'● Connecting…';
+ const info=$('settings-offline-status');if(info)info.textContent=t;
+}
 // BandHelper exports preserve chord line whitespace, including NBSP.
 // BandHelper's display uses a proportional font: the width of a space is
  // smaller than a monospace cell. Chord lines and lyric lines therefore need
@@ -660,7 +719,7 @@ function requestSong(r){
  if(artist)hits=hits.filter(s=>String(s.artist||'').trim().toLocaleLowerCase()===artist);
  return hits.length===1?hits[0]:null;
 }
-function setMode(mode){if(mode==='playing'&&editorActive){if(!confirm('Discard unsaved edits and enter Playing Mode?'))return;closeEditor();}showMode=mode==='between'?'between':'playing';if(showMode==='playing')$('setlists-panel').hidden=true;if(showMode==='playing'){$('library').hidden=true;} document.body.classList.toggle('mode-playing',showMode==='playing');if(showMode!=='playing'){pauseAutoScroll();setToolbarHidden(false);}else{$('dice-panel').hidden=true;} localStorage.setItem('performance-start-mode',showMode);$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('mode-hint').textContent=showMode==='playing'?"Playing: requests are visible, but can't replace your current chart.":'Between Songs: tap a request to open its chart. Requests are not automatically marked played.';drawRequests()}
+function setMode(mode){if(mode==='playing'&&editorActive){if(!confirm('Discard unsaved edits and enter Playing Mode?'))return;closeEditor();}showMode=mode==='between'?'between':'playing';if(showMode==='playing')$('setlists-panel').hidden=true;if(showMode==='playing'){$('library').hidden=true;} document.body.classList.toggle('mode-playing',showMode==='playing');if(showMode!=='playing'){$('library').hidden=false;pauseAutoScroll();setToolbarHidden(false);}else{$('dice-panel').hidden=true;} localStorage.setItem('performance-start-mode',showMode);$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('mode-hint').textContent=showMode==='playing'?"Playing: requests are visible, but can't replace your current chart.":'Between Songs: tap a request to open its chart. Requests are not automatically marked played.';drawRequests()}
 // Compact, non-interrupting song titles on the Playing screen.
 // The legacy Show Controls returns grouped requests; preserve its supplied order.
 // A tip is a recorded note, not verification of an external payment.
@@ -693,7 +752,7 @@ function drawRequests(){
  const list=$('request-list');list.replaceChildren();
  const pending=incomingRequests.filter(r=>!r.played);
  const total=pending.reduce((n,r)=>n+Math.max(1,Number(r.count)||1),0);
- $('requests-btn').textContent=`Requests (${total})`;drawFloatingRequests(pending);$('float-requests').classList.toggle('has-requests',total>0);
+ $('request-button-label').textContent=`Requests (${total})`;drawFloatingRequests(pending);$('float-requests').classList.toggle('has-requests',total>0);
  $('requests-btn').classList.toggle('has-requests',total>0);
  $('pin-setup').hidden=Boolean(showPin);
  $('show-controls').hidden=(!showPin||showMode!=='between');
@@ -790,8 +849,16 @@ $('playing-btn').onclick=()=>setMode('playing');$('between-btn').onclick=()=>set
 function toggleRequestPanel(){$('dice-panel').hidden=true;$('request-panel').hidden=!$('request-panel').hidden;if(!$('request-panel').hidden)refreshRequests()}
 $('requests-btn').onclick=toggleRequestPanel;$('float-requests').onclick=toggleRequestPanel;
 $('refresh-requests').onclick=refreshRequests;$('close-requests').onclick=()=>{$('request-panel').hidden=true};
-$('dice-btn').onclick=()=>{$('request-panel').hidden=true;$('dice-panel').hidden=!$('dice-panel').hidden;if(!$('dice-panel').hidden&&!diceSuggestion)diceRoll()};
-$('close-dice').onclick=()=>{$('dice-panel').hidden=true};$('reroll').onclick=diceRoll;
+let rollingDice=false;
+function rollAnimated(){
+ if(rollingDice)return;
+ rollingDice=true;
+ const die=$('dice-btn');die.classList.remove('is-rolling');void die.offsetWidth;die.classList.add('is-rolling');
+ $('dice-choice').textContent='Rolling…';$('dice-artist').textContent='';$('play-dice').disabled=true;
+ window.setTimeout(()=>{diceRoll();rollingDice=false;die.classList.remove('is-rolling')},550);
+}
+$('dice-btn').onclick=()=>{$('request-panel').hidden=true;$('setlists-panel').hidden=true;$('appearance-panel').hidden=true;$('dice-panel').hidden=false;rollAnimated()};
+$('close-dice').onclick=()=>{$('dice-panel').hidden=true};$('reroll').onclick=rollAnimated;
 $('play-dice').onclick=()=>{if(diceSuggestion){showSong(diceSuggestion);$('dice-panel').hidden=true}};
 
 // Full-screen controls and opt-in per-song auto-scroll. Never starts automatically.
@@ -876,18 +943,44 @@ let transportPlacement={edge:'bottom',fraction:0},transportDrag=null;
 try{const saved=JSON.parse(localStorage.getItem(TRANSPORT_POSITION_KEY)||'null');
  if(saved&&['top','bottom','left','right'].includes(saved.edge)&&Number.isFinite(saved.fraction))transportPlacement={edge:saved.edge,fraction:Math.max(0,Math.min(1,saved.fraction))};
 }catch{}
+function transportViewSize(){
+ // visualViewport differs from the layout viewport in Safari after keyboard and Split View changes.
+ const visual=window.visualViewport;
+ return {w:Math.max(120,Math.min(innerWidth,visual?.width||innerWidth)),
+         h:Math.max(120,Math.min(innerHeight,visual?.height||innerHeight))};
+}
+function checkTransportReachable(){
+ if(showMode!=='playing'){document.body.classList.remove('toolbar-needs-recovery');return;}
+ const r=transport.getBoundingClientRect(),{w,h}=transportViewSize();
+ // Require at least a genuinely tappable portion, not just one narrow pixel at the edge.
+ const visibleW=Math.max(0,Math.min(r.right,w)-Math.max(r.left,0));
+ const visibleH=Math.max(0,Math.min(r.bottom,h)-Math.max(r.top,0));
+ document.body.classList.toggle('toolbar-needs-recovery',visibleW<48||visibleH<36);
+}
 function placeTransport(){
  const edge=transportPlacement.edge;
  transport.classList.toggle('edge-left',edge==='left');
  transport.classList.toggle('edge-right',edge==='right');
  transport.style.left='0px';transport.style.top='0px';transport.style.right='auto';transport.style.bottom='auto';
+ transport.scrollTop=0;
+ const {w,h}=transportViewSize(),margin=8;
+ // Sizing constraints apply before measuring, including on very narrow Split View windows.
+ transport.style.maxWidth=Math.max(120,w-2*margin)+'px';
+ transport.style.maxHeight=Math.max(120,h-2*margin)+'px';
  const rect=transport.getBoundingClientRect();
- const viewWidth=window.visualViewport?.width||innerWidth,viewHeight=window.visualViewport?.height||innerHeight;
- const margin=8,availableX=Math.max(0,viewWidth-rect.width-margin*2),availableY=Math.max(0,viewHeight-rect.height-margin*2);
- const x=(edge==='left')?margin:(edge==='right')?viewWidth-rect.width-margin:margin+availableX*transportPlacement.fraction;
- const y=(edge==='top')?margin:(edge==='bottom')?viewHeight-rect.height-margin:margin+availableY*transportPlacement.fraction;
- transport.style.left=Math.max(margin,Math.min(viewWidth-rect.width-margin,x))+'px';transport.style.top=Math.max(margin,Math.min(viewHeight-rect.height-margin,y))+'px';
+ const width=Math.min(rect.width,w-2*margin),height=Math.min(rect.height,h-2*margin);
+ const availableX=Math.max(0,w-width-2*margin),availableY=Math.max(0,h-height-2*margin);
+ const x=edge==='left'?margin:edge==='right'?margin+availableX:margin+availableX*transportPlacement.fraction;
+ const y=edge==='top'?margin:edge==='bottom'?margin+availableY:margin+availableY*transportPlacement.fraction;
+ transport.style.left=Math.round(Math.max(margin,Math.min(margin+availableX,x)))+'px';
+ transport.style.top=Math.round(Math.max(margin,Math.min(margin+availableY,y)))+'px';
+ requestAnimationFrame(checkTransportReachable);
 }
+$('toolbar-recover').onclick=()=>{
+ setTransportPlacement('bottom',0);
+ $('toolbar-recover').textContent='☷ SONGS · Reset controls';
+ setMode('between');$('filter').value='ready';drawList();$('library').hidden=false;
+};
 function setTransportPlacement(edge,fraction){
  transportPlacement={edge,fraction:Math.max(0,Math.min(1,fraction))};
  try{localStorage.setItem(TRANSPORT_POSITION_KEY,JSON.stringify(transportPlacement))}catch{}
@@ -925,8 +1018,10 @@ transportGrip.addEventListener('keydown',e=>{
  if(edges[e.key]){e.preventDefault();setTransportPlacement(edges[e.key],.5);}
 });
 window.addEventListener('resize',()=>requestAnimationFrame(placeTransport));
+window.addEventListener('orientationchange',()=>requestAnimationFrame(placeTransport));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(placeTransport)});
 if(window.ResizeObserver){new ResizeObserver(()=>requestAnimationFrame(placeTransport)).observe(transport);}
-if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>requestAnimationFrame(placeTransport));
+if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>requestAnimationFrame(placeTransport));window.visualViewport.addEventListener('scroll',()=>requestAnimationFrame(placeTransport));}
 requestAnimationFrame(placeTransport);
 // A deliberate touch, wheel movement, or pointer drag pauses scrolling immediately.
 $('stage').addEventListener('touchstart',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
@@ -936,6 +1031,7 @@ window.addEventListener('resize',syncHeaderHeight);
 updateScrollButtons();syncHeaderHeight();
 
 setMode(showMode);
+requestAnimationFrame(()=>{placeTransport();checkTransportReachable()});
 if(showPin&&navigator.onLine)refreshRequests();
 window.addEventListener('online',()=>{setBusy(`${songs.length} songs · RECONNECTING…`);connect().catch(e=>console.warn('Reconnect failed:',e));if(showPin)refreshRequests()});
 window.addEventListener('offline',()=>{onlineConnected=false;signedInUserId=null;setBusy(`${songs.length} songs · OFFLINE COPY`);requestsError='Requests require internet';drawRequests()});
