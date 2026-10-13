@@ -261,7 +261,7 @@ function moveSongAtSlot(from,slot,side='none'){
 }
 function markSetDragTarget(slot){const rows=[...$('set-songs').querySelectorAll('.set-row')];if(slot<rows.length)rows[slot].classList.add('drop-target');else $('set-drop-zone').classList.add('active')}
 function clearDrag(){for(const el of $('set-songs').querySelectorAll('.set-row'))el.classList.remove('dragging','drop-target');$('set-drop-zone').classList.remove('active')}
-document.addEventListener('pointermove',e=>{if(!dragging||e.pointerId!==dragging.id)return;e.preventDefault();const root=$('set-songs'),r=root.getBoundingClientRect();if(e.clientY<r.top+35)root.scrollTop-=17;else if(e.clientY>r.bottom-35)root.scrollTop+=17;const to=findTarget(e.clientY);dragging.target=to;dragging.side=breakSideAt(to,e.clientY);clearDrag();dragging.el.classList.add('dragging');markSetDragTarget(to)},{passive:false});
+document.addEventListener('pointermove',e=>{if(!dragging||e.pointerId!==dragging.id)return;e.preventDefault();const root=$('set-songs'),r=root.getBoundingClientRect();if(e.clientY<r.top+35)root.scrollTop-=17;else if(e.clientY>r.bottom-35)root.scrollTop+=17;const pad=$('set-drop-zone').getBoundingClientRect();const inPad=e.clientX>=pad.left&&e.clientX<=pad.right&&e.clientY>=pad.top&&e.clientY<=pad.bottom;const to=inPad?active().songIds.length:findTarget(e.clientY);dragging.target=to;dragging.side=inPad?'none':breakSideAt(to,e.clientY);clearDrag();dragging.el.classList.add('dragging');markSetDragTarget(to)},{passive:false});
 document.addEventListener('pointerup',e=>{if(!dragging||e.pointerId!==dragging.id)return;const {index,target,side}=dragging;dragging=null;clearDrag();moveSongAtSlot(index,target,side)});
 document.addEventListener('pointercancel',()=>{dragging=null;clearDrag()});
 function initialLetter(title){const match=String(title||'').trim().toUpperCase().match(/^[A-Z]/);return match?match[0]:'#'}
@@ -376,7 +376,7 @@ $('add-break').onclick=()=>{
  save();drawSelected();$('manage-details').open=false;
 };
 $('new-setlist').onclick=()=>{$('manage-details').open=true;$('new-name').focus()};
-$('play-setlist').onclick=()=>{const s=active();if(!s||!s.songIds.length)return;location.href='performance-setlist-development.html?setlist='+encodeURIComponent(s.id)};
+$('play-setlist').onclick=()=>{const s=active();if(!s||!s.songIds.length)return;location.href='performance-development.html?setlist='+encodeURIComponent(s.id)};
 const FONT_KEY='setlist-app-font-v1';const SIZE_KEY='setlist-studio-text-scale-v1';
 let textScale=Math.max(0.85,Math.min(1.75,Number(localStorage.getItem(SIZE_KEY))||1.30));
 function applyTextScale(){document.documentElement.style.setProperty('--text-scale',textScale.toFixed(2));$('text-scale-label').textContent=Math.round(textScale*100)+'%';localStorage.setItem(SIZE_KEY,String(textScale))}
