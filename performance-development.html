@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🎸 Performance Mode · Development</title>
+<title>Performance Mode — Full Screen Beta Test</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}
 *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#252525;color:#fff;border:1px solid #484848;border-radius:10px;padding:10px 13px;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #87baff;outline-offset:2px}button:disabled{opacity:.5}header{height:64px;background:#171717;border-bottom:1px solid #343434;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;gap:12px}.head-title{font-size:17px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-shrink:0}#layout{display:flex;height:calc(100dvh - 64px);min-height:0}aside{width:min(42%,420px);min-width:240px;flex-shrink:0;display:flex;flex-direction:column;background:#171717;border-right:1px solid #353535}aside[hidden]{display:none}#browser-top{padding:12px;display:grid;gap:9px;border-bottom:1px solid #333}input,select{background:#272727;color:white;border:1px solid #555;border-radius:9px;padding:11px;width:100%;font-size:16px}#song-list{overflow:auto;flex:1;min-height:0}.song-row{display:block;text-align:left;border:0;border-bottom:1px solid #333;border-radius:0;padding:13px 15px;width:100%;background:none}.song-row.active{background:#264267}.song-name{font-size:17px;font-weight:600}.song-meta{font-size:13px;color:#bbb;margin-top:4px}.muted{color:#aaa}.missing{color:#efbd79}#stage{min-width:0;flex:1;overflow:auto;padding:25px 30px 80px;overscroll-behavior:contain}#song-title{text-align:center;font-size:28px;margin:0;font-weight:700}#song-artist{text-align:center;color:#b5b5b5;margin:8px 0 4px}#song-status{text-align:center;color:#9e9e9e;font-size:13px;margin:7px 0 25px}#chart{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;line-height:1.25;overflow-x:auto;overflow-y:visible;margin:0;min-height:50vh;overscroll-behavior-x:contain;font-variant-ligatures:none;letter-spacing:0;font-weight:400}
@@ -119,24 +119,164 @@ body.mode-playing #stage{padding-top:12px}
 #az-rail button:active,#az-rail button:focus-visible{background:#35648c;color:white}
 .az-heading{position:sticky;top:0;z-index:1;background:#303e50;color:#f1f5f9;font-weight:750;padding:5px 10px;font-size:13px;border-bottom:1px solid #627088}
 @media(max-height:620px){#az-rail button{font-size:9px}}
+
+/* Setlist navigation: local setlists from the same browser, no internet required. */
+#setlist-info{font-size:12px;color:#a3e8bd;white-space:nowrap;max-width:165px;overflow:hidden;text-overflow:ellipsis}
+#setlist-prev,#setlist-next{border-color:#3e9961;color:#d4ffdf;background:#173b26;font-size:12px;padding:8px}
+
+/* New green stage theme — visual direction shared with the Setlist Studio. */
+header{background:#101813;border-bottom-color:#2e5138}
+button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#75e0a0}
+.mode button.chosen{background:#206740}
+.song-row.active{background:#214d33}
+#az-rail{background:#112017;border-left-color:#325a3f}
+#az-rail button{color:#a5e8b9}
+#az-rail button:active,#az-rail button:focus-visible{background:#287448}
+.az-heading{background:#19442a;border-bottom-color:#397c4c}
+#mode-hint{color:#a7dfb7}
+#song-title{font-family:"Segoe Print","Bradley Hand",system-ui,sans-serif}
+/* Set break intermission and safe return to setlist after an audience request. */
+#set-break-screen[hidden]{display:none!important}
+#set-break-screen{min-height:55vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:10px;color:#effcf1}
+#set-break-screen .break-symbol{font-size:50px}
+#set-break-screen h2{font-size:clamp(28px,5vw,44px);margin:5px 0}
+#set-break-screen p{color:#bddac4;margin:0 0 12px}
+#set-break-screen button,#setlist-resume{border-color:#58b67b;background:#174c2c;color:#effff2}
+#setlist-resume{white-space:nowrap}
+body.showing-set-break #chart,body.showing-set-break #song-title,body.showing-set-break #song-artist,body.showing-set-break #song-status{display:none!important}
+
+/* Clean-stage beta: controls do not consume chart height. */
+body.mode-playing header{display:none!important}
+body.mode-playing #layout{height:100dvh!important}
+body.mode-playing #restore-controls{display:none!important}
+body.mode-playing #stage{padding:12px 18px 94px}
+body.mode-playing #request-panel{top:8px}
+#float-transport{max-width:calc(100vw - 18px);flex-wrap:wrap}
+#float-transport .drag-grip{border:1px solid #576457;background:#203226}
+#float-transport button{background:#1c3625;border-color:#365942;color:#edf7ee}
+#float-transport #float-between{border-color:#86b995}
+#float-transport.edge-left,#float-transport.edge-right{flex-wrap:nowrap;overflow-y:auto}
+#request-panel{width:min(430px,calc(100vw - 16px));top:var(--header-height,70px);max-height:calc(100dvh - 90px);padding:10px}
+#request-list{display:grid;gap:4px}
+#request-list .request-item{display:flex;align-items:center;gap:5px;margin:0;padding:7px 8px;min-height:47px;background:#202321;border-color:#394239;border-radius:9px}
+#request-list .request-summary{min-width:0;flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px}
+#request-list .request-title{margin:0;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#request-list .request-details{margin:0;font-size:11px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#request-list .request-open{width:auto!important;min-width:42px;max-width:78px;padding:6px 7px;margin:0!important;font-size:11px;background:#21402b;border-color:#376749;flex-shrink:0}
+#request-list .request-mark{width:auto!important;padding:7px 8px;margin:0!important;font-size:11px;background:#203e2a;border-color:#49785a;flex-shrink:0}
+#request-list .request-item.is-played{opacity:.7}
+#request-list .request-item.is-played .request-title{font-weight:650}
+#float-requests{background:#18281ded}
+@media(max-width:580px){#float-transport button{font-size:11px;padding:5px 6px;min-width:28px}}
+
+/* Shared Setlist Studio look. UI font only: NEVER modify chart text metrics. */
+:root{--studio-green:#62d996;--studio-bg:#080c09;--studio-panel:#0e1711;--studio-line:#2a4934;--studio-hand:"Segoe Print","Bradley Hand","Comic Sans MS",cursive}
+body{background:var(--studio-bg);color:#f1f7f2}
+header{background:#0d120f;border-bottom-color:var(--studio-line)}
+.head-title,.hand-heading{font-family:var(--studio-hand);letter-spacing:.012em;font-weight:650}
+.head-title{font-size:clamp(17px,2.1vw,25px);color:#b2efc4}
+header button{background:#16241a;border:1px solid #335640;color:#eff9f0}
+header button:hover,#setlists-panel button:hover{border-color:var(--studio-green)}
+#browser-top,aside{background:#101713;border-color:#2e5038}
+#browser-top input,#browser-top select{background:#1b251e;border-color:#42604b}
+.song-name{font-family:var(--studio-hand);font-weight:500;font-size:17px}
+.song-row{border-bottom-color:#2a3f30}
+.song-meta,#count{color:#aabdaf}
+#request-panel,#dice-panel,#setlists-panel{background:#101813;border:1px solid #416849}
+.panel-head strong{font-family:var(--studio-hand);font-size:20px;color:#abefc0}
+/* No handwriting font applies to #chart or any of its descendants. */
+#chart,#chart *{letter-spacing:0;font-variant-ligatures:none}
+#setlists-btn{background:#1c4930;border-color:#5a9c6a;color:#f2fff4}
+body.mode-playing #setlists-btn{display:none}
+#setlists-panel[hidden]{display:none!important}
+#setlists-panel{position:fixed;z-index:11;top:var(--header-height,80px);right:10px;width:min(400px,calc(100vw - 20px));max-height:calc(100dvh - 110px);overflow:auto;border-radius:15px;padding:14px;box-shadow:0 15px 40px #000e}
+.setlist-subtitle{color:#b4c9b9;font-size:13px;line-height:1.4;margin:4px 0 12px}
+#setlists-choices{display:grid;gap:7px}
+.setlist-choice{width:100%;text-align:left;background:#192a1f;border:1px solid #3a5b43;border-radius:11px;padding:12px 13px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.setlist-choice .setlist-choice-name{font-family:var(--studio-hand);font-size:16px;color:#fff}
+.setlist-choice .setlist-choice-count{font-size:12px;color:#b8dcc1;white-space:nowrap}
+.setlists-footer{margin-top:13px;padding-top:12px;border-top:1px solid #2f4e38}
+#open-setlist-studio{width:100%;background:#1c5433;border-color:#60ae7b;color:white}
+.setlist-empty{font-size:13px;color:#bed2c3;padding:9px}
+@media(max-width:780px){.head-title{font-size:18px}}
+
+/* Shared UI font preference. Chart lettering stays independent for chord alignment. */
+:root{--shared-hand:"Segoe Print","Bradley Hand","Comic Sans MS",cursive;--shared-modern:system-ui,-apple-system,"Segoe UI",sans-serif;--shared-classic:Georgia,"Times New Roman",serif;--shared-font:var(--shared-hand)}
+body[data-font="hand"]{--shared-font:var(--shared-hand)}
+body[data-font="modern"]{--shared-font:var(--shared-modern)}
+body[data-font="classic"]{--shared-font:var(--shared-classic)}
+.head-title,.hand-heading,.song-name,.panel-head strong,.setlist-choice .setlist-choice-name,#setlists-panel button,#request-list .request-title{font-family:var(--shared-font)}
+#chart,#chart *{font-family:Arial,Helvetica,sans-serif!important;letter-spacing:0!important;font-variant-ligatures:none!important}
+#chart .chart-line.tab{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important}
+#ui-font-choice{width:auto;max-width:140px;padding:7px 5px;font-size:13px;border-color:#49795a;background:#192e20;color:white}
+#font-choice-label{font-size:12px;color:#b5d6bd}
+
+
+/* Between Songs: a narrow, deliberate resize handle, not the entire divider. */
+#layout{min-width:0}
+#library{width:var(--library-pane-width, 340px);min-width:220px;max-width:calc(100% - 260px)}
+#library-resizer{flex:0 0 18px;position:relative;cursor:col-resize;touch-action:none;user-select:none;-webkit-user-select:none;background:#101713;border-left:1px solid #284633;border-right:1px solid #284633;z-index:4;padding:0;min-width:18px;border-radius:0}
+#library-resizer::after{content:'⋮';display:grid;place-items:center;position:absolute;width:12px;height:62px;top:50%;left:2px;transform:translateY(-50%);border-radius:9px;background:#345841;color:#eaf7ed;font-size:25px;font-family:system-ui;line-height:1}
+#layout:has(#library[hidden]) #library-resizer{display:none}
+body.mode-playing #library-resizer{display:none}
+body.resizing-library,body.resizing-library *{cursor:col-resize!important;user-select:none!important;-webkit-user-select:none!important}
+/* Wrap header actions instead of allowing controls to escape horizontally. */
+header{max-width:100vw;min-width:0}
+header .actions{min-width:0;flex:1 1 540px;flex-wrap:wrap;justify-content:flex-end}
+#busy{max-width:160px;overflow:hidden;text-overflow:ellipsis}
+/* In narrow split view the song browser remains an overlay, so resizing is disabled. */
+@media(max-width:780px){#library{width:min(88vw,420px);min-width:0;max-width:none}#library-resizer{display:none!important}}
+#float-transport{max-width:calc(100dvw - 16px);max-height:calc(100dvh - 16px)}
+#float-transport:not(.edge-left):not(.edge-right){overflow-x:auto}
+
+
+/* Development-only musician chart editor; preserve whitespace literally. */
+#editor-launch{display:none;margin:5px 0 14px;padding:7px 13px;background:#214d33;border-color:#619c70}
+body:not(.mode-playing) #editor-launch{display:inline-block}
+#song-editor[hidden],#editor-launch[hidden]{display:none!important}
+#song-editor{background:#121d16;border:1px solid #426b4c;border-radius:13px;padding:15px;margin:8px 0 20px;max-width:100%;}
+#song-editor h2{margin:0 0 6px;color:#e4f6e8;font-size:21px}
+#song-editor .editor-help{color:#c7d7ca;font-size:13px;line-height:1.45;margin:4px 0 13px}
+#song-editor textarea{display:block;box-sizing:border-box;width:100%;min-height:min(49vh,470px);padding:13px;font:17px/1.35 Arial,Helvetica,sans-serif;white-space:pre;overflow:auto;resize:vertical;color:#fff;background:#090e0b;border:1px solid #5b7962;border-radius:9px;tab-size:4;}
+#song-editor .edit-controls{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:12px}
+#song-editor .edit-controls button{min-width:92px}
+#editor-save{background:#285e3a;border-color:#81bb8e}
+#editor-feedback{font-size:13px;color:#bbdbc3;margin-top:9px;white-space:pre-wrap}
+body.editor-active #chart{display:none}
+body.mode-playing #song-editor{display:none!important}
+
 </style>
 </head>
 <body>
-<header><span class="head-title">🎸 Performance Mode · Development</span><div class="actions"><span id="busy"></span><button id="save-offline" type="button" title="Save songs for offline use">Save Offline</button><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" class="chosen" aria-pressed="true">Playing</button><button id="between-btn" type="button" aria-pressed="false">Between Songs</button></div><button id="requests-btn" type="button">Requests (0)</button><button id="dice-btn" type="button" aria-label="Pick random song">🎲</button><button id="songs-btn" type="button">Songs</button><button id="smaller" type="button" aria-label="Smaller text">A−</button><button id="larger" type="button" aria-label="Larger text">A+</button><button id="hide-controls" type="button" aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
+<header><span class="head-title">🎸 Performance Mode · Development</span><div class="actions"><span id="busy"></span><button id="save-offline" type="button" title="Save songs for offline use">Save Offline</button><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" class="chosen" aria-pressed="true">Playing</button><button id="between-btn" type="button" aria-pressed="false">Between Songs</button></div><button id="requests-btn" type="button">Requests (0)</button><button id="dice-btn" type="button" aria-label="Pick random song">🎲</button><button id="songs-btn" type="button">Songs</button><button id="setlists-btn" type="button" title="Choose or edit a setlist">☷ Setlists</button><label id="font-choice-label" for="ui-font-choice">App font</label><select id="ui-font-choice" aria-label="App appearance font"><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select><button id="setlist-prev" type="button" hidden title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden></span><button id="setlist-next" type="button" hidden title="Next setlist song">Next ▶</button><button id="setlist-resume" type="button" hidden title="Return to your current setlist song">↩ Return to Setlist</button><button id="smaller" type="button" aria-label="Smaller text">A−</button><button id="larger" type="button" aria-label="Larger text">A+</button><button id="hide-controls" type="button" aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
 <button id="restore-controls" type="button" aria-label="Show top controls">Controls ▾</button>
 <div id="playing-floats" aria-label="Playing controls"><div id="float-transport" class="float-control" aria-label="Movable performance controls">
 <span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls">⠿</span>
 <button id="float-smaller" type="button" aria-label="Smaller lyrics">A−</button><button id="float-larger" type="button" aria-label="Larger lyrics">A+</button>
 <button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button>
-<button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
+<button id="float-library" type="button" title="Open Ready to Play songs">Songs</button><button id="float-between" type="button" title="Between Songs controls">Between</button><button id="float-setlist-prev" type="button" hidden title="Previous setlist song">◀</button><button id="float-setlist-next" type="button" hidden title="Next setlist song">▶</button><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
 </div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span></button></div>
-<div id="layout"><aside id="library" hidden><div id="browser-top"><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="all">All Songs</option><option value="ready">Ready to Play</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside>
-<main id="stage"><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div id="chart" aria-label="Lyrics and chords"></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
+<div id="layout"><aside id="library" hidden><div id="browser-top"><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="ready">Ready to Play</option><option value="all">All Songs</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside><button id="library-resizer" type="button" aria-label="Drag to resize the song library" title="Drag to resize song list" tabindex="0"></button>
+<main id="stage"><div id="set-break-screen" hidden role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><button id="editor-launch" type="button">✎ Edit Song</button><section id="song-editor" hidden aria-label="Edit lyrics and chords"><h2>Edit Song</h2><p class="editor-help">Edit the original text, including spaces between chords. Save requires an internet connection. Use Cancel to discard edits.</p><textarea id="editor-text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Song lyrics and chords"></textarea><div class="edit-controls"><button id="editor-save" type="button">Save Changes</button><button id="editor-cancel" type="button">Cancel</button></div><div id="editor-feedback" role="status" aria-live="polite"></div></section><div id="chart" aria-label="Lyrics and chords"></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
 <section id="request-panel" hidden aria-label="Incoming requests"><div class="panel-head"><strong>Incoming Requests</strong><div><button id="refresh-requests" type="button">Refresh</button> <button id="close-requests" type="button" aria-label="Close requests">✕</button></div></div><p id="mode-hint">Playing: requests can't replace your song.</p><div id="pin-setup"><label for="show-pin">Show PIN</label><input id="show-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Admin PIN"><button id="connect-show" type="button">Connect</button></div><div id="show-state" aria-live="polite">Connect to your existing Show Controls requests.</div><section id="show-controls" hidden aria-label="Show Controls"><div class="show-control-heading">Show Controls</div><div class="show-control-buttons"><button id="start-new-show" type="button">Start New Show</button><button id="reopen-show" type="button">Reopen Show</button><button id="end-current-show" class="end-show" type="button">End Show</button></div><div id="show-controls-feedback" role="status" aria-live="polite">Manage your show without leaving Performance Mode.</div></section><div id="request-info">Waiting for connection…</div><div id="request-list"></div></section>
+<section id="setlists-panel" hidden aria-label="Saved setlists"><div class="panel-head"><strong class="hand-heading">Your Setlists</strong><button id="close-setlists" type="button" aria-label="Close setlists">✕</button></div><p class="setlist-subtitle">Choose a saved setlist, or open Setlist Studio to edit one.</p><div id="setlists-choices"></div><div class="setlists-footer"><button id="open-setlist-studio" type="button">✎ Open Setlist Studio</button></div></section>
 <section id="dice-panel" hidden aria-label="Random song picker"><div class="panel-head"><strong>🎲 What should I play?</strong><button id="close-dice" type="button" aria-label="Close dice">✕</button></div><p class="muted">Picks from Ready to Play songs, avoiding recent suggestions.</p><div id="dice-choice">Roll the dice!</div><div id="dice-artist" class="muted"></div><div class="dice-controls"><button id="reroll" type="button">🎲 Roll Again</button><button id="play-dice" type="button" disabled>Open Song</button></div></section>
 
 <script>
 'use strict';
+// Same font preference key already used by Setlist Studio on this origin.
+const SHARED_FONT_KEY='setlist-app-font-v1';
+function useSharedUiFont(value,write=false){
+ const selected=['hand','modern','classic'].includes(value)?value:'hand';
+ document.body.dataset.font=selected;
+ const choice=document.getElementById('ui-font-choice');if(choice)choice.value=selected;
+ if(write){try{localStorage.setItem(SHARED_FONT_KEY,selected)}catch(e){console.warn('Font preference could not be saved',e)}}
+}
+useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand');
+document.getElementById('ui-font-choice').addEventListener('change',e=>useSharedUiFont(e.target.value,true));
+window.addEventListener('storage',e=>{if(e.key===SHARED_FONT_KEY)useSharedUiFont(e.newValue||'hand')});
+window.addEventListener('pageshow',()=>useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand'));
+
 const SUPABASE_URL='https://sluffhedekxnoasndnid.supabase.co';
 const SUPABASE_KEY='sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8';
 const $=id=>document.getElementById(id);
@@ -144,6 +284,10 @@ let db=null, musician=null, songs=[], currentId=null;
 const LIBRARY_DB='performance-offline-library-v1';
 const OFFLINE_CDN='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
 let offlineSnapshot=null;
+let signedInUserId=null;
+let onlineConnected=false;
+let syncingLibrary=null;
+let connectionState='starting';
 function openLibraryDb(){
  return new Promise((resolve,reject)=>{
   if(!window.indexedDB){reject(new Error('Offline database is unavailable in this browser.'));return;}
@@ -163,7 +307,7 @@ async function writeOfflineLibrary(user,m,songList){
  finally{idb.close()}
 }
 function fillLibrary(list,fromCache=false){
- songs=list;setBusy(`${list.length} songs · ${fromCache?'OFFLINE COPY':'ONLINE'}`);
+ songs=list;setBusy(`${list.length} songs · ${fromCache?'OFFLINE COPY':'CONNECTED'}`);
  $('save-offline').textContent=fromCache?'Offline Copy':'Saved ✓';
  drawList();setMode(showMode);drawRequests();
  if(!requestTimer)requestTimer=setInterval(()=>{if(!document.hidden&&navigator.onLine&&showPin)refreshRequests()},10000);
@@ -273,17 +417,126 @@ function renderChart(raw){
   }
   chart.appendChild(fragment);
 }
-function showSong(s){pauseAutoScroll();currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();$('library').hidden=true;drawList()}
+
+let selectedPerformanceSetlist=null, selectedPerformanceIndex=0, setBreakPending=null;
+function setNumberAt(index){return 1+(selectedPerformanceSetlist?.breaks||[]).filter(n=>n<=index).length}
+function updateSetlistControls(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const number=setNumberAt(selectedPerformanceIndex);
+ $('setlist-info').textContent=`${sl.name} · Set ${number} · ${selectedPerformanceIndex+1}/${sl.ids.length}`;
+ $('setlist-prev').disabled=selectedPerformanceIndex===0&&!setBreakPending;
+ $('setlist-next').disabled=selectedPerformanceIndex===sl.ids.length-1&&!setBreakPending;
+ $('setlist-next').textContent=setBreakPending?`Begin Set ${number+1} ▶`:'Next ▶';
+ $('float-setlist-prev').hidden=false;$('float-setlist-next').hidden=false;
+ $('float-setlist-prev').disabled=$('setlist-prev').disabled;
+ $('float-setlist-next').disabled=$('setlist-next').disabled;
+ $('float-setlist-next').title=setBreakPending?`Begin Set ${number+1}`:'Next setlist song';
+
+ $('setlist-resume').hidden=Boolean(setBreakPending)||String(currentId)===String(sl.ids[selectedPerformanceIndex]);
+}
+function clearSetBreak(){setBreakPending=null;document.body.classList.remove('showing-set-break');$('set-break-screen').hidden=true;}
+function openSelectedSetlist(){
+ const id=new URLSearchParams(location.search).get('setlist');
+ if(!id||!musician?.id||!songs.length)return false;
+ try{
+  const lists=JSON.parse(localStorage.getItem('musician-setlists-v1:'+musician.id)||'[]');
+  const sl=lists.find(s=>String(s.id)===id);
+  if(!sl||!Array.isArray(sl.songIds))return false;
+  // Keep the original index positions so set breaks do not drift if a chart is missing.
+  const ids=sl.songIds.map(String);
+  const breaks=(Array.isArray(sl.breaks)?sl.breaks:(Number.isInteger(sl.breakAfter)?[sl.breakAfter]:[]))
+   .filter(n=>Number.isInteger(n)&&n>0&&n<ids.length).sort((a,b)=>a-b);
+  if(!ids.length)return false;
+  selectedPerformanceSetlist={name:sl.name,ids,breaks};selectedPerformanceIndex=0;
+  for(const el of ['setlist-prev','setlist-info','setlist-next'])$(el).hidden=false;
+  goToSetlistIndex(0);return true;
+ }catch(e){console.warn('Could not open setlist',e);return false}
+}
+function goToSetlistIndex(index){
+ const sl=selectedPerformanceSetlist;if(!sl||index<0||index>=sl.ids.length)return;
+ const song=songs.find(s=>String(s.id)===sl.ids[index]);
+ if(!song){alert('This setlist song was not found in your library. Open the Setlist Manager to correct it.');return}
+ clearSetBreak();selectedPerformanceIndex=index;showSong(song);updateSetlistControls();
+}
+function setlistNext(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const next=selectedPerformanceIndex+1;
+ if(next>=sl.ids.length)return;
+ if(setBreakPending){goToSetlistIndex(next);return}
+ if(sl.breaks.includes(next)){
+  pauseAutoScroll();setBreakPending=next;document.body.classList.add('showing-set-break');$('set-break-screen').hidden=false;
+  const number=setNumberAt(selectedPerformanceIndex);
+  $('set-break-heading').textContent=`End of Set ${number}`;
+  $('continue-next-set').textContent=`▶ Begin Set ${number+1}`;
+  $('stage').scrollTop=0;updateSetlistControls();return;
+ }
+ goToSetlistIndex(next);
+}
+function setlistPrevious(){
+ if(!selectedPerformanceSetlist)return;
+ if(setBreakPending){goToSetlistIndex(selectedPerformanceIndex);return}
+ goToSetlistIndex(selectedPerformanceIndex-1);
+}
+let editorActive=false,editorSaving=false;
+function activeSong(){return songs.find(s=>s.id===currentId)||null}
+function closeEditor(){editorActive=false;document.body.classList.remove('editor-active');$('song-editor').hidden=true;$('editor-launch').hidden=false;$('editor-feedback').textContent='';}
+async function verifyEditConnection(){
+ if(!navigator.onLine)throw new Error('This iPad is offline. Connect to Wi-Fi before editing.');
+ // An offline-first launch deliberately skips Supabase initialization; reconnect it now.
+ if(!db || !onlineConnected || !signedInUserId){
+  await connect();
+ }
+ if(!db || !onlineConnected || !signedInUserId || !musician)throw new Error('Your musician account is not connected. Open Musician Login if needed, then return here.');
+ // Verify the account against Supabase, rather than relying on stale browser connectivity.
+ const {data,error}=await delayLimit(db.auth.getUser(),15000);
+ if(error || !data?.user)throw new Error('Your sign-in session needs refreshing. Please sign in again.');
+ if(data.user.id!==signedInUserId || (offlineSnapshot?.userId && offlineSnapshot.userId!==data.user.id))throw new Error('This offline library belongs to a different account.');
+ return data.user;
+}
+async function openEditor(){
+ if(showMode==='playing'){alert('Switch to Between Songs to edit a chart.');return;}
+ const song=activeSong();if(!song){alert('Choose a song first.');return;}
+ $('editor-launch').disabled=true;setBusy('Checking editor connection…');
+ try{
+  await verifyEditConnection();
+  const current=activeSong();if(!current)return;
+  $('editor-text').value=chartOf(current);
+  $('editor-launch').hidden=true;$('song-editor').hidden=false;
+  editorActive=true;document.body.classList.add('editor-active');$('editor-feedback').textContent='Changes are not saved until you tap Save Changes.';
+  $('editor-text').focus();setBusy(`${songs.length} songs · CONNECTED`);
+ }catch(e){alert((e?.message||String(e))+'\n\nYour existing chart is unchanged.');setBusy(`${songs.length} songs · ${navigator.onLine?'SIGN IN / SYNC NEEDED':'OFFLINE COPY'}`)}
+ finally{$('editor-launch').disabled=false;}
+}
+async function saveEditor(){
+ if(!editorActive||editorSaving)return;
+ const song=activeSong();if(!song){$('editor-feedback').textContent='No song selected.';return;}
+ const revised=$('editor-text').value;
+ if(revised===chartOf(song)){closeEditor();return;}
+ editorSaving=true;$('editor-save').disabled=true;$('editor-cancel').disabled=true;$('editor-feedback').textContent='Saving to your account…';
+ try{
+  await verifyEditConnection();
+  // RLS should restrict writes to the authenticated musician; both identifiers are scoped here.
+  const {data,error}=await delayLimit(db.from('songs').update({lyrics_chords:revised}).eq('id',song.id).eq('musician_id',musician.id).select('id,lyrics_chords').maybeSingle(),20000);
+  if(error)throw error;
+  if(!data||String(data.id)!==String(song.id))throw new Error('No song row was updated. Check musician account permissions.');
+  song.lyrics_chords=data.lyrics_chords??revised;
+  if(offlineSnapshot?.userId&&offlineSnapshot?.musicianId===musician.id){
+   try{await writeOfflineLibrary({id:offlineSnapshot.userId},musician,songs);offlineSnapshot.songs=songs;offlineSnapshot.savedAt=Date.now();}
+   catch(cacheErr){console.warn('Could not refresh offline library',cacheErr);$('editor-feedback').textContent='Saved online, but offline copy not refreshed. Tap Save Offline after reconnecting.';}
+  }
+  renderChart(chartOf(song).trim()?chartOf(song):'No lyrics or chords yet.');drawList();closeEditor();setBusy(`${songs.length} songs · CONNECTED · SONG SAVED ✓`);
+ }catch(e){$('editor-feedback').textContent='Not saved: '+(e?.message||String(e))+' — your draft is still available.';}
+ finally{editorSaving=false;$('editor-save').disabled=false;$('editor-cancel').disabled=false;}
+}
+$('editor-launch').onclick=openEditor;$('editor-cancel').onclick=()=>{if(editorSaving)return;if($('editor-text').value!==chartOf(activeSong()||{})&&!confirm('Discard changes to this song?'))return;closeEditor()};$('editor-save').onclick=saveEditor;
+function showSong(s){if(editorActive&&s.id!==currentId&&!confirm('Discard unsaved song edits?'))return; if(editorActive)closeEditor();clearSetBreak();pauseAutoScroll();currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();if(showMode==='playing')$('library').hidden=true;drawList();updateSetlistControls()}
 function drawList(){
- const term=$('search').value.trim().toLocaleLowerCase();
- const filter=$('filter').value;
- const shown=songs.filter(s=>(`${s.title||''} ${s.artist||''}`).toLocaleLowerCase().includes(term))
-   .filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()))
-   .sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),undefined,{numeric:true,sensitivity:'base'}));
+ const term=$('search').value.trim().toLocaleLowerCase(), filter=$('filter').value;
+ const shown=songs.filter(s=>(`${s.title||''} ${s.artist||''}`).toLocaleLowerCase().includes(term)).filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()));
  $('count').textContent=`${shown.length} of ${songs.length} songs`;
- const list=$('song-list'),rail=$('az-rail');
- list.replaceChildren();rail.replaceChildren();
- const sections=new Map(),frag=document.createDocumentFragment();
+ const list=$('song-list'),rail=$('az-rail');list.replaceChildren();rail.replaceChildren();
+ const sections=new Map(), frag=document.createDocumentFragment();
+ // Same title ordering as the existing songbook, including symbols/numbers in #.
  const letterFor=s=>{const a=String(s.title||'').trim().charAt(0).toUpperCase();return /^[A-Z]$/.test(a)?a:'#'};
  for(const s of shown){
   const letter=letterFor(s);
@@ -297,35 +550,27 @@ function drawList(){
   btn.append(title,meta);btn.onclick=()=>showSong(s);frag.append(btn);
  }
  list.append(frag);
- const alphabet=['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
- function jumpToLetter(letter){
-  const available=alphabet.filter(l=>sections.has(l));
-  if(!available.length)return;
-  // When a particular filter has no songs for a letter, jump forward to the nearest occupied section.
-  const target=sections.get(letter)||sections.get(available.find(l=>alphabet.indexOf(l)>alphabet.indexOf(letter))||available[available.length-1]);
-  if(!target)return;
-  // Measure after the filtered DOM is in place; avoid relying on stale positions from All Songs.
-  const offset=target.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop;
-  list.scrollTop=Math.max(0,offset);
- }
- for(const letter of alphabet){
-  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;
-  btn.setAttribute('aria-label','Jump to '+letter);
-  btn.disabled=!sections.size;
-  if(!sections.has(letter))btn.style.opacity='.55';
-  btn.onclick=()=>jumpToLetter(letter);
+ for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){
+  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;btn.setAttribute('aria-label','Jump to '+letter);
+  btn.disabled=!sections.has(letter);if(btn.disabled)btn.style.opacity='.28';
+  btn.onclick=()=>{const heading=sections.get(letter);if(heading)list.scrollTop+=heading.getBoundingClientRect().top-list.getBoundingClientRect().top;};
   rail.append(btn);
  }
- list.scrollTop=0;
 }
 
 async function connect(){
+ if(syncingLibrary)return syncingLibrary;
+ syncingLibrary=connectCore();
+ try{return await syncingLibrary}finally{syncingLibrary=null}
+}
+async function connectCore(){
+ onlineConnected=false;signedInUserId=null;
  // Show the last downloaded library immediately, even with airplane mode on.
  try{
   offlineSnapshot=await readOfflineLibrary();
   if(offlineSnapshot?.songs?.length){
    musician={id:offlineSnapshot.musicianId};
-   fillLibrary(offlineSnapshot.songs,true);
+   fillLibrary(offlineSnapshot.songs,true);if(!selectedPerformanceSetlist)openSelectedSetlist();
   }else{setBusy('No offline copy yet');showMessage('Connect to the internet once, sign in, and tap Save Offline before your gig.');}
  }catch(e){console.warn('Offline library unavailable:',e);setBusy('Offline storage unavailable')}
  // A service worker can reopen this page offline after its first successful installation.
@@ -345,7 +590,7 @@ async function connect(){
   if(!user){
    // Never show the cached library for a DIFFERENT signed-in user.
    if(!offlineSnapshot?.songs?.length){showMessage('Please sign in to your musician account first. ');const a=document.createElement('a');a.href='musician-login.html';a.textContent='Open Musician Login';$('message').append(a)}
-   setBusy(offlineSnapshot?.songs?.length?'Offline copy · Sign in to sync':'Sign in needed');return;
+   setBusy(offlineSnapshot?.songs?.length?'OFFLINE COPY · SIGN IN REQUIRED':'SIGN IN REQUIRED');return;
   }
   if(offlineSnapshot?.userId&&offlineSnapshot.userId!==user.id){
    songs=[];offlineSnapshot=null;currentId=null;$('chart').replaceChildren();$('song-list').replaceChildren();
@@ -364,12 +609,13 @@ async function connect(){
   // Save before presenting Online status. Data is in IndexedDB, not a temporary JS variable.
   await writeOfflineLibrary(user,m,loaded);
   offlineSnapshot={userId:user.id,musicianId:m.id,savedAt:Date.now(),songs:loaded};
-  fillLibrary(loaded,false);
+  signedInUserId=user.id;onlineConnected=true;
+  fillLibrary(loaded,false);if(!selectedPerformanceSetlist)openSelectedSetlist();
   if(showPin)refreshRequests();
   await shellReady;
  }catch(e){
   const explanation=e?.message||String(e);
-  if(offlineSnapshot?.songs?.length){setBusy(`${songs.length} songs · OFFLINE COPY`);console.warn('Sync failed; using offline library:',explanation)}
+  if(offlineSnapshot?.songs?.length){setBusy(`${songs.length} songs · OFFLINE COPY · RECONNECT NEEDED`);console.warn('Sync failed; using offline library:',explanation)}
   else{setBusy('Connection issue');showMessage('Could not download library: '+explanation+' Connect online and sign in before testing offline.')}
  }
 }
@@ -380,7 +626,8 @@ $('save-offline').onclick=async()=>{
  $('save-offline').disabled=false;
 };
 
-$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('search').oninput=drawList;$('filter').onchange=()=>{drawList();};
+$('setlist-prev').onclick=setlistPrevious;$('setlist-next').onclick=setlistNext;$('continue-next-set').onclick=setlistNext;$('setlist-resume').onclick=()=>goToSetlistIndex(selectedPerformanceIndex);
+$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('filter').value='ready';$('search').oninput=drawList;$('filter').onchange=drawList;
 function changeFont(delta){fontSize=Math.max(14,Math.min(48,fontSize+delta));$('chart').style.fontSize=fontSize+'px';if(currentId){const active=songs.find(s=>s.id===currentId);if(active)renderChart(chartOf(active))}localStorage.setItem('performance-font-size',String(fontSize))}
 $('smaller').onclick=()=>changeFont(-2);$('larger').onclick=()=>changeFont(2);
 // Only the musician's account can be queried; Supabase RLS remains authoritative.
@@ -396,7 +643,7 @@ function requestSong(r){
  if(artist)hits=hits.filter(s=>String(s.artist||'').trim().toLocaleLowerCase()===artist);
  return hits.length===1?hits[0]:null;
 }
-function setMode(mode){showMode=mode==='between'?'between':'playing';if(showMode==='playing'){$('library').hidden=true;} document.body.classList.toggle('mode-playing',showMode==='playing');if(showMode!=='playing'){pauseAutoScroll();setToolbarHidden(false);}else{$('dice-panel').hidden=true;} localStorage.setItem('performance-start-mode',showMode);$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('mode-hint').textContent=showMode==='playing'?"Playing: requests are visible, but can't replace your current chart.":'Between Songs: tap a request to open its chart. Requests are not automatically marked played.';drawRequests()}
+function setMode(mode){if(mode==='playing'&&editorActive){if(!confirm('Discard unsaved edits and enter Playing Mode?'))return;closeEditor();}showMode=mode==='between'?'between':'playing';if(showMode==='playing')$('setlists-panel').hidden=true;if(showMode==='playing'){$('library').hidden=true;} document.body.classList.toggle('mode-playing',showMode==='playing');if(showMode!=='playing'){pauseAutoScroll();setToolbarHidden(false);}else{$('dice-panel').hidden=true;} localStorage.setItem('performance-start-mode',showMode);$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('mode-hint').textContent=showMode==='playing'?"Playing: requests are visible, but can't replace your current chart.":'Between Songs: tap a request to open its chart. Requests are not automatically marked played.';drawRequests()}
 // Compact, non-interrupting song titles on the Playing screen.
 // The legacy Show Controls returns grouped requests; preserve its supplied order.
 // A tip is a recorded note, not verification of an external payment.
@@ -440,20 +687,23 @@ function drawRequests(){
  $('show-state').textContent=showPin?(showIsOpen===null?'Connected — waiting for show status':(showIsOpen?'Requests OPEN':'Requests CLOSED')+(showLabel?' · '+showLabel:''))+' · PIN remembered up to 3 hours in this tab':'Enter your Show Controls PIN (remembered for 3 hours in this tab).';
  $('request-info').textContent=!navigator.onLine?'Offline: live requests unavailable. Your saved songs still work.':requestLoading?'Checking the current show…':requestsError?`Could not load show requests: ${requestsError}`:!showPin?'Your current requests are in Show Controls. Connect here to see them.':pending.length?`${total} request${total===1?'':'s'} across ${pending.length} song${pending.length===1?'':'s'}. Updates every 10 seconds.`:'No pending requests in the current show.';
  for(const r of incomingRequests){
-  const item=document.createElement('div');item.className='request-item';
+  const item=document.createElement('div');item.className='request-item'+(r.played?' is-played':'');
+  const summary=document.createElement('div');summary.className='request-summary';
   const heading=document.createElement('div');heading.className='request-title';heading.textContent=String(r.song||'Unknown song')+(Number(r.count)>1?' ×'+r.count:'')+(r.played?' · PLAYED':'');
   const details=document.createElement('div');details.className='request-details';
-  details.textContent=[r.artist||'',r.name?'From: '+r.name:'',r.notes?'Notes: '+r.notes:'',r.tip?'Tip: '+r.tip:''].filter(Boolean).join(' · ');
-  item.append(heading,details);
+  details.textContent=[r.artist||'',r.name?'From: '+r.name:'',r.notes?'Notes: '+r.notes:'',r.tip?'Tip noted: '+r.tip:''].filter(Boolean).join(' · ');
+  details.title=details.textContent;
+  summary.append(heading,details);item.append(summary);
   const match=requestSong({title:r.song,artist:r.artist});
   if(!r.played){
-   const open=document.createElement('button');open.type='button';
-   open.textContent=showMode==='playing'?'🔒 Switch to Between Songs to open chart':match?'Open lyrics & chords':'Song not matched to library';
+   const open=document.createElement('button');open.type='button';open.className='request-open';
+   open.textContent=showMode==='playing'?'Locked':match?'Open':'No chart';
+   open.title=showMode==='playing'?'Switch to Between Songs to open the chart':match?'Open lyrics and chords':'No unique chart match';
    open.disabled=showMode==='playing'||!match;
    open.onclick=()=>{if(showMode!=='between'||!match)return;showSong(match);$('request-panel').hidden=true};
    item.append(open);
-   const mark=document.createElement('button');mark.className='played-button';mark.textContent='Mark played';mark.type='button';
-   mark.onclick=async()=>{if(!showPin)return;mark.disabled=true;mark.textContent='Saving…';try{const result=await showApi('played',{key:r.key});if(!result.ok)throw new Error(result.message||'Could not mark played');await refreshRequests()}catch(e){alert(e?.message||String(e));mark.disabled=false;mark.textContent='Mark played'}};
+   const mark=document.createElement('button');mark.className='request-mark';mark.textContent='✓ Played';mark.type='button';
+   mark.onclick=async()=>{if(!showPin)return;mark.disabled=true;mark.textContent='Saving…';try{const result=await showApi('played',{key:r.key});if(!result.ok)throw new Error(result.message||'Could not mark played');await refreshRequests()}catch(e){alert(e?.message||String(e));mark.disabled=false;mark.textContent='✓ Played'}};
    item.append(mark);
   }
   list.append(item);
@@ -497,6 +747,28 @@ $('reopen-show').onclick=()=>runShowAction('setOpen');
 $('connect-show').onclick=()=>{const p=$('show-pin').value.trim();if(!p){$('request-info').textContent='Enter your Show Controls PIN first.';return}showPin=p;showUnlockExpiry=0;$('show-pin').value='';refreshRequests()};
 $('show-pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('connect-show').click()});
 function diceRoll(){const ready=songs.filter(s=>statusOf(s)==='Ready to Play'&&s.id!==currentId);let choices=ready.filter(s=>!recentDiceIds.includes(s.id));if(!choices.length){recentDiceIds=[];choices=ready}if(!choices.length){$('dice-choice').textContent='No other Ready to Play songs';$('dice-artist').textContent='';diceSuggestion=null;$('play-dice').disabled=true;return}diceSuggestion=choices[Math.floor(Math.random()*choices.length)];recentDiceIds.push(diceSuggestion.id);if(recentDiceIds.length>15)recentDiceIds.shift();$('dice-choice').textContent=diceSuggestion.title||'Untitled';$('dice-artist').textContent=diceSuggestion.artist||'';$('play-dice').disabled=false}
+// Setlist menu belongs to Between Songs; selection never forces a setlist on free-playing musicians.
+function showSavedSetlists(){
+ if(showMode==='playing')setMode('between');
+ const target=$('setlists-choices');target.replaceChildren();
+ let saved=[];
+ try{saved=JSON.parse(localStorage.getItem('musician-setlists-v1:'+musician.id)||'[]')}catch(e){}
+ if(!Array.isArray(saved))saved=[];
+ for(const sl of saved){
+  if(!sl||!sl.id||!Array.isArray(sl.songIds))continue;
+  const b=document.createElement('button');b.type='button';b.className='setlist-choice';
+  const name=document.createElement('span');name.className='setlist-choice-name';name.textContent=sl.name||'Unnamed Setlist';
+  const count=document.createElement('span');count.className='setlist-choice-count';count.textContent=sl.songIds.length+' songs →';
+  b.append(name,count);
+  b.onclick=()=>{location.href='performance-shared-font-test.html?setlist='+encodeURIComponent(sl.id)};
+  target.append(b);
+ }
+ if(!target.childElementCount){const msg=document.createElement('div');msg.className='setlist-empty';msg.textContent='No locally saved setlists yet. Create one in Setlist Studio.';target.append(msg)}
+ $('setlists-panel').hidden=false;
+}
+$('setlists-btn').onclick=showSavedSetlists;
+$('close-setlists').onclick=()=>{$('setlists-panel').hidden=true};
+$('open-setlist-studio').onclick=()=>{location.href='setlist-shared-font-test.html'};
 $('playing-btn').onclick=()=>setMode('playing');$('between-btn').onclick=()=>setMode('between');
 function toggleRequestPanel(){$('dice-panel').hidden=true;$('request-panel').hidden=!$('request-panel').hidden;if(!$('request-panel').hidden)refreshRequests()}
 $('requests-btn').onclick=toggleRequestPanel;$('float-requests').onclick=toggleRequestPanel;
@@ -538,8 +810,49 @@ $('float-larger').onclick=()=>changeFont(2);
 $('scroll-toggle').onclick=toggleAutoScroll;
 $('speed-down').onclick=()=>adjustSpeed(-5);
 $('speed-up').onclick=()=>adjustSpeed(5);
+$('float-between').onclick=()=>setMode('between');
+$('float-library').onclick=()=>{setMode('between');$('filter').value='ready';drawList();$('library').hidden=false;};
+$('float-setlist-prev').onclick=setlistPrevious;
+$('float-setlist-next').onclick=setlistNext;
+
 // The floating transport snaps to an edge: top/bottom horizontal, sides vertical.
 // Its position is saved locally; nothing about movement changes the song or scrolling state.
+// Save a separate library width for Between Songs; charts remain untouched.
+const LIBRARY_WIDTH_KEY='performance-library-width-v1';
+let libraryWidth=Number(localStorage.getItem(LIBRARY_WIDTH_KEY))||340;
+const libraryResizer=$('library-resizer');
+function clampLibraryWidth(px){return Math.max(220,Math.min(px,Math.max(220,$('layout').clientWidth-280)));}
+function applyLibraryWidth(){
+ if(innerWidth<=780)return;
+ libraryWidth=clampLibraryWidth(libraryWidth);
+ document.documentElement.style.setProperty('--library-pane-width',libraryWidth+'px');
+}
+applyLibraryWidth();
+libraryResizer.addEventListener('pointerdown',e=>{
+ if(e.button!==0||innerWidth<=780||$('library').hidden)return;
+ e.preventDefault();document.body.classList.add('resizing-library');
+ libraryResizer.setPointerCapture(e.pointerId);
+});
+libraryResizer.addEventListener('pointermove',e=>{
+ if(!libraryResizer.hasPointerCapture(e.pointerId)||innerWidth<=780)return;
+ const bounds=$('layout').getBoundingClientRect();
+ libraryWidth=clampLibraryWidth(e.clientX-bounds.left-9);
+ document.documentElement.style.setProperty('--library-pane-width',libraryWidth+'px');
+});
+function finishLibraryResize(){
+ if(!document.body.classList.contains('resizing-library'))return;
+ document.body.classList.remove('resizing-library');
+ try{localStorage.setItem(LIBRARY_WIDTH_KEY,String(Math.round(libraryWidth)))}catch{}
+}
+libraryResizer.addEventListener('pointerup',finishLibraryResize);
+libraryResizer.addEventListener('pointercancel',finishLibraryResize);
+libraryResizer.addEventListener('keydown',e=>{
+ if(!['ArrowLeft','ArrowRight'].includes(e.key)||innerWidth<=780)return;
+ e.preventDefault();libraryWidth=clampLibraryWidth(libraryWidth+(e.key==='ArrowRight'?30:-30));
+ applyLibraryWidth();try{localStorage.setItem(LIBRARY_WIDTH_KEY,String(libraryWidth))}catch{}
+});
+window.addEventListener('resize',applyLibraryWidth);
+
 const transport=$('float-transport'), transportGrip=$('transport-grip');
 const TRANSPORT_POSITION_KEY='performance-transport-position-v1';
 let transportPlacement={edge:'bottom',fraction:0},transportDrag=null;
@@ -552,10 +865,11 @@ function placeTransport(){
  transport.classList.toggle('edge-right',edge==='right');
  transport.style.left='0px';transport.style.top='0px';transport.style.right='auto';transport.style.bottom='auto';
  const rect=transport.getBoundingClientRect();
- const margin=8,availableX=Math.max(0,innerWidth-rect.width-margin*2),availableY=Math.max(0,innerHeight-rect.height-margin*2);
- const x=(edge==='left')?margin:(edge==='right')?innerWidth-rect.width-margin:margin+availableX*transportPlacement.fraction;
- const y=(edge==='top')?margin:(edge==='bottom')?innerHeight-rect.height-margin:margin+availableY*transportPlacement.fraction;
- transport.style.left=Math.max(0,x)+'px';transport.style.top=Math.max(0,y)+'px';
+ const viewWidth=window.visualViewport?.width||innerWidth,viewHeight=window.visualViewport?.height||innerHeight;
+ const margin=8,availableX=Math.max(0,viewWidth-rect.width-margin*2),availableY=Math.max(0,viewHeight-rect.height-margin*2);
+ const x=(edge==='left')?margin:(edge==='right')?viewWidth-rect.width-margin:margin+availableX*transportPlacement.fraction;
+ const y=(edge==='top')?margin:(edge==='bottom')?viewHeight-rect.height-margin:margin+availableY*transportPlacement.fraction;
+ transport.style.left=Math.max(margin,Math.min(viewWidth-rect.width-margin,x))+'px';transport.style.top=Math.max(margin,Math.min(viewHeight-rect.height-margin,y))+'px';
 }
 function setTransportPlacement(edge,fraction){
  transportPlacement={edge,fraction:Math.max(0,Math.min(1,fraction))};
@@ -593,7 +907,9 @@ transportGrip.addEventListener('keydown',e=>{
  const edges={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'top',ArrowDown:'bottom'};
  if(edges[e.key]){e.preventDefault();setTransportPlacement(edges[e.key],.5);}
 });
-window.addEventListener('resize',placeTransport);
+window.addEventListener('resize',()=>requestAnimationFrame(placeTransport));
+if(window.ResizeObserver){new ResizeObserver(()=>requestAnimationFrame(placeTransport)).observe(transport);}
+if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>requestAnimationFrame(placeTransport));
 requestAnimationFrame(placeTransport);
 // A deliberate touch, wheel movement, or pointer drag pauses scrolling immediately.
 $('stage').addEventListener('touchstart',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
@@ -604,8 +920,8 @@ updateScrollButtons();syncHeaderHeight();
 
 setMode(showMode);
 if(showPin&&navigator.onLine)refreshRequests();
-window.addEventListener('online',()=>{setBusy(`${songs.length} songs · ONLINE (tap Save Offline to sync)`);if(showPin)refreshRequests()});
-window.addEventListener('offline',()=>{setBusy(`${songs.length} songs · OFFLINE`);requestsError='Requests require internet';drawRequests()});
+window.addEventListener('online',()=>{setBusy(`${songs.length} songs · RECONNECTING…`);connect().catch(e=>console.warn('Reconnect failed:',e));if(showPin)refreshRequests()});
+window.addEventListener('offline',()=>{onlineConnected=false;signedInUserId=null;setBusy(`${songs.length} songs · OFFLINE COPY`);requestsError='Requests require internet';drawRequests()});
 connect();
 </script>
 </body></html>

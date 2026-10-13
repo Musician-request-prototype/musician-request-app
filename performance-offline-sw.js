@@ -1,5 +1,5 @@
 // Offline performance shell, beta + development; live requests still require internet.
-const SHELL='performance-offline-shell-v11-edit-song';
+const SHELL='performance-offline-shell-v12-development-reconnect';
 const PATHS=[
  'performance-beta.html','performance-development.html',
  'performance-clean-stage-requests-test.html','performance-studio-theme-test.html',
