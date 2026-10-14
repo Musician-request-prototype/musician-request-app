@@ -217,7 +217,7 @@ function restoreSelectedSetlist(){
 function normalizedBreaks(input, count){
  const legacy=Number.isInteger(input?.breakAfter)?[input.breakAfter]:[];
  const all=Array.isArray(input?.breaks)?input.breaks:legacy;
- return [...new Set(all.filter(n=>Number.isInteger(n)&&n>0&&n<=count))].sort((a,b)=>a-b);
+ return [...new Set(all.filter(n=>Number.isInteger(n)&&n>=0&&n<=count))].sort((a,b)=>a-b);
 }
 function loadSets(){try{const raw=JSON.parse(localStorage.getItem(key())||'[]');sets=Array.isArray(raw)?raw.filter(x=>x&&typeof x.name==='string'&&Array.isArray(x.songIds)).map(x=>({id:String(x.id),name:x.name,songIds:x.songIds.map(String),breaks:normalizedBreaks(x,x.songIds.length)})):[]}catch{sets=[]}restoreSelectedSetlist()}
 function save(){try{localStorage.setItem(key(),JSON.stringify(sets));msg('Setlist saved on this iPad ✓ · '+new Date().toLocaleTimeString());$('save-setlist').textContent='Saved ✓';return true}catch(e){msg('Save FAILED: '+e.message+' · Export backup and check available storage.');$('save-setlist').textContent='Save failed';return false}}
@@ -237,7 +237,8 @@ function drawSelected(){
  const s=active(),root=$('set-songs');root.replaceChildren();
  $('selected-heading').textContent=s?s.name:'Select or create a setlist';$('set-count').textContent=s?s.songIds.length+' songs':'';
  if(!s){root.innerHTML='<p class="empty">Choose a setlist above or tap + New.</p>';return}
- if(!s.songIds.length){root.innerHTML='<p class="empty">Empty setlist. Add songs from the library on the right.</p>';return}
+ if(!s.songIds.length){if(s.breaks.includes(0))root.append(makeBreak(s,0));root.insertAdjacentHTML('beforeend','<p class="empty">Empty setlist. Add songs from the library on the right.</p>');return}
+ if(s.breaks.includes(0))root.append(makeBreak(s,0));
  const lookup=new Map(songs.map(x=>[String(x.id),x]));
  s.songIds.forEach((id,i)=>{
   const found=lookup.get(String(id));const el=document.createElement('div');el.className='item set-row';el.dataset.index=String(i);
@@ -255,7 +256,7 @@ function makeBreak(s,position){
  const preceding=s.breaks.filter(n=>n<position).length;
  const txt=document.createElement('strong');txt.textContent='☕ SET BREAK · SET '+(preceding+2)+' BELOW';
  const up=document.createElement('button');up.type='button';up.textContent='↑';up.title='Move break earlier';up.setAttribute('aria-label','Move break earlier');
- up.disabled=position<=1||s.breaks.includes(position-1);
+ up.disabled=position<=0||s.breaks.includes(position-1);
  up.onclick=()=>moveBreak(s,position,-1);
  const down=document.createElement('button');down.type='button';down.textContent='↓';down.title='Move break later';down.setAttribute('aria-label','Move break later');
  down.disabled=position>=s.songIds.length||s.breaks.includes(position+1);
@@ -265,7 +266,7 @@ function makeBreak(s,position){
  r.append(up,txt,down,remove);return r;
 }
 function moveBreak(s,position,direction){
- const next=position+direction;if(next<=0||next>s.songIds.length||s.breaks.includes(next))return;
+ const next=position+direction;if(next<0||next>s.songIds.length||s.breaks.includes(next))return;
  s.breaks=normalizedBreaks({breaks:s.breaks.map(n=>n===position?next:n)},s.songIds.length);save();drawSelected();
 }
 function moveSong(from,to){const s=active();if(!s||to<0||to>=s.songIds.length||from===to)return;const [id]=s.songIds.splice(from,1);s.songIds.splice(to,0,id);save();drawSelected();drawSets()}
