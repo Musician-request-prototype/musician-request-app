@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Setlist Studio · Save & Set Break Test</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Setlist Studio · Floating Drag Test</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#292929;border:1px solid #505050;color:#fff;border-radius:9px;padding:9px 12px;touch-action:manipulation}button:disabled{opacity:.4}button.primary{background:#24633f;border-color:#70c897}button.danger{border-color:#a46161}input,select{background:#262626;border:1px solid #555;border-radius:9px;color:#fff;padding:11px;font-size:16px;min-width:0}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #86dda8}header{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;background:#171717;border-bottom:1px solid #3c3c3c;padding:12px 16px}.title{font-size:20px;font-weight:700}.subtitle{color:#bdbdbd;font-size:12px}main{max-width:1250px;margin:0 auto;padding:16px;display:grid;grid-template-columns:minmax(230px,290px) minmax(260px,1fr) minmax(280px,1fr);gap:14px}.panel{background:#161616;border:1px solid #393939;border-radius:14px;padding:14px;min-width:0}.panel h2{font-size:17px;margin:0 0 12px}.stack{display:grid;gap:10px}.row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.row input{flex:1}.mini{font-size:12px;color:#bcbcbc}#status{font-size:13px;color:#a9d9b7;margin:0}.item{padding:10px;background:#222;border:1px solid #383838;border-radius:10px;margin:6px 0}.item.selected{background:#203f2b;border-color:#5fae78}.songtitle{font-weight:650;overflow-wrap:anywhere}.artist{color:#c0c0c0;font-size:12px;margin-top:3px}.item button{font-size:13px;padding:6px 9px}.smallbtn{font-size:13px;padding:7px}.scroll{max-height:66vh;overflow:auto;overscroll-behavior:contain}.empty{color:#aaa;padding:16px 3px;font-size:14px}.pill{font-size:11px;color:#c0daca}.faint{color:#aaa}#selected-heading{font-weight:700}#song-search{width:100%}#song-filter{width:100%}a{color:#91dca9}.mobile-heading{display:none}#count{font-size:12px;color:#aaa}.sep{height:1px;background:#393939;margin:12px 0}@media(max-width:950px){main{grid-template-columns:1fr 1fr}.setlists-panel{grid-column:1/-1}.scroll{max-height:48vh}}@media(max-width:570px){main{display:flex;flex-direction:column;padding:9px;gap:9px}.scroll{max-height:43vh}.panel{padding:11px}header{padding:10px}.title{font-size:17px}}[hidden]{display:none!important}
 
@@ -128,6 +128,28 @@ header.app-header{display:flex;flex-direction:column;align-items:stretch;justify
 main{flex:1 1 auto;min-height:0;height:auto!important;overflow:hidden}
 #status{flex:0 0 auto}
 @media(max-width:570px){body{overflow:auto;height:auto;min-height:100dvh}main{flex:0 0 auto;overflow:visible;min-height:760px}.header-actions>select{max-width:none}}
+/* Exit sign: distinct but muted red, readable in dark stage lighting. */
+#exit-manager{background:#572222!important;border:1px solid #d86b6b!important;color:#fff!important;font-weight:800;letter-spacing:.045em;box-shadow:inset 0 0 0 1px #743535}
+#exit-manager:active{background:#8a3030!important}
+#display-settings{border-top:1px solid #34533d;padding-top:8px}
+#display-settings>summary{color:#b5e4c1;cursor:pointer;font-size:14px}
+/* Keep the actions popover above the panels and inside the visible iPad viewport. */
+.header-menu .menu-content{position:fixed;top:var(--menu-top,110px);left:var(--menu-left,12px);right:auto;width:min(390px,calc(100vw - 24px));max-height:var(--menu-height,65dvh);overscroll-behavior:contain;z-index:200}
+/* A–Z navigation uses real heading elements instead of cached pixel offsets. */
+#library-songs .letter-heading{position:static!important}
+#az-bar button{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#library-songs .letter-heading{margin:0!important}
+#library-songs{overflow-anchor:none!important} #library-songs .letter-heading{position:static!important}
+/* Drag preview: a floating song label and an unmistakable insertion rule. */
+#set-drop-indicator{position:fixed;z-index:9998;pointer-events:none;height:7px;background:#b7ff58;border-radius:6px;box-shadow:0 0 0 2px #102719,0 0 14px #b7ff58c0}
+#set-drop-indicator[hidden]{display:none!important}
+#set-drop-indicator::before{content:'';position:absolute;left:-4px;top:-5px;width:17px;height:17px;border-radius:50%;background:#b7ff58}
+#set-drop-indicator::after{content:none!important;display:none!important}
+#set-songs .set-row.dragging{opacity:0!important;box-shadow:none!important;outline:none!important} /* Keep its space as an empty slot while the row moves with the finger. */
+#drag-ghost{z-index:9999;max-width:min(300px,65vw);background:#265b37;border:2px solid #8cf0ac;box-shadow:0 8px 24px #000c;opacity:.97;transform:none!important;min-width:135px;text-align:center}
+#drag-ghost.set-song-ghost{box-sizing:border-box;width:min(390px,72vw);max-width:calc(100vw - 24px);min-height:56px;display:flex;align-items:center;justify-content:flex-start;text-align:left;padding:11px 17px;font-size:clamp(16px,1.7vw,22px);font-family:var(--ui);white-space:nowrap;border:2px solid #adf5bf;background:#1e6339;box-shadow:0 10px 25px #000e}
+#drag-ghost.set-song-ghost .songtitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;font-weight:600;line-height:1.25}
+#drag-ghost.set-song-ghost .dragging-song-icon{font-size:1.1em;margin-right:11px;color:#b4ffd0}
 </style></head><body>
 <header class="app-header">
  <div class="brand"><span class="hand-heading">Setlist Manager</span></div>
@@ -137,15 +159,16 @@ main{flex:1 1 auto;min-height:0;height:auto!important;overflow:hidden}
   <button id="play-setlist" class="primary play-set" type="button" disabled>▶ Play Setlist</button>
   <button id="save-setlist" type="button" disabled>Save ✓</button>
   <button id="reload" type="button" title="Refresh song library from Supabase; setlists stay saved on this iPad">↻ Sync Songs</button>
+   <button id="exit-manager" type="button" title="Exit Setlist Manager and return to Performance Mode">↩ EXIT</button>
   <details id="manage-details" class="header-menu"><summary aria-label="More setlist actions" title="More actions">⋯</summary><div class="menu-content stack">
     <div class="row"><input id="new-name" aria-label="New setlist name" placeholder="Setlist name" maxlength="100"><button id="create" class="primary" type="button">Create</button></div>
     <div id="setlists" aria-label="Saved setlists" hidden></div>
     <div class="row"><button id="rename" disabled>Rename</button><button id="duplicate" disabled>Duplicate</button><button id="remove-setlist" class="danger" disabled>Delete</button></div>
     <button id="add-break" type="button" disabled>+ Set Break (another set)</button>
     <button id="export" type="button">Export backup (.json)</button>
-    <label class="menu-label" for="font-choice">App font</label><select id="font-choice"><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select>
+    <details id="display-settings"><summary>Display Settings</summary><div class="stack" style="padding-top:10px"><label class="menu-label" for="font-choice">App font</label><select id="font-choice"><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select>
     <label class="menu-label">Text size</label>
-  <div class="font-sizing" aria-label="Setlist Studio text size"><button id="text-smaller" type="button" title="Smaller text">A−</button><output id="text-scale-label">130%</output><button id="text-larger" type="button" title="Larger text">A+</button></div>
+  <div class="font-sizing" aria-label="Setlist Studio text size"><button id="text-smaller" type="button" title="Smaller text">A−</button><output id="text-scale-label">130%</output><button id="text-larger" type="button" title="Larger text">A+</button></div></div></details>
     <p class="mini">Setlists save on this iPad, even offline. Export a backup before clearing website data. Cross-device sync isn't connected yet.</p>
   </div></details>
  </div>
@@ -161,7 +184,7 @@ main{flex:1 1 auto;min-height:0;height:auto!important;overflow:hidden}
  <div class="library-controls"><input id="song-search" placeholder="Search songs…" aria-label="Search title or artist"><select id="song-filter" aria-label="Song status"><option value="all">All Songs</option><option value="ready">Ready to Play</option><option value="learning">Still Learning</option></select></div>
  <div id="library-wrap"><div class="scroll" id="library-songs" aria-label="Music library"></div><nav id="az-bar" aria-label="Jump to song letter"></nav></div>
 </section>
-</main><div id="drag-ghost" hidden aria-hidden="true"></div><p id="status" role="status" aria-live="polite">Loading…</p>
+</main><div id="set-drop-indicator" hidden aria-hidden="true"></div><div id="drag-ghost" hidden aria-hidden="true"></div><p id="status" role="status" aria-live="polite">Loading…</p>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 'use strict';
@@ -174,15 +197,32 @@ function msg(s){$('status').textContent=s}
 function openDB(){return new Promise((resolve,reject)=>{const q=indexedDB.open(DB_NAME,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains('data'))q.result.createObjectStore('data')};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)})}
 async function readSavedSongs(){let d=await openDB();try{return await new Promise((resolve,reject)=>{const q=d.transaction('data','readonly').objectStore('data').get('current');q.onsuccess=()=>resolve(q.result||null);q.onerror=()=>reject(q.error)})}finally{d.close()}}
 function key(){return LOCAL_KEY_PREFIX+musicianId}
+// Keep the active setlist only on this device, scoped to the signed-in musician.
+const LAST_SELECTED_PREFIX='musician-last-selected-setlist-v1:';
+function selectionKey(){return LAST_SELECTED_PREFIX+musicianId}
+function rememberSelectedSetlist(){
+ if(!musicianId)return;
+ try{if(selectedId)localStorage.setItem(selectionKey(),String(selectedId));
+ else localStorage.removeItem(selectionKey())}catch(e){console.warn('Could not remember selected setlist',e)}
+}
+function restoreSelectedSetlist(){
+ let remembered=null;
+ try{remembered=localStorage.getItem(selectionKey())}catch(e){console.warn('Could not load selected setlist',e)}
+ // Keep a choice made during this session; otherwise restore the saved choice.
+ selectedId=sets.find(s=>s.id===selectedId)?.id
+   ||sets.find(s=>s.id===remembered)?.id
+   ||sets[0]?.id||null;
+ rememberSelectedSetlist();
+}
 function normalizedBreaks(input, count){
  const legacy=Number.isInteger(input?.breakAfter)?[input.breakAfter]:[];
  const all=Array.isArray(input?.breaks)?input.breaks:legacy;
- return [...new Set(all.filter(n=>Number.isInteger(n)&&n>0&&n<count))].sort((a,b)=>a-b);
+ return [...new Set(all.filter(n=>Number.isInteger(n)&&n>0&&n<=count))].sort((a,b)=>a-b);
 }
-function loadSets(){try{const raw=JSON.parse(localStorage.getItem(key())||'[]');sets=Array.isArray(raw)?raw.filter(x=>x&&typeof x.name==='string'&&Array.isArray(x.songIds)).map(x=>({id:String(x.id),name:x.name,songIds:x.songIds.map(String),breaks:normalizedBreaks(x,x.songIds.length)})):[]}catch{sets=[]}}
+function loadSets(){try{const raw=JSON.parse(localStorage.getItem(key())||'[]');sets=Array.isArray(raw)?raw.filter(x=>x&&typeof x.name==='string'&&Array.isArray(x.songIds)).map(x=>({id:String(x.id),name:x.name,songIds:x.songIds.map(String),breaks:normalizedBreaks(x,x.songIds.length)})):[]}catch{sets=[]}restoreSelectedSetlist()}
 function save(){try{localStorage.setItem(key(),JSON.stringify(sets));msg('Setlist saved on this iPad ✓ · '+new Date().toLocaleTimeString());$('save-setlist').textContent='Saved ✓';return true}catch(e){msg('Save FAILED: '+e.message+' · Export backup and check available storage.');$('save-setlist').textContent='Save failed';return false}}
 function active(){return sets.find(s=>s.id===selectedId)||null}
-function pick(id){selectedId=id;render()}
+function pick(id){selectedId=id;rememberSelectedSetlist();render()}
 function render(){drawSets();drawSelected();drawLibrary()}
 function drawSets(){
  const root=$('setlists'), picker=$('setlist-picker');root.replaceChildren();picker.replaceChildren();
@@ -191,7 +231,7 @@ function drawSets(){
  picker.value=active()?.id||'';
  for(const id of ['rename','duplicate','remove-setlist'])$(id).disabled=!active();
  $('play-setlist').disabled=!active()||!active().songIds.length;
- $('save-setlist').disabled=!active();$('add-break').disabled=!active()||active().songIds.length<2;
+ $('save-setlist').disabled=!active();$('add-break').disabled=!active()||active().songIds.length<1;
 }
 function drawSelected(){
  const s=active(),root=$('set-songs');root.replaceChildren();
@@ -218,19 +258,19 @@ function makeBreak(s,position){
  up.disabled=position<=1||s.breaks.includes(position-1);
  up.onclick=()=>moveBreak(s,position,-1);
  const down=document.createElement('button');down.type='button';down.textContent='↓';down.title='Move break later';down.setAttribute('aria-label','Move break later');
- down.disabled=position>=s.songIds.length-1||s.breaks.includes(position+1);
+ down.disabled=position>=s.songIds.length||s.breaks.includes(position+1);
  down.onclick=()=>moveBreak(s,position,1);
  const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.title='Remove set break';remove.setAttribute('aria-label','Remove set break');
  remove.onclick=()=>{s.breaks=s.breaks.filter(n=>n!==position);save();drawSelected()};
  r.append(up,txt,down,remove);return r;
 }
 function moveBreak(s,position,direction){
- const next=position+direction;if(next<=0||next>=s.songIds.length||s.breaks.includes(next))return;
+ const next=position+direction;if(next<=0||next>s.songIds.length||s.breaks.includes(next))return;
  s.breaks=normalizedBreaks({breaks:s.breaks.map(n=>n===position?next:n)},s.songIds.length);save();drawSelected();
 }
 function moveSong(from,to){const s=active();if(!s||to<0||to>=s.songIds.length||from===to)return;const [id]=s.songIds.splice(from,1);s.songIds.splice(to,0,id);save();drawSelected();drawSets()}
 let dragging=null,libraryDragging=null;
-function beginDrag(e,el,index){if(e.button!==undefined&&e.button!==0)return;e.preventDefault();dragging={index,target:index,side:'none',id:e.pointerId,el,handle:e.currentTarget};el.classList.add('dragging');e.currentTarget.setPointerCapture(e.pointerId)}
+function beginDrag(e,el,index){if(e.button!==undefined&&e.button!==0)return;e.preventDefault();dragging={index,target:index,side:'none',id:e.pointerId,el,handle:e.currentTarget};el.classList.add('dragging');showMovingSong(el);moveSetGhost(e.clientX,e.clientY);updateSetDrag(e.clientX,e.clientY);try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}}
 // A drag destination is an INSERTION SLOT, not the nearest song. In particular,
 // Each set-break divider is a real boundary; dropping across it changes sets.
 function findTarget(y){const rows=[...$('set-songs').querySelectorAll('.set-row')];for(let i=0;i<rows.length;i++){const r=rows[i].getBoundingClientRect();if(y<r.top+r.height/2)return i}return rows.length}
@@ -259,9 +299,84 @@ function moveSongAtSlot(from,slot,side='none'){
  s.breaks=normalizedBreaks({breaks:updated},s.songIds.length);
  save();drawSelected();drawSets();
 }
-function markSetDragTarget(slot){const rows=[...$('set-songs').querySelectorAll('.set-row')];if(slot<rows.length)rows[slot].classList.add('drop-target');else $('set-drop-zone').classList.add('active')}
-function clearDrag(){for(const el of $('set-songs').querySelectorAll('.set-row'))el.classList.remove('dragging','drop-target');$('set-drop-zone').classList.remove('active')}
-document.addEventListener('pointermove',e=>{if(!dragging||e.pointerId!==dragging.id)return;e.preventDefault();const root=$('set-songs'),r=root.getBoundingClientRect();if(e.clientY<r.top+35)root.scrollTop-=17;else if(e.clientY>r.bottom-35)root.scrollTop+=17;const pad=$('set-drop-zone').getBoundingClientRect();const inPad=e.clientX>=pad.left&&e.clientX<=pad.right&&e.clientY>=pad.top&&e.clientY<=pad.bottom;const to=inPad?active().songIds.length:findTarget(e.clientY);dragging.target=to;dragging.side=inPad?'none':breakSideAt(to,e.clientY);clearDrag();dragging.el.classList.add('dragging');markSetDragTarget(to)},{passive:false});
+// Pick a precise insertion slot. Break dividers have two distinct sides:
+// above = end of previous set, below = beginning of following set.
+function setDropDestination(y){
+ const root=$('set-songs'), rows=[...root.querySelectorAll('.set-row')];
+ const breaks=new Map([...root.querySelectorAll('.set-break-row')].map(el=>[Number(el.dataset.setBreak),el]));
+ for(let i=0;i<=rows.length;i++){
+  const divider=breaks.get(i);
+  if(divider){
+   const r=divider.getBoundingClientRect();
+   if(y>=r.top && y<=r.bottom){
+    const before=y < (r.top+r.bottom)/2;
+    return {slot:i,side:before?'before':'after',lineY:before?r.top:r.bottom};
+   }
+  }
+  if(i<rows.length){
+   const r=rows[i].getBoundingClientRect();
+   const midpoint=r.top+r.height/2;
+   if(y<midpoint){
+    const previous=i?rows[i-1].getBoundingClientRect():null;
+    const boundary=breaks.get(i)?.getBoundingClientRect();
+    const side=boundary?(y<boundary.top+boundary.height/2?'before':'after'):'none';
+    return {slot:i,side,lineY:boundary?(side==='before'?boundary.top:boundary.bottom):(previous?(previous.bottom+r.top)/2:r.top)};
+   }
+  }
+ }
+ const last=rows.at(-1)?.getBoundingClientRect();
+ const lastBreak=breaks.get(rows.length)?.getBoundingClientRect();
+ return {slot:rows.length,side:lastBreak?'after':'none',lineY:lastBreak?lastBreak.bottom:(last?.bottom||root.getBoundingClientRect().top+12)};
+}
+function showSetDropIndicator(dest){
+ const root=$('set-songs'),bounds=root.getBoundingClientRect(),line=$('set-drop-indicator');
+ line.hidden=false;
+ line.style.left=(bounds.left+10)+'px';line.style.width=Math.max(24,bounds.width-20)+'px';
+ line.style.top=Math.max(bounds.top+8,Math.min(bounds.bottom-12,dest.lineY))+'px';
+}
+function showMovingSong(row){
+ const ghost=$('drag-ghost');
+ const title=row.querySelector('.songtitle');
+ const styles=title?getComputedStyle(title):getComputedStyle(row);
+ ghost.replaceChildren();
+ const grip=document.createElement('span');grip.className='dragging-song-icon';grip.textContent='⠿';
+ const label=document.createElement('span');label.className='songtitle';label.textContent=title?.textContent||'Move song';
+ // Use the same selected app font; make the moving row slightly more legible.
+ label.style.fontFamily=styles.fontFamily;
+ label.style.fontSize=`${Math.round(parseFloat(styles.fontSize)*1.08)}px`;
+ ghost.append(grip,label);
+ ghost.classList.add('set-song-ghost');
+ const rect=row.getBoundingClientRect();
+ ghost.style.width=Math.min(rect.width,window.innerWidth-24)+'px';
+ ghost.hidden=false;
+}
+function moveSetGhost(x,y){
+ const g=$('drag-ghost');
+ // Place label well above the fingertip; clamp it inside the visible iPad view.
+ const width=Math.min(window.innerWidth-24,Math.max(135,g.offsetWidth||195));
+ const height=Math.max(42,g.offsetHeight||44);
+ const left=Math.max(8,Math.min(window.innerWidth-width-8,x-width/2));
+ const preferredTop=y-height-82;
+ g.style.left=left+'px';
+ g.style.top=(preferredTop>=8?preferredTop:Math.min(window.innerHeight-height-8,y+65))+'px';
+ g.hidden=false;
+}
+function clearDrag(){
+ for(const el of $('set-songs').querySelectorAll('.set-row'))el.classList.remove('dragging','drop-target');
+ $('set-drop-zone').classList.remove('active');$('set-drop-indicator').hidden=true;
+ $('drag-ghost').hidden=true;$('drag-ghost').classList.remove('set-song-ghost');$('drag-ghost').style.width='';
+}
+function updateSetDrag(x,y){
+ if(!dragging)return;
+ const root=$('set-songs'),r=root.getBoundingClientRect();
+ if(y<r.top+40)root.scrollTop-=Math.max(8,Math.round((r.top+40-y)/2));
+ else if(y>r.bottom-40)root.scrollTop+=Math.max(8,Math.round((y-(r.bottom-40))/2));
+ const target=setDropDestination(Math.max(r.top,Math.min(r.bottom,y)));
+ dragging.target=target.slot;dragging.side=target.side;
+ showSetDropIndicator(target);moveSetGhost(x,y);
+ dragging.el.classList.add('dragging');
+}
+document.addEventListener('pointermove',e=>{if(!dragging||e.pointerId!==dragging.id)return;e.preventDefault();updateSetDrag(e.clientX,e.clientY)},{passive:false});
 document.addEventListener('pointerup',e=>{if(!dragging||e.pointerId!==dragging.id)return;const {index,target,side}=dragging;dragging=null;clearDrag();moveSongAtSlot(index,target,side)});
 document.addEventListener('pointercancel',()=>{dragging=null;clearDrag()});
 function initialLetter(title){const match=String(title||'').trim().toUpperCase().match(/^[A-Z]/);return match?match[0]:'#'}
@@ -276,7 +391,31 @@ function drawLibrary(){
   const b=document.createElement('button');b.className='smallbtn';const already=ids.has(String(x.id));b.textContent=already?'Added ✓':'+ Add';b.disabled=!s||already;b.onclick=()=>addLibrarySong(x.id);const drag=document.createElement('button');drag.className='library-drag';drag.type='button';drag.textContent='☰';drag.title='Hold and drag into setlist';drag.setAttribute('aria-label','Drag '+(x.title||'song')+' into setlist');drag.disabled=!s||already;drag.onpointerdown=e=>beginLibraryDrag(e,x,drag);el.append(drag,text,b);attachLibraryRowDrag(el, x, b);frag.append(el)
  }
  root.append(frag);
- const alphabet='#ABCDEFGHIJKLMNOPQRSTUVWXYZ';for(const letter of alphabet){const b=document.createElement('button');b.type='button';b.textContent=letter;b.disabled=!headings.has(letter);b.setAttribute('aria-label','Jump to '+letter);b.onclick=()=>{const h=headings.get(letter);if(h)root.scrollTop=h.offsetTop-root.offsetTop};az.append(b)}
+  // Use the same content-coordinate scrollTop approach verified in Performance Mode.
+  // Measure while the list is at the top and do not use scrollIntoView on iPad Safari.
+  root.scrollTop=0;
+  root.style.overflowAnchor='none';
+  const positions=new Map();
+  const rootRect=root.getBoundingClientRect();
+  for(const [letter,heading] of headings){
+   positions.set(letter,Math.max(0,heading.getBoundingClientRect().top-rootRect.top+root.scrollTop));
+  }
+  for(const letter of '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'){
+   const b=document.createElement('button');b.type='button';b.textContent=letter;
+   const top=positions.get(letter);
+   b.disabled=top===undefined;b.setAttribute('aria-label','Jump to '+letter);
+   b.addEventListener('click',()=>{
+    if(top===undefined)return;
+    const before=Math.round(root.scrollTop);
+    const destination=Math.max(0,Math.min(top,root.scrollHeight-root.clientHeight));
+    root.scrollTop=destination;
+    // Diagnostic: prove the tap handler ran and show the browser's actual scroll.
+    requestAnimationFrame(()=>{
+     msg('A–Z '+letter+' · '+before+' → '+Math.round(root.scrollTop)+' (target '+Math.round(destination)+')');
+    });
+   });
+   az.append(b);
+  }
 }
 
 function addLibrarySong(id,at){const s=active(),str=String(id);if(!s||s.songIds.includes(str))return false;const pos=Number.isInteger(at)?Math.max(0,Math.min(s.songIds.length,at)):s.songIds.length;s.songIds.splice(pos,0,str);s.breaks=s.breaks.map(n=>pos<n?n+1:n);save();render();return true}
@@ -284,7 +423,7 @@ function libraryDropIndex(y){const root=$('set-songs'),rows=[...root.querySelect
 let reusableDropMarker=null;
 function clearLibraryDragUI(){const root=$('set-songs');root.classList.remove('library-drag-over');$('set-drop-zone').classList.remove('active');reusableDropMarker?.remove();$('drag-ghost').hidden=true}
 function updateLibraryDrag(e){if(!libraryDragging||e.pointerId!==libraryDragging.pointerId)return;
- const g=$('drag-ghost');g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';
+ const g=$('drag-ghost');g.classList.remove('set-song-ghost');g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';
  const root=$('set-songs'),area=root.getBoundingClientRect(),pad=$('set-drop-zone').getBoundingClientRect(),inPad=e.clientX>=pad.left&&e.clientX<=pad.right&&e.clientY>=pad.top&&e.clientY<=pad.bottom;
  const inside=inPad||(e.clientX>=area.left&&e.clientX<=area.right&&e.clientY>=area.top&&e.clientY<=area.bottom);
  libraryDragging.inside=inside;g.hidden=false;root.classList.toggle('library-drag-over',inside&&!inPad);$('set-drop-zone').classList.toggle('active',inside);
@@ -321,8 +460,8 @@ function installTouchDrag(row,getPayload){
    }else{
     dragging={index:payload.index,target:payload.index,side:'none',id:-123,el:row,handle:row};
     row.classList.add('dragging');
-    const ghost=$('drag-ghost');ghost.textContent=row.querySelector('.songtitle')?.textContent||'Move song';ghost.hidden=false;
-    ghost.style.left=origin.x+'px';ghost.style.top=origin.y+'px';
+    showMovingSong(row);
+    updateSetDrag(origin.x,origin.y);
    }
    if(navigator.vibrate)try{navigator.vibrate(12)}catch{}
   },180);
@@ -334,10 +473,7 @@ function installTouchDrag(row,getPayload){
   e.preventDefault();
   if(activeTouch.type==='library')updateLibraryDrag({pointerId:-123,clientX:t.clientX,clientY:t.clientY});
   else{
-   const root=$('set-songs'),r=root.getBoundingClientRect();
-   if(t.clientY<r.top+32)root.scrollTop-=13;else if(t.clientY>r.bottom-32)root.scrollTop+=13;
-   dragging.target=findTarget(t.clientY);dragging.side=breakSideAt(dragging.target,t.clientY);clearDrag();row.classList.add('dragging');markSetDragTarget(dragging.target);
-   const ghost=$('drag-ghost');ghost.style.left=t.clientX+'px';ghost.style.top=t.clientY+'px';
+   updateSetDrag(t.clientX,t.clientY);
   }
  },{passive:false});
  const finish=e=>{
@@ -364,17 +500,36 @@ function attachLibraryRowDrag(row,song,addButton){
  row.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||e.target.closest('button,input,select')||e.button!==0)return;beginLibraryDrag(e,song,row)});
 }
 
+// Reposition the menu every time it opens, including split-screen widths.
+function positionManagerMenu(){
+ const details=$('manage-details'), menu=details.querySelector('.menu-content');
+ if(!details.open)return;
+ const button=details.querySelector('summary').getBoundingClientRect();
+ const vw=document.documentElement.clientWidth, vh=window.innerHeight;
+ const width=Math.min(390,vw-24);
+ const left=Math.max(12,Math.min(vw-width-12,button.right-width));
+ const below=vh-button.bottom-12, above=button.top-12;
+ const showAbove=below<190&&above>below;
+ const top=showAbove?12:Math.min(button.bottom+8,vh-110);
+ const height=Math.max(100,showAbove?above:vh-top-12);
+ menu.style.setProperty('--menu-left',left+'px');
+ menu.style.setProperty('--menu-top',top+'px');
+ menu.style.setProperty('--menu-height',height+'px');
+}
+$('manage-details').addEventListener('toggle',positionManagerMenu);
+window.addEventListener('resize',positionManagerMenu);
 $('setlist-picker').onchange=e=>pick(e.target.value||null);
 $('save-setlist').onclick=()=>{if(active())save()};
 $('add-break').onclick=()=>{
- const s=active();if(!s||s.songIds.length<2)return;
+ const s=active();if(!s||s.songIds.length<1)return;
  const last=s.breaks.at(-1)||0;
  // Insert the new divider ahead of the final song; user can drag it to the desired boundary.
  const position=Math.max(last+1,s.songIds.length-1);
- if(position>=s.songIds.length){msg('Add another song after the last set break before inserting a new break.');return}
+  if(position>s.songIds.length){msg('Add another song before inserting another set break.');return}
  s.breaks=normalizedBreaks({breaks:[...s.breaks,position]},s.songIds.length);
  save();drawSelected();$('manage-details').open=false;
 };
+$('exit-manager').onclick=()=>{location.href='performance-development.html'};
 $('new-setlist').onclick=()=>{$('manage-details').open=true;$('new-name').focus()};
 $('play-setlist').onclick=()=>{const s=active();if(!s||!s.songIds.length)return;location.href='performance-development.html?setlist='+encodeURIComponent(s.id)};
 const FONT_KEY='setlist-app-font-v1';const SIZE_KEY='setlist-studio-text-scale-v1';
@@ -389,10 +544,10 @@ $('create').onclick=()=>{if(!musicianId){msg('Load your songbook first.');return
 $('new-name').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('create').click()}});
 $('rename').onclick=()=>{const s=active();if(!s)return;const n=prompt('Rename setlist:',s.name);if(n===null)return;if(!n.trim())return msg('Setlist name cannot be empty.');s.name=n.trim().slice(0,100);save();render()};
 $('duplicate').onclick=()=>{const s=active();if(!s)return;const clone={id:makeId(),name:s.name+' (Copy)',songIds:[...s.songIds],breaks:[...s.breaks]};sets.push(clone);save();pick(clone.id)};
-$('remove-setlist').onclick=()=>{const s=active();if(!s||!confirm('Delete setlist "'+s.name+'"? Your songs will not be deleted.'))return;sets=sets.filter(x=>x.id!==s.id);selectedId=sets[0]?.id||null;save();render()};
+$('remove-setlist').onclick=()=>{const s=active();if(!s||!confirm('Delete setlist "'+s.name+'"? Your songs will not be deleted.'))return;sets=sets.filter(x=>x.id!==s.id);selectedId=sets[0]?.id||null;rememberSelectedSetlist();save();render()};
 $('export').onclick=()=>{if(!musicianId)return msg('Load your library first.');const text=JSON.stringify({type:'musician-setlists-backup',version:1,exportedAt:new Date().toISOString(),setlists:sets.map(s=>({...s}))},null,2);const blob=new Blob([text],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='setlists-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)};
 $('song-search').oninput=()=>{drawLibrary();$('library-songs').scrollTop=0};$('song-filter').onchange=()=>{drawLibrary();$('library-songs').scrollTop=0};$('reload').onclick=()=>init(true);
-async function init(force=false){msg('Loading song library…');let cache=null;try{cache=await readSavedSongs()}catch(e){console.warn('No offline library:',e)}if(cache?.songs?.length){userId=cache.userId;musicianId=cache.musicianId;songs=cache.songs;loadSets();selectedId=sets[0]?.id||null;render();msg('Loaded '+songs.length+' saved songs · Setlists save locally on this device.')}if(!navigator.onLine){if(!songs.length)msg('Offline library not found. Open Performance Beta while online and save your song library.');return}try{if(!window.supabase?.createClient){if(!songs.length)msg('Cannot connect to Supabase right now; try reloading online.');return}dbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data:auth,error:authError}=await dbClient.auth.getSession();if(authError)throw authError;const user=auth?.session?.user;if(!user){if(!songs.length)msg('Please sign in through Musician Login, then reopen Setlist Manager.');return}const {data:m,error:err}=await dbClient.from('musicians').select('id').eq('user_id',user.id).maybeSingle();if(err||!m)throw err||new Error('Musician account not found');if(musicianId&&musicianId!==m.id){sets=[];selectedId=null}const loaded=[];for(let offset=0;offset<20000;offset+=500){const {data,error}=await dbClient.from('songs').select('id,title,artist,song_status').eq('musician_id',m.id).order('title').order('id').range(offset,offset+499);if(error)throw error;loaded.push(...(data||[]));if(!data||data.length<500)break}if(loaded.length){songs=loaded;musicianId=m.id;userId=user.id;loadSets();selectedId=sets.find(s=>s.id===selectedId)?.id||sets[0]?.id||null;render();msg('Synced '+songs.length+' songs online · Setlists save locally (not yet in Supabase).')}}catch(e){msg((songs.length?'Using saved song library. ':'')+'Online sync unavailable: '+(e.message||e))}}
+async function init(force=false){msg('Loading song library…');let cache=null;try{cache=await readSavedSongs()}catch(e){console.warn('No offline library:',e)}if(cache?.songs?.length){userId=cache.userId;musicianId=cache.musicianId;songs=cache.songs;loadSets();render();msg('Loaded '+songs.length+' saved songs · Setlists save locally on this device.')}if(!navigator.onLine){if(!songs.length)msg('Offline library not found. Open Performance Beta while online and save your song library.');return}try{if(!window.supabase?.createClient){if(!songs.length)msg('Cannot connect to Supabase right now; try reloading online.');return}dbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data:auth,error:authError}=await dbClient.auth.getSession();if(authError)throw authError;const user=auth?.session?.user;if(!user){if(!songs.length)msg('Please sign in through Musician Login, then reopen Setlist Manager.');return}const {data:m,error:err}=await dbClient.from('musicians').select('id').eq('user_id',user.id).maybeSingle();if(err||!m)throw err||new Error('Musician account not found');if(musicianId&&musicianId!==m.id){sets=[];selectedId=null}const loaded=[];for(let offset=0;offset<20000;offset+=500){const {data,error}=await dbClient.from('songs').select('id,title,artist,song_status').eq('musician_id',m.id).order('title').order('id').range(offset,offset+499);if(error)throw error;loaded.push(...(data||[]));if(!data||data.length<500)break}if(loaded.length){songs=loaded;musicianId=m.id;userId=user.id;loadSets();render();msg('Synced '+songs.length+' songs online · Setlists save locally (not yet in Supabase).')}}catch(e){msg((songs.length?'Using saved song library. ':'')+'Online sync unavailable: '+(e.message||e))}}
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./performance-offline-sw.js').catch(e=>console.warn('Offline page cache unavailable',e));}
 init();
 </script></body></html>
