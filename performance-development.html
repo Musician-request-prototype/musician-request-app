@@ -120,6 +120,7 @@ body.mode-playing #stage{padding-top:12px}
 .az-heading{position:sticky;top:0;z-index:1;background:#303e50;color:#f1f5f9;font-weight:750;padding:5px 10px;font-size:13px;border-bottom:1px solid #627088}
 @media(max-height:620px){#az-rail button{font-size:9px}}
 
+#song-list .az-heading{position:static!important}
 /* Setlist navigation: local setlists from the same browser, no internet required. */
 #setlist-browser-bar{display:flex;align-items:center;gap:6px;width:100%;padding:4px 0 8px;flex-wrap:wrap}
 #setlist-browser-bar[hidden]{display:none!important}
@@ -672,7 +673,22 @@ function drawList(){
   btn.append(title,meta);btn.onclick=()=>showSong(s);frag.append(btn);
  }
  list.append(frag);
- for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){const btn=document.createElement('button');btn.type='button';btn.textContent=letter;btn.setAttribute('aria-label','Jump to '+letter);btn.disabled=!sections.has(letter);if(btn.disabled)btn.style.opacity='.28';btn.onclick=()=>{const heading=sections.get(letter);if(heading)list.scrollTop+=heading.getBoundingClientRect().top-list.getBoundingClientRect().top};rail.append(btn)}
+ // Measure positions in list content coordinates, never from sticky viewport coordinates.
+ const positions=new Map();let contentY=0;
+ for(const child of list.children){
+  if(child.classList.contains('az-heading'))positions.set(child.textContent,contentY);
+  contentY+=child.getBoundingClientRect().height;
+ }
+ for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){
+  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;
+  btn.setAttribute('aria-label','Jump to '+letter);btn.disabled=!positions.has(letter);
+  if(btn.disabled)btn.style.opacity='.28';
+  btn.addEventListener('click',()=>{
+   const top=positions.get(letter);if(top===undefined)return;
+   list.scrollTop=Math.min(top,Math.max(0,list.scrollHeight-list.clientHeight));
+  });
+  rail.append(btn);
+ }
 }
 
 async function connect(){
