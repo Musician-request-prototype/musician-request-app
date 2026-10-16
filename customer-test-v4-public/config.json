@@ -1,0 +1,14 @@
+{
+  "musicianName": "Phil Smith Live",
+  "logo": "logo.jpeg",
+  "accent": "#62eb86",
+  "tagline": "Request a song for today’s show",
+  "demoMode": true,
+  "paymentLinks": {
+    "venmo": "",
+    "cashApp": "",
+    "paypal": "",
+    "custom": ""
+  },
+  "musicianSlug": "phil-smith-live"
+}
