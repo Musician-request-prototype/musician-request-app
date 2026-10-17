@@ -1,0 +1,1179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Performance Mode — Show History V2 Test</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#252525;color:#fff;border:1px solid #484848;border-radius:10px;padding:10px 13px;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #87baff;outline-offset:2px}button:disabled{opacity:.5}header{height:64px;background:#171717;border-bottom:1px solid #343434;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;gap:12px}.head-title{font-size:17px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-shrink:0}#layout{display:flex;height:calc(100dvh - 64px);min-height:0}aside{width:min(42%,420px);min-width:240px;flex-shrink:0;display:flex;flex-direction:column;background:#171717;border-right:1px solid #353535}aside[hidden]{display:none}#browser-top{padding:12px;display:grid;gap:9px;border-bottom:1px solid #333}input,select{background:#272727;color:white;border:1px solid #555;border-radius:9px;padding:11px;width:100%;font-size:16px}#song-list{overflow:auto;flex:1;min-height:0}.song-row{display:block;text-align:left;border:0;border-bottom:1px solid #333;border-radius:0;padding:13px 15px;width:100%;background:none}.song-row.active{background:#264267}.song-name{font-size:17px;font-weight:600}.song-meta{font-size:13px;color:#bbb;margin-top:4px}.muted{color:#aaa}.missing{color:#efbd79}#stage{min-width:0;flex:1;overflow:auto;padding:25px 30px 80px;overscroll-behavior:contain}#song-title{text-align:center;font-size:28px;margin:0;font-weight:700}#song-artist{text-align:center;color:#b5b5b5;margin:8px 0 4px}#song-status{text-align:center;color:#9e9e9e;font-size:13px;margin:7px 0 25px}#chart{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;line-height:1.25;overflow-x:auto;overflow-y:visible;margin:0;min-height:50vh;overscroll-behavior-x:contain;font-variant-ligatures:none;letter-spacing:0;font-weight:400}
+/* Chords and their lyrics use EXACTLY the same font, size, character advance and whitespace rules. */
+.chart-line{display:block;white-space:pre;width:max-content;min-width:100%;min-height:1.28em;font-family:inherit;font-size:1em;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.chart-line.chords{color:#a8dfb3;line-height:1.15;min-height:1.15em}
+.chart-line.lyric{color:#fff;line-height:1.3;min-height:1.3em}
+.chart-line.section{color:#d6b8ff;font-weight:700;margin-top:.6em}
+.chart-line.blank{min-height:.65em}
+.chart-line.tab{color:#c2c6ce;font-size:.82em;line-height:1.25;font-family:inherit}
+.chart-line.note{color:#cbd5e1}
+.chart-line.empty{color:#cbd5e1;white-space:normal;width:auto}
+.locked-pair{display:block;width:max-content;min-width:100%;margin:0 0 .18em;white-space:pre;font-family:inherit;font-size:1em;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.locked-pair .chord-line{display:block;color:#a8dfb3;line-height:1.12;white-space:pre;font-family:inherit;font-size:inherit;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+.locked-pair .lyric-line{display:block;color:#fff;line-height:1.28;white-space:pre;font-family:inherit;font-size:inherit;font-weight:400;letter-spacing:0;font-variant-ligatures:none}
+#message{font-size:16px;line-height:1.5;color:#ddd;margin:28px auto;max-width:570px}a{color:#9fcbff}#count{font-size:12px;color:#bbb}#busy{font-size:12px;color:#ddd;white-space:nowrap}#restore{display:none}#library{touch-action:pan-y}@media(max-width:780px){aside{position:absolute;left:0;top:64px;bottom:0;width:min(88vw,420px);max-width:none;min-width:0;z-index:5;box-shadow:14px 0 30px #0009}#stage{padding:22px 17px 60px}#song-title{font-size:25px}#chart{font-size:21px}header{padding:8px}.head-title{font-size:14px}}
+
+/* BandHelper-style fidelity: preserve raw column whitespace, but make all
+   printed text and its whitespace use the same proportional glyph metrics.
+   Never anchor chords against a monospace approximation of the lyric. */
+#chart{font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:1.25;font-variant-ligatures:none;overflow-x:auto}
+.bandhelper-pair{display:block;width:max-content;min-width:100%;margin:0 0 .16em;font:inherit;white-space:pre;letter-spacing:0;}
+.bandhelper-pair .chord-line,.bandhelper-pair .lyric-line{display:block;font:inherit;font-weight:400;white-space:pre;letter-spacing:0;font-variant-ligatures:none}
+.bandhelper-pair .chord-line{color:#a8dfb3;line-height:1.14}
+.bandhelper-pair .lyric-line{color:#fff;line-height:1.25}
+.chart-line{font-family:Arial,Helvetica,sans-serif;font-size:1em}
+.chart-line.tab{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.81em}
+@media(max-width:780px){#chart{font-size:23px}}
+
+/* Beta request controls: additions do not change chart formatting. */
+.actions{align-items:center;flex-wrap:wrap;justify-content:flex-end}
+header{min-height:64px;height:auto;flex-wrap:wrap}
+#layout{height:calc(100dvh - 64px)}
+.mode{display:flex;gap:2px;background:#232323;border:1px solid #555;border-radius:10px;padding:3px}
+.mode button{padding:8px 10px;background:transparent;border:0;font-size:13px}
+.mode button.chosen{background:#35648c;color:#fff}
+#request-panel{position:fixed;z-index:8;right:12px;top:72px;width:min(390px,calc(100vw - 24px));max-height:min(70vh,650px);overflow:auto;background:#191919;border:1px solid #666;border-radius:14px;box-shadow:0 12px 35px #000b;padding:14px}
+#request-panel[hidden],#dice-panel[hidden]{display:none}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.request-item{border:1px solid #444;padding:10px;border-radius:10px;margin:8px 0;background:#242424}
+.request-title{font-weight:700;margin-bottom:5px}.request-details{font-size:13px;color:#bbb;white-space:pre-wrap;margin-bottom:8px}
+.request-item button{width:100%;text-align:left}.request-item button:disabled{cursor:default}
+#requests-btn.has-requests{border-color:#8bcd9b}
+#request-info{font-size:13px;color:#b8b8b8;line-height:1.4}
+#dice-panel{position:fixed;z-index:8;right:12px;top:72px;width:min(350px,calc(100vw - 24px));background:#191919;border:1px solid #666;border-radius:14px;box-shadow:0 12px 35px #000b;padding:14px}
+#dice-choice{font-size:22px;font-weight:700;margin:16px 0 5px}.dice-controls{display:flex;gap:8px;margin-top:14px}.dice-controls button{flex:1}
+#mode-hint{font-size:12px;color:#a7c3e0}
+#pin-setup{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:10px 0}
+#show-pin{width:135px;max-width:100%;padding:9px;font-size:16px}
+#show-state{font-size:12px;color:#b9dbb9}
+#request-info{margin:8px 0}
+#request-list .request-item button{margin-top:7px}
+#request-list .request-item .played-button{width:auto;background:#242f28;border-color:#5b936a}
+
+@media(max-width:780px){header{gap:5px}.head-title{width:100%;font-size:13px}.actions{width:100%;gap:4px}.actions button{padding:6px 8px;font-size:13px}.mode button{padding:6px 8px}#layout{height:calc(100dvh - 104px)}aside{top:104px}}
+
+/* Show controls stay entirely inside the Requests panel. */
+#show-controls{margin:12px 0;padding:12px;border:1px solid #4b4b4b;border-radius:12px;background:#202020}
+#show-controls[hidden]{display:none}
+#show-controls .show-control-heading{font-size:15px;font-weight:700;margin-bottom:8px}
+#show-controls .show-control-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#show-controls button{padding:11px 8px;font-size:14px;min-height:43px}
+#show-controls .end-show{border-color:#a36a6a}
+#show-controls-feedback{font-size:13px;line-height:1.4;margin-top:9px;color:#c5c5c5}
+@media(max-width:400px){#show-controls .show-control-buttons{grid-template-columns:1fr}}
+
+#save-offline{font-size:12px;padding:7px 10px;border-color:#5a8869}
+/* Playing screen: full-height chart and small floating controls. */
+html,body{height:100%;overflow:hidden}
+body{height:100dvh;display:flex;flex-direction:column}
+header{flex:0 0 auto}
+#layout{flex:1 1 auto;height:auto!important;min-height:0}
+#stage{min-height:0}
+body.toolbar-hidden header{display:none}
+body.toolbar-hidden #layout{height:100dvh!important}
+#restore-controls{display:none;position:fixed;z-index:12;top:0;left:50%;transform:translateX(-50%);border-radius:0 0 11px 11px;padding:3px 14px;min-height:26px;font-size:12px;background:#202020e8;color:#fff;border:1px solid #555;border-top:0;opacity:.72}
+body.toolbar-hidden #restore-controls{display:block}
+#hide-controls{font-size:13px;padding:7px 9px}
+#playing-floats{display:none;position:fixed;inset:0;z-index:6;pointer-events:none}
+body.mode-playing #playing-floats{display:block}
+.float-control{pointer-events:auto;position:absolute;background:#171717e8;border:1px solid #666;border-radius:12px;box-shadow:0 4px 20px #0009;padding:6px;display:flex;gap:5px;align-items:center}
+.float-control button{font-size:13px;padding:7px 9px;min-height:37px;min-width:38px}
+#float-requests{right:12px;bottom:18px;width:min(244px,calc(100vw - 24px));min-width:0;max-height:190px;display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:9px 10px;border-color:#53765c;text-align:left;cursor:pointer}
+#float-requests .request-float-head{font-size:11px;color:#c8e0cc;font-weight:700;letter-spacing:.03em;margin-bottom:3px}
+#float-requests .request-float-row{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0;font-size:13px;line-height:1.3;padding:3px 0;border-top:1px solid #ffffff12}
+#float-requests .request-float-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#float-requests .request-float-tip{color:#9ee0a5;font-weight:800;flex-shrink:0}
+#float-requests .request-float-empty{font-size:12px;color:#b7b7b7}
+#float-requests:focus-visible{outline:2px solid #87baff;outline-offset:3px}
+#float-requests.has-requests{background:#24402bea;border-color:#85d49c}
+#float-transport{left:12px;bottom:18px;flex-direction:row;max-width:calc(100vw - 16px);touch-action:none}
+#float-transport.edge-left,#float-transport.edge-right{flex-direction:column;max-width:none;max-height:calc(100dvh - 16px)}
+#float-transport .drag-grip{background:#333;border:1px dashed #888;border-radius:7px;color:#ddd;display:grid;place-items:center;min-width:30px;min-height:37px;padding:5px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+#float-transport .drag-grip:active{cursor:grabbing;background:#425265}
+#float-transport .drag-grip:focus-visible{outline:2px solid #87baff;outline-offset:2px}
+#float-transport.edge-left .drag-grip,#float-transport.edge-right .drag-grip{width:100%}
+#auto-status{font-size:11px;min-width:40px;color:#ccc;text-align:center}
+#auto-status{font-size:11px;min-width:40px;color:#ccc;text-align:center}
+body:not(.mode-playing) #hide-controls{display:none}
+body.mode-playing #dice-btn{display:none}
+#request-panel{z-index:10}
+#dice-panel{z-index:10}
+@media(max-width:780px){aside{top:var(--header-height,104px)}body.toolbar-hidden aside{top:0}#float-requests{right:8px;bottom:8px}.float-control{padding:4px;gap:2px}.float-control button{padding:6px 8px;min-width:33px}}
+@media(max-width:580px){#float-requests{bottom:8px}}
+
+/* Compact stage: title, artist, status never occupy Playing Mode space. */
+body.mode-playing #song-title,body.mode-playing #song-artist,body.mode-playing #song-status{display:none!important}
+body.mode-playing #stage{padding-top:12px}
+/* Browser list scrolls independently; alphabet stays on its right edge. */
+#song-list-wrap{display:flex;flex:1;min-height:0;overflow:hidden}
+#song-list{min-width:0;flex:1;overflow-y:auto;scroll-behavior:auto}
+#az-rail{display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;flex:0 0 27px;padding:3px 1px;background:#20242a;border-left:1px solid #434955;overflow:hidden;min-height:0}
+#az-rail button{border:0;background:transparent;color:#b9d5f4;border-radius:5px;min-height:0;min-width:23px;flex:1;padding:0;font-size:clamp(9px,1.13vh,12px);font-weight:700;line-height:1;touch-action:manipulation}
+#az-rail button:active,#az-rail button:focus-visible{background:#35648c;color:white}
+.az-heading{position:sticky;top:0;z-index:1;background:#303e50;color:#f1f5f9;font-weight:750;padding:5px 10px;font-size:13px;border-bottom:1px solid #627088}
+@media(max-height:620px){#az-rail button{font-size:9px}}
+
+#song-list .az-heading{position:static!important}
+/* Setlist navigation: local setlists from the same browser, no internet required. */
+#setlist-browser-bar{display:flex;align-items:center;gap:6px;width:100%;padding:4px 0 8px;flex-wrap:wrap}
+#setlist-browser-bar[hidden]{display:none!important}
+#active-setlist-title{color:#b7efc1;flex:1 1 100px;min-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+#setlist-browser-bar button{background:#1e3828;border:1px solid #568668;padding:7px;font-size:12px}
+#setlist-browser-bar button:active{background:#41915d}
+body.active-setlist:not(.all-songs-view) #az-rail,body.active-setlist:not(.all-songs-view) #filter{display:none}
+body.active-setlist:not(.all-songs-view) #browser-top #search{flex:1 1 100%}
+.song-row.setlist-current{background:#28583b;border-left:4px solid #a8e7b5}
+.setlist-break-row{display:block;padding:12px 9px;background:#233124;color:#b1ddb7;border-top:1px solid #537459;font-weight:700;font-size:12px;text-align:center}
+#setlist-browser-bar #exit-setlist{border-color:#6f7f70}
+
+#setlist-info{font-size:12px;color:#a3e8bd;white-space:nowrap;max-width:165px;overflow:hidden;text-overflow:ellipsis}
+#setlist-prev,#setlist-next{border-color:#3e9961;color:#d4ffdf;background:#173b26;font-size:12px;padding:8px}
+
+@keyframes requestFloatPulse{0%,100%{box-shadow:0 0 0 0 #b5e89900;border-color:#79b48a}50%{box-shadow:0 0 0 5px #b5e89955;border-color:#e4fa91}}
+body.mode-playing #float-requests.has-requests{animation:requestFloatPulse 2.7s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){body.mode-playing #float-requests.has-requests{animation:none;border-color:#e4fa91}}
+/* New green stage theme — visual direction shared with the Setlist Studio. */
+header{background:#101813;border-bottom-color:#2e5138}
+button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#75e0a0}
+.mode button.chosen{background:#206740}
+.song-row.active{background:#214d33}
+#az-rail{background:#112017;border-left-color:#325a3f}
+#az-rail button{color:#a5e8b9}
+#az-rail button:active,#az-rail button:focus-visible{background:#287448}
+.az-heading{background:#19442a;border-bottom-color:#397c4c}
+#mode-hint{color:#a7dfb7}
+#song-title{font-family:"Segoe Print","Bradley Hand",system-ui,sans-serif}
+/* Set break intermission and safe return to setlist after an audience request. */
+#set-break-screen[hidden]{display:none!important}
+#set-break-screen{min-height:55vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:10px;color:#effcf1}
+#set-break-screen .break-symbol{font-size:50px}
+#set-break-screen h2{font-size:clamp(28px,5vw,44px);margin:5px 0}
+#set-break-screen p{color:#bddac4;margin:0 0 12px}
+#set-break-screen button,#setlist-resume{border-color:#58b67b;background:#174c2c;color:#effff2}
+#setlist-resume{white-space:nowrap}
+body.showing-set-break #chart,body.showing-set-break #song-title,body.showing-set-break #song-artist,body.showing-set-break #song-status{display:none!important}
+
+/* Clean-stage beta: controls do not consume chart height. */
+body.mode-playing header{display:none!important}
+body.mode-playing #layout{height:100dvh!important}
+body.mode-playing #restore-controls{display:none!important}
+body.mode-playing #stage{padding:12px 18px 94px}
+body.mode-playing #request-panel{top:8px}
+#float-transport{max-width:calc(100vw - 18px);flex-wrap:wrap}
+#float-transport .drag-grip{border:1px solid #576457;background:#203226}
+#float-transport button{background:#1c3625;border-color:#365942;color:#edf7ee}
+#float-transport #float-between{border-color:#86b995}
+#float-transport.edge-left,#float-transport.edge-right{flex-wrap:nowrap;overflow-y:auto}
+#request-panel{width:min(430px,calc(100vw - 16px));top:var(--header-height,70px);max-height:calc(100dvh - 90px);padding:10px}
+#request-list{display:grid;gap:4px}
+#request-list .request-item{display:flex;align-items:center;gap:5px;margin:0;padding:7px 8px;min-height:47px;background:#202321;border-color:#394239;border-radius:9px}
+#request-list .request-summary{min-width:0;flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px}
+#request-list .request-title{margin:0;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#request-list .request-details{margin:0;font-size:11px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#request-list .request-open{width:auto!important;min-width:42px;max-width:78px;padding:6px 7px;margin:0!important;font-size:11px;background:#21402b;border-color:#376749;flex-shrink:0}
+#request-list .request-mark{width:auto!important;padding:7px 8px;margin:0!important;font-size:11px;background:#203e2a;border-color:#49785a;flex-shrink:0}
+#request-list .request-item.is-played{opacity:.7}
+#request-list .request-item.is-played .request-title{font-weight:650}
+#float-requests{background:#18281ded}
+@media(max-width:580px){#float-transport button{font-size:11px;padding:5px 6px;min-width:28px}}
+
+/* Shared Setlist Studio look. UI font only: NEVER modify chart text metrics. */
+:root{--studio-green:#62d996;--studio-bg:#080c09;--studio-panel:#0e1711;--studio-line:#2a4934;--studio-hand:"Segoe Print","Bradley Hand","Comic Sans MS",cursive}
+body{background:var(--studio-bg);color:#f1f7f2}
+header{background:#0d120f;border-bottom-color:var(--studio-line)}
+.head-title,.hand-heading{font-family:var(--studio-hand);letter-spacing:.012em;font-weight:650}
+.head-title{font-size:clamp(17px,2.1vw,25px);color:#b2efc4}
+header button{background:#16241a;border:1px solid #335640;color:#eff9f0}
+header button:hover,#setlists-panel button:hover{border-color:var(--studio-green)}
+#browser-top,aside{background:#101713;border-color:#2e5038}
+#browser-top input,#browser-top select{background:#1b251e;border-color:#42604b}
+.song-name{font-family:var(--studio-hand);font-weight:500;font-size:17px}
+.song-row{border-bottom-color:#2a3f30}
+.song-meta,#count{color:#aabdaf}
+#request-panel,#dice-panel,#setlists-panel{background:#101813;border:1px solid #416849}
+.panel-head strong{font-family:var(--studio-hand);font-size:20px;color:#abefc0}
+/* No handwriting font applies to #chart or any of its descendants. */
+#chart,#chart *{letter-spacing:0;font-variant-ligatures:none}
+#setlists-btn{background:#1a241d;border-color:#5a9c6a;color:#f2fff4}
+#setlists-btn.panel-open{background:#287344;border-color:#9fddad}
+body.mode-playing #setlists-btn{display:none}
+#setlists-panel[hidden]{display:none!important}
+#setlists-panel{position:fixed;z-index:11;top:var(--header-height,80px);right:10px;width:min(400px,calc(100vw - 20px));max-height:calc(100dvh - 110px);overflow:auto;border-radius:15px;padding:14px;box-shadow:0 15px 40px #000e}
+.setlist-subtitle{color:#b4c9b9;font-size:13px;line-height:1.4;margin:4px 0 12px}
+#setlists-choices{display:grid;gap:7px}
+.setlist-choice{width:100%;text-align:left;background:#192a1f;border:1px solid #3a5b43;border-radius:11px;padding:12px 13px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.setlist-choice .setlist-choice-name{font-family:var(--studio-hand);font-size:16px;color:#fff}
+.setlist-choice .setlist-choice-count{font-size:12px;color:#b8dcc1;white-space:nowrap}
+.setlists-footer{margin-top:13px;padding-top:12px;border-top:1px solid #2f4e38}
+#open-setlist-studio{width:100%;background:#1c5433;border-color:#60ae7b;color:white}
+.setlist-empty{font-size:13px;color:#bed2c3;padding:9px}
+@media(max-width:780px){.head-title{font-size:18px}}
+
+/* Shared UI font preference. Chart lettering stays independent for chord alignment. */
+:root{--shared-hand:"Segoe Print","Bradley Hand","Comic Sans MS",cursive;--shared-modern:system-ui,-apple-system,"Segoe UI",sans-serif;--shared-classic:Georgia,"Times New Roman",serif;--shared-font:var(--shared-hand)}
+body[data-font="hand"]{--shared-font:var(--shared-hand)}
+body[data-font="modern"]{--shared-font:var(--shared-modern)}
+body[data-font="classic"]{--shared-font:var(--shared-classic)}
+.head-title,.hand-heading,.song-name,.panel-head strong,.setlist-choice .setlist-choice-name,#setlists-panel button,#request-list .request-title{font-family:var(--shared-font)}
+#chart,#chart *{font-family:Arial,Helvetica,sans-serif!important;letter-spacing:0!important;font-variant-ligatures:none!important}
+#chart .chart-line.tab{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important}
+#ui-font-choice{width:auto;max-width:140px;padding:7px 5px;font-size:13px;border-color:#49795a;background:#192e20;color:white}
+#font-choice-label{font-size:12px;color:#b5d6bd}
+
+
+/* Between Songs: a narrow, deliberate resize handle, not the entire divider. */
+#layout{min-width:0}
+#library{width:var(--library-pane-width, 340px);min-width:220px;max-width:calc(100% - 260px)}
+#library-resizer{flex:0 0 18px;position:relative;cursor:col-resize;touch-action:none;user-select:none;-webkit-user-select:none;background:#101713;border-left:1px solid #284633;border-right:1px solid #284633;z-index:4;padding:0;min-width:18px;border-radius:0}
+#library-resizer::after{content:'⋮';display:grid;place-items:center;position:absolute;width:12px;height:62px;top:50%;left:2px;transform:translateY(-50%);border-radius:9px;background:#345841;color:#eaf7ed;font-size:25px;font-family:system-ui;line-height:1}
+#layout:has(#library[hidden]) #library-resizer{display:none}
+body.mode-playing #library-resizer{display:none}
+body.resizing-library,body.resizing-library *{cursor:col-resize!important;user-select:none!important;-webkit-user-select:none!important}
+/* Wrap header actions instead of allowing controls to escape horizontally. */
+header{max-width:100vw;min-width:0}
+header .actions{min-width:0;flex:1 1 540px;flex-wrap:wrap;justify-content:flex-end}
+#busy{max-width:160px;overflow:hidden;text-overflow:ellipsis}
+/* In narrow split view the song browser remains an overlay, so resizing is disabled. */
+@media(max-width:780px){#library{width:min(88vw,420px);min-width:0;max-width:none}#library-resizer{display:none!important}}
+#float-transport{max-width:calc(100dvw - 16px);max-height:calc(100dvh - 16px)}
+#float-transport:not(.edge-left):not(.edge-right){overflow-x:auto}
+
+
+/* Development-only musician chart editor; preserve whitespace literally. */
+#editor-launch{display:none;margin:5px 0 14px;padding:7px 13px;background:#214d33;border-color:#619c70}
+body:not(.mode-playing) #editor-launch{display:inline-block}
+#song-editor[hidden],#editor-launch[hidden]{display:none!important}
+#song-editor{background:#121d16;border:1px solid #426b4c;border-radius:13px;padding:15px;margin:8px 0 20px;max-width:100%;}
+#song-editor h2{margin:0 0 6px;color:#e4f6e8;font-size:21px}
+#song-editor .editor-help{color:#c7d7ca;font-size:13px;line-height:1.45;margin:4px 0 13px}
+#song-editor textarea{display:block;box-sizing:border-box;width:100%;min-height:min(49vh,470px);padding:13px;font:17px/1.35 Arial,Helvetica,sans-serif;white-space:pre;overflow:auto;resize:vertical;color:#fff;background:#090e0b;border:1px solid #5b7962;border-radius:9px;tab-size:4;}
+#song-editor .edit-controls{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:12px}
+#song-editor .edit-controls button{min-width:92px}
+#editor-save{background:#285e3a;border-color:#81bb8e}
+#editor-feedback{font-size:13px;color:#bbdbc3;margin-top:9px;white-space:pre-wrap}
+body.editor-active #chart{display:none}
+body.mode-playing #song-editor{display:none!important}
+
+/* Studio stage controls: highly visible Songs shortcut and raised four-arrow handle. */
+#float-transport .drag-grip{
+ box-sizing:border-box; min-width:46px;min-height:46px;width:46px;height:46px;padding:8px;
+ background:linear-gradient(145deg,#3b8151 0%,#285b3c 58%,#173925 100%);
+ border:1px solid #91c39c;border-radius:11px;color:#f5fff7;
+ box-shadow:inset 0 1px 1px #d0efd452,0 3px 0 #0a2615,0 5px 9px #000b;
+}
+#float-transport .drag-grip:active{background:linear-gradient(155deg,#234d32,#366f48);transform:translateY(2px);box-shadow:inset 0 2px 5px #0009}
+#float-library{
+ box-sizing:border-box;min-height:46px;min-width:104px;padding:10px 13px!important;
+ color:#fff;background:#2b7445;border:1px solid #9bd0a8;border-radius:10px;
+ font:700 15px/1.15 system-ui,-apple-system,sans-serif!important;
+ letter-spacing:.025em;box-shadow:0 2px 7px #0009;
+}
+#float-library:active{background:#398958}
+#float-transport.edge-left #float-library,#float-transport.edge-right #float-library{min-width:75px;padding:10px 7px!important;font-size:12px!important}
+@media(max-width:780px){#float-transport .drag-grip{min-width:44px;min-height:44px;width:44px;height:44px}#float-library{min-height:44px;min-width:92px;padding:9px!important;font-size:14px!important}}
+/* Defensive sizing for resized Safari windows and iPad Split View. */
+#float-transport{box-sizing:border-box;max-width:calc(100dvw - 24px);max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+#float-transport.edge-left,#float-transport.edge-right{width:max-content;max-width:calc(100dvw - 24px);max-height:calc(100dvh - 24px);overflow-y:auto;overflow-x:hidden}
+#toolbar-recover{display:none;position:fixed;z-index:25;left:12px;bottom:88px;min-height:46px;padding:9px 15px;background:#296f42;color:#fff;border:2px solid #a5d5b0;border-radius:12px;box-shadow:0 5px 18px #000d;font:700 15px system-ui,-apple-system,sans-serif}
+body.mode-playing.toolbar-needs-recovery #toolbar-recover{display:block}
+
+/* Stage-friendly consolidated header. Keep implementation behavior while simplifying appearance. */
+header{gap:10px!important;min-height:68px!important;padding:10px 14px!important;align-items:center!important;justify-content:space-between!important;flex-wrap:wrap!important;background:linear-gradient(110deg,#08110b,#0c1b10 60%,#061009)!important;border-bottom:1px solid #2d6339!important}
+.performance-brand{display:flex;align-items:center;gap:9px;min-width:145px;flex:0 0 auto}
+.brand-mark{display:grid;place-items:center;width:39px;height:39px;font-size:25px;border-radius:13px;background:#12301d;border:1px solid #438e51;box-shadow:0 0 10px #2c9e4930}
+.brand-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.brand-copy .head-title{font-family:var(--shared-font);font-size:clamp(15px,1.55vw,21px)!important;font-weight:700;color:#f0f9f0}
+.brand-status{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font:500 12px system-ui,sans-serif;white-space:nowrap;color:#bacbbd}
+.connection-ok{color:#a6fa6a;font-weight:750}.connection-offline{color:#ffcf77;font-weight:700}.connection-pending{color:#c7dbce}
+header .actions{min-width:0!important;width:auto!important;flex:1 1 auto;justify-content:flex-end!important;gap:8px!important;flex-wrap:wrap!important;align-items:center}
+header .actions button:not([hidden]){min-height:45px;font:650 15px system-ui,sans-serif;border-radius:13px;padding:10px 13px;border:1px solid #447653;background:linear-gradient(135deg,#18331f,#0b1c12);color:#f3fbf4;box-shadow:0 3px 9px #0007;white-space:nowrap}
+header .actions button:hover{border-color:#9bee95}
+header .actions .mode{padding:4px;border-radius:14px;border:1px solid #426449;background:#111b15;gap:3px}
+header .actions .mode button:not([hidden]){min-height:41px;border:0;box-shadow:none;background:transparent;padding:9px 12px;font-size:14px}
+header .actions .mode button.chosen{background:linear-gradient(125deg,#216c36,#61b94e);border:1px solid #93ea7e;box-shadow:0 0 12px #55e67750;color:white}
+header .actions #dice-btn:not([hidden]){height:64px;min-width:70px;font-size:37px!important;display:grid;place-items:center;padding:5px 10px;background:radial-gradient(circle at 50% 35%,#3c8538,#143d23 65%,#0a1b10);border:2px solid #80ee72;border-radius:18px;box-shadow:0 0 15px #6aff446b,inset 0 0 14px #53c35d30}
+.dice-art{display:block;line-height:1;filter:drop-shadow(0 2px 4px #000c)}
+#dice-btn.is-rolling .dice-art{animation:stageDiceRoll .55s cubic-bezier(.2,.7,.2,1) 1}
+@keyframes stageDiceRoll{0%{transform:rotate(-28deg) scale(.85)}38%{transform:rotate(240deg) scale(1.18)}75%{transform:rotate(480deg) scale(.9)}100%{transform:rotate(720deg) scale(1)}}
+header .actions #requests-btn.has-requests{border:2px solid #a4e361!important;color:#f6ffed!important;background:linear-gradient(120deg,#315326,#152d1e)!important;animation:requestsAttention 2.5s ease-in-out infinite;}
+@keyframes requestsAttention{0%,100%{box-shadow:0 0 2px #9dea5433}50%{box-shadow:0 0 17px #8ff95199;background:#294b25}}
+#requests-btn{display:flex;align-items:center;gap:8px}#settings-btn{font-size:24px!important;min-width:45px}
+#appearance-panel[hidden]{display:none!important}#appearance-panel{position:fixed;z-index:14;top:var(--header-height,72px);right:12px;background:#102016;border:1px solid #578b5e;border-radius:16px;width:min(380px,calc(100vw - 24px));padding:16px;max-height:calc(100dvh - 90px);overflow:auto;box-shadow:0 15px 35px #000d}
+#appearance-panel .panel-head strong{font:700 22px var(--shared-font)}#appearance-panel label{display:block;margin:13px 0 7px;color:#d8e5d9;font-weight:600}
+#settings-font-slot select{display:block;width:100%;max-width:none;padding:10px}
+#appearance-panel p{font-size:13px;line-height:1.5}.settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #2c4d32;padding:12px 0}.settings-row button{background:#245b34;border-color:#549d66}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+/* Hidden controls remain reachable in code but aren't duplicated in the interface. */
+header button[hidden],header select[hidden],header label[hidden],header span[hidden]{display:none!important}
+@media(max-width:920px){header .actions{justify-content:flex-start!important}header .actions button:not([hidden]){font-size:13px;padding:8px 10px}header .actions #dice-btn:not([hidden]){height:52px;min-width:57px;font-size:30px!important}.performance-brand{min-width:100%}}
+@media(max-width:580px){header .actions{gap:5px!important}header .actions .mode button:not([hidden]){padding:8px 7px!important}header .actions #setlists-btn span{display:none}header .actions #requests-btn{font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){#dice-btn.is-rolling .dice-art,#requests-btn.has-requests{animation:none!important}}
+/* Toolbar test V2: new URL prevents stale cached document. */
+#float-transport{--control-scale:1;gap:calc(4px * var(--control-scale));padding:calc(7px * var(--control-scale));overflow:visible!important;}
+#float-transport button:not(#toolbar-resize),#float-transport .drag-grip{font-size:calc(13px * var(--control-scale))!important;min-width:calc(34px * var(--control-scale));min-height:calc(38px * var(--control-scale));padding:calc(7px * var(--control-scale)) calc(9px * var(--control-scale))!important;}
+#float-transport #float-library{font-size:calc(14px * var(--control-scale))!important;min-width:calc(82px * var(--control-scale));}
+#float-transport .drag-grip{width:calc(46px * var(--control-scale));height:calc(46px * var(--control-scale));}
+#float-transport #toolbar-resize{position:absolute;right:-8px;bottom:-8px;min-height:23px;min-width:23px;width:23px;height:23px;padding:0!important;border:1px solid #a7dab3;border-radius:6px;background:#297347;color:#fff;font-size:15px!important;cursor:nwse-resize;touch-action:none;z-index:3;box-shadow:0 1px 6px #000b}
+#float-transport.edge-right #toolbar-resize{left:-8px;right:auto}
+#float-transport #float-smaller,#float-transport #float-larger{display:none!important}
+body:not(.show-scroll-controls) #scroll-toggle,body:not(.show-scroll-controls) #speed-down,body:not(.show-scroll-controls) #speed-up{display:none!important}
+#learning-stop[hidden],#learning-start[hidden]{display:none!important}
+#chart{touch-action:pan-x pan-y}
+.settings-check{display:flex!important;align-items:center;justify-content:space-between;gap:12px;}
+.settings-check input{width:22px;height:22px;flex:0 0 auto;accent-color:#5aca83}
+#learning-feedback{font-size:12px;color:#a6dbb7}
+
+.performance-log-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:14px}.performance-log-actions button,#float-played{background:#245836;border-color:#78be88}#record-feedback{font-size:13px;color:#b7e5c1;flex-basis:100%;white-space:pre-wrap}
+body.mode-playing .performance-log-actions{display:none}
+#performance-toast{position:fixed;z-index:30;left:12px;bottom:12px;max-width:min(440px,calc(100vw - 24px));padding:12px;border-radius:10px;background:#244b30;color:#fff;box-shadow:0 3px 12px #0009;font-size:14px;pointer-events:none}#performance-toast[hidden]{display:none}
+#history-panel{position:fixed;z-index:25;inset:16px;margin:auto;width:min(740px,calc(100vw - 24px));height:min(800px,calc(100dvh - 32px));overflow:auto;padding:18px;background:#101d15;border:1px solid #77b987;border-radius:16px;box-shadow:0 0 0 100vmax #000a}
+#history-panel[hidden]{display:none}#history-shows{margin:12px 0}.history-row{padding:12px 0;border-bottom:1px solid #355640}.history-row p{margin:4px 0;color:#b3c9bb;font-size:13px}#history-note{color:#b3c9bb;font-size:13px}#history-results{overflow-wrap:anywhere}
+
+.history-requested{display:inline-block;font:600 12px system-ui;color:#caffd3;background:#234b30;border:1px solid #609d70;border-radius:12px;padding:3px 8px;margin-left:5px}
+#song-end-actions{margin:35px 0 25px;padding:20px 0;border-top:1px solid #355640;text-align:center}#song-end-actions button{background:#245836;border:1px solid #78be88;min-height:48px;padding:12px 28px}#song-end-actions p{font:13px system-ui;color:#b3c9bb}#song-end-actions[hidden],body.showing-set-break #song-end-actions,body.editor-active #song-end-actions{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="performance-brand"><span class="brand-mark" aria-hidden="true">🎸</span><div class="brand-copy"><span class="head-title">Performance · Show History V2 Test</span><div class="brand-status"><span id="song-count-status">596 songs</span><span id="connection-status" class="connection-pending">● Connecting…</span></div></div></div><div class="actions"><span id="busy" class="visually-hidden" role="status" aria-live="polite"></span><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" aria-pressed="false">Playing</button><button id="between-btn" type="button" class="chosen" aria-pressed="true">Between Songs</button></div><button id="setlists-btn" type="button" title="Choose or edit a setlist">☷ <span>Setlists</span></button><button id="requests-btn" type="button" aria-label="Open incoming requests">◉ <span id="request-button-label">Requests (0)</span></button><button id="dice-btn" type="button" aria-label="Roll for a random Ready to Play song" title="Random Song"><span class="dice-art" aria-hidden="true">🎲</span></button><button id="settings-btn" type="button" aria-label="Appearance and offline settings" title="Settings">⚙</button><button id="songs-btn" type="button" hidden>Open Songs</button><button id="save-offline" type="button" title="Update offline song library" hidden>Save Offline</button><label id="font-choice-label" for="ui-font-choice" hidden>App font</label><select id="ui-font-choice" aria-label="App appearance font" hidden><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select><button id="setlist-prev" type="button" hidden title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden></span><button id="setlist-next" type="button" hidden title="Next setlist song">Next ▶</button><button id="setlist-resume" type="button" hidden title="Return to your current setlist song">↩ Return to Setlist</button><button id="smaller" type="button" hidden aria-label="Smaller text">A−</button><button id="larger" type="button" hidden aria-label="Larger text">A+</button><button id="hide-controls" type="button" hidden aria-label="Hide top toolbar">Hide controls ▴</button></div></header>
+<button id="restore-controls" type="button" aria-label="Show top controls">Controls ▾</button>
+<div id="performance-toast" role="status" aria-live="polite" hidden></div><div id="playing-floats" aria-label="Playing controls"><div id="float-transport" class="float-control" aria-label="Movable performance controls">
+<span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"/></svg></span>
+<button id="float-smaller" type="button" aria-label="Smaller lyrics">A−</button><button id="float-larger" type="button" aria-label="Larger lyrics">A+</button>
+<button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button>
+<button id="float-library" type="button" title="Open Ready to Play songs" aria-label="Open Ready to Play songs"><span aria-hidden="true">☷</span> SONGS</button><button id="float-played" type="button" disabled>✓ Played</button><button id="float-between" type="button" title="Between Songs controls">Between</button><button id="float-setlist-prev" type="button" hidden title="Previous setlist song">Back</button><button id="float-setlist-next" type="button" hidden title="Next setlist song">Next</button><button id="learning-start" type="button" hidden>▶ Start Timer</button><button id="learning-stop" type="button" hidden>■ Stop Timer</button><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
+<button id="toolbar-resize" type="button" aria-label="Drag to resize toolbar" title="Drag corner to resize">◢</button></div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span></button></div>
+<button id="toolbar-recover" type="button">☷ SONGS · Reset controls</button>
+<div id="layout"><aside id="library" hidden><div id="browser-top"><div id="setlist-browser-bar" hidden><strong id="active-setlist-title">Setlist</strong><button id="toggle-setlist-library" type="button">All Songs</button><button id="exit-setlist" type="button" title="Exit the active setlist">Exit</button></div><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="ready">Ready to Play</option><option value="all">All Songs</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside><button id="library-resizer" type="button" aria-label="Drag to resize the song library" title="Drag to resize song list" tabindex="0"></button>
+<main id="stage"><div id="set-break-screen" hidden role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div class="performance-log-actions"><button id="history-open" type="button">Show History</button><span id="record-feedback" role="status" aria-live="polite"></span></div><button id="editor-launch" type="button">✎ Edit Song</button><section id="song-editor" hidden aria-label="Edit lyrics and chords"><h2>Edit Song</h2><p class="editor-help">Edit the original text, including spaces between chords. Save requires an internet connection. Use Cancel to discard edits.</p><textarea id="editor-text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Song lyrics and chords"></textarea><div class="edit-controls"><button id="editor-save" type="button">Save Changes</button><button id="editor-cancel" type="button">Cancel</button></div><div id="editor-feedback" role="status" aria-live="polite"></div></section><div id="chart" aria-label="Lyrics and chords"></div><div id="song-end-actions"><button id="record-played" type="button" disabled>✓ Mark Played</button><p>Record this song in tonight’s performance history.</p></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
+<section id="request-panel" hidden aria-label="Incoming requests"><div class="panel-head"><strong>Incoming Requests</strong><div><button id="refresh-requests" type="button">Refresh</button> <button id="close-requests" type="button" aria-label="Close requests">✕</button></div></div><p id="mode-hint">Playing: requests can't replace your song.</p><div id="show-state" aria-live="polite">Checking your musician login…</div><p><a href="dashboard-live-test/" target="_blank" rel="noopener">Start / End Show ↗</a> · <a href="customer-live-test/" target="_blank" rel="noopener">Customer test ↗</a></p><p style="font-size:12px">Connected request test · Phil Smith Live. Show controls open in the dashboard.</p><p><button id="history-request" type="button">Show History</button></p><div id="request-info">Waiting for connection…</div><div id="request-list"></div></section>
+<section id="setlists-panel" hidden aria-label="Saved setlists"><div class="panel-head"><strong class="hand-heading">Your Setlists</strong><button id="close-setlists" type="button" aria-label="Close setlists">✕</button></div><p class="setlist-subtitle">Choose a saved setlist, or open Setlist Studio to edit one.</p><div id="setlists-choices"></div><div class="setlists-footer"><button id="open-setlist-studio" type="button">✎ Open Setlist Studio</button></div></section>
+<section id="dice-panel" hidden aria-label="Random song picker"><div class="panel-head"><strong>🎲 What should I play?</strong><button id="close-dice" type="button" aria-label="Close dice">✕</button></div><p class="muted">Picks from Ready to Play songs, avoiding recent suggestions.</p><div id="dice-choice">Roll the dice!</div><div id="dice-artist" class="muted"></div><div class="dice-controls"><button id="reroll" type="button">🎲 Roll Again</button><button id="play-dice" type="button" disabled>Open Song</button></div></section>
+
+<section id="appearance-panel" hidden aria-label="Performance settings"><div class="panel-head"><strong>Settings</strong><button id="close-appearance" type="button" aria-label="Close settings">✕</button></div><label for="ui-font-choice" id="appearance-font-label">App Font</label><div id="settings-font-slot"></div><p class="muted">The app font is shared with Song Manager and Setlist Studio. Chart text stays independent to preserve chord alignment.</p><div class="settings-row"><span>Chart size</span><div><button id="settings-smaller" type="button">A−</button> <button id="settings-larger" type="button">A+</button></div></div><label class="settings-row settings-check"><span>Track songs played</span><input id="setting-track-history" type="checkbox"></label><p class="muted">Optional. Saves each Mark Played press in show order, including repeats. This setting is remembered in this browser. Turning it off keeps existing history and audience request controls available.</p><label class="settings-row settings-check"><span>Show Auto-Scroll controls on toolbar</span><input id="setting-show-scroll" type="checkbox"></label><label class="settings-row settings-check"><span>Enable Learning Mode timer</span><input id="setting-learning" type="checkbox"></label><p id="learning-feedback">Start and stop the timer while playing any song. Its duration will be remembered for Auto-Scroll.</p><div class="settings-row"><span>Offline Library</span><button id="settings-update-offline" type="button">Update Offline Copy</button></div><p id="settings-offline-status" class="muted" role="status">Loading library status…</p></section>
+<section id="history-panel" hidden role="dialog" aria-modal="true" aria-label="Show history"><div class="panel-head"><strong>Show History</strong><button id="history-close" type="button">Close</button></div><p id="history-note">When tracking is on, each Mark Played press records one performance. Repeat songs appear separately. History starts with this update; older shows may have no recorded songs.</p><button id="history-refresh" type="button">Refresh Shows</button> <button id="history-undo" type="button">Undo last recording</button><select id="history-shows" aria-label="Choose a show"></select><button id="history-more-shows" type="button" hidden>Load older shows</button><div id="history-summary" role="status" aria-live="polite"></div><div id="history-results"></div><button id="history-more-songs" type="button" hidden>Load more performances</button></section>
+<script>
+'use strict';
+// Same font preference key already used by Setlist Studio on this origin.
+const SHARED_FONT_KEY='setlist-app-font-v1';
+function useSharedUiFont(value,write=false){
+ const selected=['hand','modern','classic'].includes(value)?value:'hand';
+ document.body.dataset.font=selected;
+ const choice=document.getElementById('ui-font-choice');if(choice)choice.value=selected;
+ if(write){try{localStorage.setItem(SHARED_FONT_KEY,selected)}catch(e){console.warn('Font preference could not be saved',e)}}
+}
+useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand');
+document.getElementById('ui-font-choice').addEventListener('change',e=>useSharedUiFont(e.target.value,true));
+document.getElementById('settings-font-slot').append(document.getElementById('ui-font-choice'));
+document.getElementById('ui-font-choice').hidden=false;
+document.getElementById('settings-btn').onclick=()=>{const panel=document.getElementById('appearance-panel');panel.hidden=!panel.hidden;document.getElementById('dice-panel').hidden=true;document.getElementById('request-panel').hidden=true;document.getElementById('setlists-panel').hidden=true};
+document.getElementById('close-appearance').onclick=()=>{document.getElementById('appearance-panel').hidden=true};
+document.getElementById('settings-update-offline').onclick=()=>document.getElementById('save-offline').click();
+document.getElementById('settings-smaller').onclick=()=>document.getElementById('smaller').click();
+document.getElementById('settings-larger').onclick=()=>document.getElementById('larger').click();
+
+window.addEventListener('storage',e=>{if(e.key===SHARED_FONT_KEY)useSharedUiFont(e.newValue||'hand')});
+window.addEventListener('pageshow',()=>useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand'));
+
+const SUPABASE_URL='https://sluffhedekxnoasndnid.supabase.co';
+const SUPABASE_KEY='sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8';
+const $=id=>document.getElementById(id);
+let db=null, musician=null, songs=[], currentId=null;
+const LIBRARY_DB='performance-offline-library-v1';
+const OFFLINE_CDN='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+let offlineSnapshot=null;
+let signedInUserId=null;
+let onlineConnected=false;
+let syncingLibrary=null;
+let connectionState='starting';
+function openLibraryDb(){
+ return new Promise((resolve,reject)=>{
+  if(!window.indexedDB){reject(new Error('Offline database is unavailable in this browser.'));return;}
+  const req=indexedDB.open(LIBRARY_DB,1);
+  req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('data'))req.result.createObjectStore('data')};
+  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('Cannot open offline database'));
+ });
+}
+async function readOfflineLibrary(){
+ const idb=await openLibraryDb();
+ try{return await new Promise((resolve,reject)=>{const t=idb.transaction('data','readonly');const q=t.objectStore('data').get('current');q.onsuccess=()=>resolve(q.result||null);q.onerror=()=>reject(q.error);});}
+ finally{idb.close()}
+}
+async function writeOfflineLibrary(user,m,songList){
+ const idb=await openLibraryDb();
+ try{await new Promise((resolve,reject)=>{const t=idb.transaction('data','readwrite');t.objectStore('data').put({userId:user.id,musicianId:m.id,savedAt:Date.now(),songs:songList},'current');t.oncomplete=resolve;t.onerror=()=>reject(t.error);t.onabort=()=>reject(t.error);});}
+ finally{idb.close()}
+}
+function fillLibrary(list,fromCache=false){
+ songs=list;setBusy(`${list.length} songs · ${fromCache?'OFFLINE COPY':'CONNECTED'}`);
+ $('save-offline').textContent=fromCache?'Offline Copy':'Saved ✓';
+ drawList();
+setMode(showMode);
+requestAnimationFrame(()=>{placeTransport();checkTransportReachable()});drawRequests();
+ if(!requestTimer)requestTimer=setInterval(()=>{if(!document.hidden&&navigator.onLine&&onlineConnected)refreshRequests()},10000);
+ if(!songs.length){showMessage('No songs in this library.');return;}
+ const remembered=songs.find(s=>s.id===currentId);
+ showSong(remembered||songs[0]);$('library').hidden=(showMode==='playing');
+}
+function ensureSupabaseSdk(){
+ if(window.supabase?.createClient)return Promise.resolve();
+ return new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=OFFLINE_CDN;el.onload=()=>window.supabase?.createClient?resolve():reject(new Error('Supabase library did not load'));el.onerror=()=>reject(new Error('Internet required to sync songs'));document.head.append(el)});
+}
+async function registerOfflineShell(){ return false; }
+let showMode=localStorage.getItem('performance-start-mode')==='between'?'between':'playing';
+let incomingRequests=[], requestsError='', diceSuggestion=null, recentDiceIds=[], requestLoading=false, requestTimer=null, showActionBusy=false;
+const TEST_MUSICIAN_ID='adbce7b8-424e-4de3-84ed-7c4e68c64559';
+let requestShowId=null, requestOwner=null, requestEpoch=0, markingRequest=false;
+function clearLiveRequests(){requestEpoch++;incomingRequests=[];requestShowId=null;requestOwner=null;drawRequests()}
+let fontSize=Number(localStorage.getItem('performance-font-size'))||24;
+const safeNumber=x=>Number.isFinite(x)?x:24;
+fontSize=Math.max(14,Math.min(48,safeNumber(fontSize)));
+$('chart').style.fontSize=fontSize+'px';
+const delayLimit=(promise,ms=15000)=>Promise.race([Promise.resolve(promise),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Connection timed out. Try reloading the page.')),ms))]);
+function statusOf(s){return s.song_status==='ready'?'Ready to Play':s.song_status==='learning'?'Still Learning':(s.public_request_enabled?'Ready to Play':'Still Learning')}
+function chartOf(s){return typeof s.lyrics_chords==='string'?s.lyrics_chords:''}
+function showMessage(t){$('message').hidden=false;$('message').textContent=t}
+function hideMessage(){$('message').hidden=true}
+function setBusy(t){
+ $('busy').textContent=t;
+ const match=String(t).match(/(\d+)\s+songs?/i);
+ if(match)$('song-count-status').textContent=match[1]+' songs';
+ const label=$('connection-status');
+ const value=String(t).toUpperCase();
+ const connected= value.includes('CONNECTED')||value.includes('SONG SAVED');
+ const offline=value.includes('OFFLINE');
+ label.className=connected?'connection-ok':offline?'connection-offline':'connection-pending';
+ label.textContent=connected?'● Connected':offline?'● Offline Copy':value.includes('SIGN IN')?'● Sign in needed':'● Connecting…';
+ const info=$('settings-offline-status');if(info)info.textContent=t;
+}
+// BandHelper exports preserve chord line whitespace, including NBSP.
+// BandHelper's display uses a proportional font: the width of a space is
+ // smaller than a monospace cell. Chord lines and lyric lines therefore need
+ // the SAME proportional font and white-space:pre to reproduce source layout.
+ // Unlike v4, no independent absolute-positioned chords can collide.
+const chordToken=/^(?:[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M|ø|°|\+|\-)?(?:\d{0,2})?(?:\([^\s)]*\))?(?:\/[A-G](?:#|b)?)?|N\/?C|NC|\||:|%|\/|\(|\)|\.|\-)+$/;
+function chartLineKind(line){
+  const t=line.trim();
+  if(!t)return 'blank';
+  if(/^\[[^\]]+\]$/.test(t)||/^(?:verse|chorus|bridge|intro|outro|solo|instrumental|pre-chorus|refrain)(?:\s|:|$)/i.test(t))return 'section';
+  if(/^[eBGDAE]\|[-0-9hbp\/~xX| ]+/.test(t)||/^[eBGDAE]\s*\|/.test(t))return 'tab';
+  if(/^(?:\{[^}]+\}|\/\/)/.test(t))return 'note';
+  const pieces=t.split(/\s+/);
+  if(pieces.length&&pieces.every(p=>chordToken.test(p))&&pieces.some(p=>/^[A-G]/.test(p)))return 'chords';
+  return 'lyric';
+}
+function displaySpaces(s){return s.replace(/[\u00a0\u2007\u202f]/g,' ')}
+function renderChart(raw){
+  const chart=$('chart');chart.replaceChildren();
+  const lines=raw.replace(/\r\n?/g,'\n').split('\n').map(displaySpaces);
+  const fragment=document.createDocumentFragment();
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i],kind=chartLineKind(line);
+    if(kind==='chords'&&i+1<lines.length&&chartLineKind(lines[i+1])==='lyric'){
+      const lyric=lines[++i];
+      const pair=document.createElement('div');pair.className='bandhelper-pair';
+      const chord=document.createElement('span');chord.className='chord-line';chord.textContent=line;
+      const words=document.createElement('span');words.className='lyric-line';words.textContent=lyric;
+      pair.append(chord,words);fragment.appendChild(pair);
+    }else{
+      const row=document.createElement('span');row.className='chart-line '+kind;
+      row.textContent=line||' ';fragment.appendChild(row);
+    }
+  }
+  chart.appendChild(fragment);
+}
+
+let selectedPerformanceSetlist=null, selectedPerformanceIndex=0, setBreakPending=null, viewingAllSongsInSetlist=false;
+function setlistBrowserUI(){
+ const on=Boolean(selectedPerformanceSetlist);
+ document.body.classList.toggle('active-setlist',on);
+ document.body.classList.toggle('all-songs-view',on&&viewingAllSongsInSetlist);
+ $('setlist-browser-bar').hidden=!on;
+ if(!on)return;
+ $('active-setlist-title').textContent='☷ '+selectedPerformanceSetlist.name;
+ $('toggle-setlist-library').textContent=viewingAllSongsInSetlist?'Show Setlist':'All Songs';
+ $('filter').hidden=!viewingAllSongsInSetlist;
+}
+$('toggle-setlist-library').onclick=()=>{viewingAllSongsInSetlist=!viewingAllSongsInSetlist;$('search').value='';drawList()};
+$('exit-setlist').onclick=()=>{if(!confirm('Exit active setlist? Your saved setlist will not be deleted.'))return;selectedPerformanceSetlist=null;setBreakPending=null;viewingAllSongsInSetlist=false;clearSetBreak();for(const el of ['setlist-prev','setlist-next','setlist-info','float-setlist-prev','float-setlist-next','setlist-resume'])$(el).hidden=true;history.replaceState(null,'',location.pathname);drawList()};
+function setNumberAt(index){return 1+(selectedPerformanceSetlist?.breaks||[]).filter(n=>n<=index).length}
+function updateSetlistControls(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const number=setNumberAt(selectedPerformanceIndex);
+ $('setlist-info').textContent=`${sl.name} · Set ${number} · ${selectedPerformanceIndex+1}/${sl.ids.length}`;
+ $('setlist-prev').disabled=selectedPerformanceIndex===0&&setBreakPending===null&&!(sl.breaks.includes(0));
+ $('setlist-next').disabled=selectedPerformanceIndex===sl.ids.length-1&&setBreakPending===null;
+ $('setlist-next').textContent=setBreakPending?`Begin Set ${number+1} ▶`:'Next ▶';
+ $('float-setlist-prev').hidden=false;$('float-setlist-next').hidden=false;
+ $('float-setlist-prev').disabled=$('setlist-prev').disabled;
+ $('float-setlist-next').disabled=$('setlist-next').disabled;
+ $('float-setlist-next').title=setBreakPending?`Begin Set ${number+1}`:'Next setlist song';
+ $('float-setlist-next').setAttribute('aria-label',$('float-setlist-next').title);
+ $('float-setlist-prev').setAttribute('aria-label','Previous setlist song');
+
+ $('setlist-resume').hidden=setBreakPending!==null||String(currentId)===String(sl.ids[selectedPerformanceIndex]);
+}
+function clearSetBreak(){setBreakPending=null;document.body.classList.remove('showing-set-break');$('set-break-screen').hidden=true;}
+function openSelectedSetlist(){
+ const id=new URLSearchParams(location.search).get('setlist');
+ if(!id||!musician?.id||!songs.length)return false;
+ try{
+  const lists=JSON.parse(localStorage.getItem('musician-setlists-v1:'+musician.id)||'[]');
+  const sl=lists.find(s=>String(s.id)===id);
+  if(!sl||!Array.isArray(sl.songIds))return false;
+  // Keep the original index positions so set breaks do not drift if a chart is missing.
+  const ids=sl.songIds.map(String);
+  const breaks=(Array.isArray(sl.breaks)?sl.breaks:(Number.isInteger(sl.breakAfter)?[sl.breakAfter]:[]))
+   .filter(n=>Number.isInteger(n)&&n>=0&&n<ids.length).sort((a,b)=>a-b);
+  if(!ids.length)return false;
+  selectedPerformanceSetlist={name:sl.name,ids,breaks};selectedPerformanceIndex=0;viewingAllSongsInSetlist=false;
+  for(const el of ['setlist-prev','setlist-info','setlist-next'])$(el).hidden=false;
+  goToSetlistIndex(0);if(breaks.includes(0))showSetBreakAt(0);return true;
+ }catch(e){console.warn('Could not open setlist',e);return false}
+}
+function goToSetlistIndex(index){
+ const sl=selectedPerformanceSetlist;if(!sl||index<0||index>=sl.ids.length)return;
+ const song=songs.find(s=>String(s.id)===sl.ids[index]);
+ if(!song){alert('This setlist song was not found in your library. Open the Setlist Manager to correct it.');return}
+ clearSetBreak();selectedPerformanceIndex=index;showSong(song);updateSetlistControls();drawList();
+}
+function showSetBreakAt(boundary){
+ pauseAutoScroll();setBreakPending=boundary;document.body.classList.add('showing-set-break');$('set-break-screen').hidden=false;
+ const priorNumber=1+(selectedPerformanceSetlist?.breaks||[]).filter(n=>n<boundary).length;
+ const endNumber=Math.max(1,priorNumber);
+ $('set-break-heading').textContent='End of Set '+endNumber;
+ $('continue-next-set').textContent='▶ Begin Set '+(endNumber+1);
+ $('stage').scrollTop=0;updateSetlistControls();
+}
+function setlistNext(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const next=selectedPerformanceIndex+1;
+ if(next>=sl.ids.length)return;
+ if(setBreakPending!==null){goToSetlistIndex(next);return}
+ if(sl.breaks.includes(next)){showSetBreakAt(next);return;}
+ goToSetlistIndex(next);
+}
+function setlistPrevious(){
+ if(!selectedPerformanceSetlist)return;
+ if(setBreakPending!==null){goToSetlistIndex(Math.max(0,setBreakPending-1));return}
+ if(selectedPerformanceSetlist.breaks.includes(selectedPerformanceIndex)){showSetBreakAt(selectedPerformanceIndex);return;}
+ goToSetlistIndex(selectedPerformanceIndex-1);
+}
+let editorActive=false,editorSaving=false;
+function activeSong(){return songs.find(s=>s.id===currentId)||null}
+function closeEditor(){editorActive=false;document.body.classList.remove('editor-active');$('song-editor').hidden=true;$('editor-launch').hidden=false;$('editor-feedback').textContent='';}
+async function verifyEditConnection(){
+ if(!navigator.onLine)throw new Error('This iPad is offline. Connect to Wi-Fi before editing.');
+ // An offline-first launch deliberately skips Supabase initialization; reconnect it now.
+ if(!db || !onlineConnected || !signedInUserId){
+  await connect();
+ }
+ if(!db || !onlineConnected || !signedInUserId || !musician)throw new Error('Your musician account is not connected. Open Musician Login if needed, then return here.');
+ // Verify the account against Supabase, rather than relying on stale browser connectivity.
+ const {data,error}=await delayLimit(db.auth.getUser(),15000);
+ if(error || !data?.user)throw new Error('Your sign-in session needs refreshing. Please sign in again.');
+ if(data.user.id!==signedInUserId || (offlineSnapshot?.userId && offlineSnapshot.userId!==data.user.id))throw new Error('This offline library belongs to a different account.');
+ return data.user;
+}
+async function openEditor(){
+ if(showMode==='playing'){alert('Switch to Between Songs to edit a chart.');return;}
+ const song=activeSong();if(!song){alert('Choose a song first.');return;}
+ $('editor-launch').disabled=true;setBusy('Checking editor connection…');
+ try{
+  await verifyEditConnection();
+  const current=activeSong();if(!current)return;
+  $('editor-text').value=chartOf(current);
+  $('editor-launch').hidden=true;$('song-editor').hidden=false;
+  editorActive=true;document.body.classList.add('editor-active');$('editor-feedback').textContent='Changes are not saved until you tap Save Changes.';
+  $('editor-text').focus();setBusy(`${songs.length} songs · CONNECTED`);
+ }catch(e){alert((e?.message||String(e))+'\n\nYour existing chart is unchanged.');setBusy(`${songs.length} songs · ${navigator.onLine?'SIGN IN / SYNC NEEDED':'OFFLINE COPY'}`)}
+ finally{$('editor-launch').disabled=false;}
+}
+async function saveEditor(){
+ if(!editorActive||editorSaving)return;
+ const song=activeSong();if(!song){$('editor-feedback').textContent='No song selected.';return;}
+ const revised=$('editor-text').value;
+ if(revised===chartOf(song)){closeEditor();return;}
+ editorSaving=true;$('editor-save').disabled=true;$('editor-cancel').disabled=true;$('editor-feedback').textContent='Saving to your account…';
+ try{
+  await verifyEditConnection();
+  // RLS should restrict writes to the authenticated musician; both identifiers are scoped here.
+  const {data,error}=await delayLimit(db.from('songs').update({lyrics_chords:revised}).eq('id',song.id).eq('musician_id',musician.id).select('id,lyrics_chords').maybeSingle(),20000);
+  if(error)throw error;
+  if(!data||String(data.id)!==String(song.id))throw new Error('No song row was updated. Check musician account permissions.');
+  song.lyrics_chords=data.lyrics_chords??revised;
+  if(offlineSnapshot?.userId&&offlineSnapshot?.musicianId===musician.id){
+   try{await writeOfflineLibrary({id:offlineSnapshot.userId},musician,songs);offlineSnapshot.songs=songs;offlineSnapshot.savedAt=Date.now();}
+   catch(cacheErr){console.warn('Could not refresh offline library',cacheErr);$('editor-feedback').textContent='Saved online, but offline copy not refreshed. Tap Save Offline after reconnecting.';}
+  }
+  renderChart(chartOf(song).trim()?chartOf(song):'No lyrics or chords yet.');drawList();closeEditor();setBusy(`${songs.length} songs · CONNECTED · SONG SAVED ✓`);
+ }catch(e){$('editor-feedback').textContent='Not saved: '+(e?.message||String(e))+' — your draft is still available.';}
+ finally{editorSaving=false;$('editor-save').disabled=false;$('editor-cancel').disabled=false;}
+}
+$('editor-launch').onclick=openEditor;$('editor-cancel').onclick=()=>{if(editorSaving)return;if($('editor-text').value!==chartOf(activeSong()||{})&&!confirm('Discard changes to this song?'))return;closeEditor()};$('editor-save').onclick=saveEditor;
+function showSong(s){if(editorActive&&s.id!==currentId&&!confirm('Discard unsaved song edits?'))return; if(editorActive)closeEditor();clearSetBreak();pauseAutoScroll();currentId=s.id;$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();if(showMode==='playing')$('library').hidden=true;drawList();updateSetlistControls();syncRecordButtons()}
+function drawList(){
+ const term=$('search').value.trim().toLocaleLowerCase(),filter=$('filter').value;
+ const active=selectedPerformanceSetlist&&!viewingAllSongsInSetlist;
+ setlistBrowserUI();
+ const list=$('song-list'),rail=$('az-rail');list.replaceChildren();rail.replaceChildren();
+ const matches=s=>`${s.title||''} ${s.artist||''}`.toLocaleLowerCase().includes(term);
+ if(active){
+  let matching=0;
+  selectedPerformanceSetlist.ids.forEach((id,i)=>{
+   if(selectedPerformanceSetlist.breaks.includes(i)){
+    const br=document.createElement('div');br.className='setlist-break-row';br.textContent=`☕ SET BREAK · SET ${setNumberAt(i)}`;list.append(br);
+   }
+   const s=songs.find(x=>String(x.id)===id);
+   if(s&&!matches(s))return;
+   matching++;
+   const b=document.createElement('button');b.type='button';b.className='song-row'+(i===selectedPerformanceIndex?' setlist-current':'');
+   const title=document.createElement('div');title.className='song-name';title.textContent=(i===selectedPerformanceIndex?'▶ ':'')+(i+1)+'. '+(s?.title||'Missing song');
+   const meta=document.createElement('div');meta.className='song-meta';meta.textContent=s?(s.artist||'Unknown artist'):'Song is missing from your library';
+   b.append(title,meta);b.onclick=()=>goToSetlistIndex(i);list.append(b);
+   if(i===selectedPerformanceIndex&&!term)requestAnimationFrame(()=>{if(!list.contains(b))return;const r=b.getBoundingClientRect(),outer=list.getBoundingClientRect();if(r.top<outer.top||r.bottom>outer.bottom)b.scrollIntoView({block:'nearest'});});
+  });
+  $('count').textContent=`${matching} of ${selectedPerformanceSetlist.ids.length} setlist songs`;
+  return;
+ }
+ const shown=songs.filter(matches).filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Still Learning')||(filter==='missing'&&!chartOf(s).trim()));
+ $('count').textContent=`${shown.length} of ${songs.length} songs`;
+ const sections=new Map(),frag=document.createDocumentFragment();
+ const letterFor=s=>{const a=String(s.title||'').trim().charAt(0).toUpperCase();return /^[A-Z]$/.test(a)?a:'#'};
+ for(const s of shown){
+  const letter=letterFor(s);
+  if(!sections.has(letter)){const heading=document.createElement('div');heading.className='az-heading';heading.textContent=letter;sections.set(letter,heading);frag.append(heading)}
+  const btn=document.createElement('button');btn.type='button';btn.className='song-row'+(s.id===currentId?' active':'');
+  const title=document.createElement('div');title.className='song-name';title.textContent=s.title||'Untitled';
+  const meta=document.createElement('div');meta.className='song-meta';meta.textContent=(s.artist||'Unknown artist')+' · '+statusOf(s)+(chartOf(s).trim()?'':' · Needs chart');
+  btn.append(title,meta);btn.onclick=()=>showSong(s);frag.append(btn);
+ }
+ list.append(frag);
+ // Measure positions in list content coordinates, never from sticky viewport coordinates.
+ const positions=new Map();let contentY=0;
+ for(const child of list.children){
+  if(child.classList.contains('az-heading'))positions.set(child.textContent,contentY);
+  contentY+=child.getBoundingClientRect().height;
+ }
+ for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){
+  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;
+  btn.setAttribute('aria-label','Jump to '+letter);btn.disabled=!positions.has(letter);
+  if(btn.disabled)btn.style.opacity='.28';
+  btn.addEventListener('click',()=>{
+   const top=positions.get(letter);if(top===undefined)return;
+   list.scrollTop=Math.min(top,Math.max(0,list.scrollHeight-list.clientHeight));
+  });
+  rail.append(btn);
+ }
+}
+
+async function connect(){
+ if(syncingLibrary)return syncingLibrary;
+ syncingLibrary=connectCore();
+ try{return await syncingLibrary}finally{syncingLibrary=null}
+}
+async function connectCore(){
+ onlineConnected=false;signedInUserId=null;clearLiveRequests();
+ // Show the last downloaded library immediately, even with airplane mode on.
+ try{
+  offlineSnapshot=await readOfflineLibrary();
+  if(offlineSnapshot?.songs?.length){
+   musician={id:offlineSnapshot.musicianId};
+   fillLibrary(offlineSnapshot.songs,true);if(!selectedPerformanceSetlist)openSelectedSetlist();
+  }else{setBusy('No offline copy yet');showMessage('Connect to the internet once, sign in, and tap Save Offline before your gig.');}
+ }catch(e){console.warn('Offline library unavailable:',e);setBusy('Offline storage unavailable')}
+ // A service worker can reopen this page offline after its first successful installation.
+ const shellReady=registerOfflineShell();
+ if(!navigator.onLine){
+  if(offlineSnapshot?.songs?.length)setBusy(`${songs.length} songs · OFFLINE`);
+  else showMessage('No saved offline library. Connect once to download your songs.');
+  await shellReady;return;
+ }
+ try{
+  setBusy(offlineSnapshot?.songs?.length?'Refreshing online…':'Connecting…');
+  await ensureSupabaseSdk();
+  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  db.auth.onAuthStateChange?.((event)=>{if(event==='SIGNED_OUT'||event==='USER_DELETED'){onlineConnected=false;signedInUserId=null;clearLiveRequests()}});
+  const {data:sessionData,error:authError}=await delayLimit(db.auth.getSession());
+  if(authError)throw authError;
+  const user=sessionData?.session?.user;
+  if(!user){
+   // Never show the cached library for a DIFFERENT signed-in user.
+   if(!offlineSnapshot?.songs?.length){showMessage('Please sign in to your musician account first. ');const a=document.createElement('a');a.href='musician-login.html';a.textContent='Open Musician Login';$('message').append(a)}
+   setBusy(offlineSnapshot?.songs?.length?'OFFLINE COPY · SIGN IN REQUIRED':'SIGN IN REQUIRED');return;
+  }
+  if(offlineSnapshot?.userId&&offlineSnapshot.userId!==user.id){
+   songs=[];offlineSnapshot=null;currentId=null;$('chart').replaceChildren();$('song-list').replaceChildren();
+   throw new Error('Offline copy belongs to another musician. Please use a separate device or clear its saved website data.');
+  }
+  const {data:m,error:lookupError}=await delayLimit(db.from('musicians').select('id').eq('user_id',user.id).maybeSingle());
+  if(lookupError)throw lookupError;if(!m)throw new Error('No musician account linked to this login.');
+  musician=m;
+  const loaded=[];
+  for(let offset=0;offset<20000;offset+=500){
+   const {data,error}=await delayLimit(db.from('songs').select('id,title,artist,lyrics_chords,song_status,public_request_enabled').eq('musician_id',m.id).order('title').order('id').range(offset,offset+499),20000);
+   if(error)throw error;loaded.push(...(data||[]));if(!data||data.length<500)break;
+  }
+  // Don't accidentally overwrite a complete local library with an empty remote query.
+  if(!loaded.length&&offlineSnapshot?.songs?.length)throw new Error('Online library returned no songs. Kept your offline copy.');
+  // Save before presenting Online status. Data is in IndexedDB, not a temporary JS variable.
+  await writeOfflineLibrary(user,m,loaded);
+  offlineSnapshot={userId:user.id,musicianId:m.id,savedAt:Date.now(),songs:loaded};
+  signedInUserId=user.id;onlineConnected=true;
+  fillLibrary(loaded,false);if(!selectedPerformanceSetlist)openSelectedSetlist();
+  if(onlineConnected)refreshRequests();
+  await shellReady;
+ }catch(e){
+  const explanation=e?.message||String(e);
+  if(offlineSnapshot?.songs?.length){setBusy(`${songs.length} songs · OFFLINE COPY · RECONNECT NEEDED`);console.warn('Sync failed; using offline library:',explanation)}
+  else{setBusy('Connection issue');showMessage('Could not download library: '+explanation+' Connect online and sign in before testing offline.')}
+ }
+}
+$('save-offline').onclick=async()=>{
+ if(!navigator.onLine){alert('You are offline. Your last saved library is available; connect to refresh it.');return;}
+ $('save-offline').disabled=true;$('save-offline').textContent='Saving…';
+ await connect();
+ $('save-offline').disabled=false;
+};
+
+$('setlist-prev').onclick=setlistPrevious;$('setlist-next').onclick=setlistNext;$('continue-next-set').onclick=setlistNext;$('setlist-resume').onclick=()=>goToSetlistIndex(selectedPerformanceIndex);
+$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('filter').value='ready';$('search').oninput=drawList;$('filter').onchange=drawList;
+function changeFont(delta){fontSize=Math.max(14,Math.min(48,fontSize+delta));$('chart').style.fontSize=fontSize+'px';if(currentId){const active=songs.find(s=>s.id===currentId);if(active)renderChart(chartOf(active))}localStorage.setItem('performance-font-size',String(fontSize))}
+$('smaller').onclick=()=>changeFont(-2);$('larger').onclick=()=>changeFont(2);
+// Only the musician's account can be queried; Supabase RLS remains authoritative.
+function requestTitle(r){return String(r.song_title||r.title||r.song_name||r.song?.title||'Requested song')}
+function requestArtist(r){return String(r.artist||r.song_artist||r.song?.artist||'')}
+function isPending(r){const v=String(r.status||r.request_status||'pending').toLowerCase();return !['played','rejected','declined','cancelled','canceled','completed','done'].includes(v)}
+function requestSong(r){
+ const id=r.song_id||r.requested_song_id;
+ if(id){const found=songs.find(s=>String(s.id)===String(id));if(found)return found;}
+ const title=requestTitle(r).trim().toLocaleLowerCase();
+ const artist=requestArtist(r).trim().toLocaleLowerCase();
+ let hits=songs.filter(s=>String(s.title||'').trim().toLocaleLowerCase()===title);
+ if(artist)hits=hits.filter(s=>String(s.artist||'').trim().toLocaleLowerCase()===artist);
+ return hits.length===1?hits[0]:null;
+}
+function setMode(mode){if(mode==='playing'&&editorActive){if(!confirm('Discard unsaved edits and enter Playing Mode?'))return;closeEditor();}showMode=mode==='between'?'between':'playing';if(showMode==='playing'){$('setlists-panel').hidden=true;$('setlists-btn').classList.remove('panel-open');}if(showMode==='playing'){$('library').hidden=true;} document.body.classList.toggle('mode-playing',showMode==='playing');if(showMode!=='playing'){$('library').hidden=false;pauseAutoScroll();setToolbarHidden(false);}else{$('dice-panel').hidden=true;} localStorage.setItem('performance-start-mode',showMode);$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('mode-hint').textContent=showMode==='playing'?"Playing: requests are visible, but can't replace your current chart.":'Between Songs: tap a request to open its chart. Requests are not automatically marked played.';drawRequests()}
+// Compact, non-interrupting song titles on the Playing screen.
+// Only authenticated owner queries; public customers use the existing beta RPCs.
+async function liveOwner(){
+ if(!db||!navigator.onLine)throw new Error('Connect online and sign in to receive requests.');
+ const {data,error}=await delayLimit(db.auth.getUser());if(error)throw error;
+ if(!data?.user||data.user.id!==signedInUserId||musician?.id!==TEST_MUSICIAN_ID)throw new Error('Sign in as Phil Smith Live to use this request test.');
+ return musician.id;
+}
+async function activeRequestShow(owner){
+ const {data,error}=await delayLimit(db.from('shows').select('id,show_date,start_time').eq('musician_id',owner).eq('requests_open',true).order('created_at',{ascending:false}).limit(2));
+ if(error)throw error;if(data?.length>1)throw new Error('Multiple open shows. Close the extra shows in the dashboard.');
+ return data?.[0]||null;
+}
+function drawFloatingRequests(pending){
+ const floating=$('float-requests');floating.replaceChildren();
+ const heading=document.createElement('span');heading.className='request-float-head';heading.textContent='SONG REQUESTS';floating.append(heading);
+ if(!pending.length){const e=document.createElement('span');e.className='request-float-empty';e.textContent=requestsError?'Connection unavailable':!requestOwner?'Sign in to connect':!requestShowId?'No active show':'No unplayed requests';floating.append(e);return;}
+ for(const r of pending.slice(0,3)){const row=document.createElement('span');row.className='request-float-row';const name=document.createElement('span');name.className='request-float-title';name.textContent=r.song;row.append(name);floating.append(row)}
+}
+function drawRequests(){
+ const list=$('request-list');list.replaceChildren();const pending=incomingRequests.filter(isPending);
+ $('request-button-label').textContent=`Requests (${pending.length})`;drawFloatingRequests(pending);
+ $('float-requests').classList.toggle('has-requests',pending.length>0);$('requests-btn').classList.toggle('has-requests',pending.length>0);
+ syncRecordButtons();$('show-state').textContent=requestsError?'Live requests unavailable':!requestOwner?'Sign in to your musician account':requestShowId?'Connected · Requests OPEN':'Connected · No active show';
+ $('request-info').textContent=requestsError|| (requestLoading?'Checking this show…':requestShowId?`${pending.length} unplayed requests · Latest 100 submissions · Updates every 10 seconds.`:'Start a show in the dashboard to receive requests.');
+ for(const r of incomingRequests){
+  const item=document.createElement('div');item.className='request-item'+(r.status==='played'?' is-played':'');
+  const summary=document.createElement('div');summary.className='request-summary';
+  const title=document.createElement('div');title.className='request-title';title.textContent=r.song+(r.status==='played'?' · PLAYED':'');
+  const details=document.createElement('div');details.className='request-details';details.style.whiteSpace='pre-wrap';details.style.overflowWrap='anywhere';details.textContent=[r.artist,r.requester_name?'From: '+r.requester_name:'',r.notes?'Notes: '+r.notes:''].filter(Boolean).join(' · ');summary.append(title,details);item.append(summary);
+  const match=songs.find(s=>s.id===r.song_id);
+  const open=document.createElement('button');open.type='button';open.className='request-open';open.textContent=showMode==='playing'?'Locked':match?'Open':'No chart';open.disabled=showMode!=='between'||!match;open.onclick=()=>{if(showMode!=='between'||!match)return;showSong(match);$('request-panel').hidden=true};item.append(open);
+  if(isPending(r)){const mark=document.createElement('button');mark.type='button';mark.className='request-mark';mark.textContent='✓ Played';mark.disabled=!requestShowId||markingRequest||requestLoading||!navigator.onLine;mark.onclick=()=>markLiveRequestPlayed(r);item.append(mark)}
+  list.append(item);
+ }
+}
+async function refreshRequests(){
+ if(requestLoading||markingRequest)return;
+ requestLoading=true;const epoch=++requestEpoch;requestsError='';drawRequests();
+ try{
+  const owner=await liveOwner();const show=await activeRequestShow(owner);
+  let rows=[];
+  if(show){const result=await delayLimit(db.from('requests').select('id,song_id,requester_name,notes,status,created_at').eq('musician_id',owner).eq('show_id',show.id).order('created_at',{ascending:false}).order('id').limit(100));if(result.error)throw result.error;rows=result.data||[];}
+  if(epoch!==requestEpoch)return;
+  requestOwner=owner;requestShowId=show?.id||null;
+  incomingRequests=rows.map(r=>({...r,show_id:show.id,song:songs.find(s=>s.id===r.song_id)?.title||'Song unavailable',artist:songs.find(s=>s.id===r.song_id)?.artist||''}));
+ }catch(e){if(epoch===requestEpoch){incomingRequests=[];requestShowId=null;requestOwner=null;requestsError=e?.message||String(e)}}
+ finally{requestLoading=false;drawRequests()}
+}
+async function markRequestWithoutHistory(r){
+ if(markingRequest||requestLoading||r.show_id!==requestShowId)return;
+ markingRequest=true;drawRequests();
+ try{
+  const owner=await liveOwner();const show=await activeRequestShow(owner);
+  if(!show||show.id!==r.show_id)throw new Error('The show changed. Refresh requests before marking played.');
+  const {data,error}=await delayLimit(db.from('requests').update({status:'played'}).eq('id',r.id).eq('musician_id',owner).eq('show_id',r.show_id).eq('status',r.status).select('id,status'));
+  if(error)throw error;if(data?.length!==1||data[0].status!=='played')throw new Error('Request changed or was not saved. Refresh and try again.');
+ }catch(e){alert(e?.message||String(e))}
+ finally{markingRequest=false;await refreshRequests()}
+}
+
+async function markLiveRequestPlayed(r){
+ if(markingRequest||requestLoading||r.show_id!==requestShowId)return;
+ if(historyTracking)await recordSongPerformance(r.song_id,r.show_id);else await markRequestWithoutHistory(r);
+}
+function diceRoll(){const ready=songs.filter(s=>statusOf(s)==='Ready to Play'&&s.id!==currentId);let choices=ready.filter(s=>!recentDiceIds.includes(s.id));if(!choices.length){recentDiceIds=[];choices=ready}if(!choices.length){$('dice-choice').textContent='No other Ready to Play songs';$('dice-artist').textContent='';diceSuggestion=null;$('play-dice').disabled=true;return}diceSuggestion=choices[Math.floor(Math.random()*choices.length)];recentDiceIds.push(diceSuggestion.id);if(recentDiceIds.length>15)recentDiceIds.shift();$('dice-choice').textContent=diceSuggestion.title||'Untitled';$('dice-artist').textContent=diceSuggestion.artist||'';$('play-dice').disabled=false}
+// Setlist menu belongs to Between Songs; selection never forces a setlist on free-playing musicians.
+function showSavedSetlists(){
+ if(showMode==='playing')setMode('between');
+ const target=$('setlists-choices');target.replaceChildren();
+ let saved=[];
+ try{saved=JSON.parse(localStorage.getItem('musician-setlists-v1:'+musician.id)||'[]')}catch(e){}
+ if(!Array.isArray(saved))saved=[];
+ for(const sl of saved){
+  if(!sl||!sl.id||!Array.isArray(sl.songIds))continue;
+  const b=document.createElement('button');b.type='button';b.className='setlist-choice';
+  const name=document.createElement('span');name.className='setlist-choice-name';name.textContent=sl.name||'Unnamed Setlist';
+  const count=document.createElement('span');count.className='setlist-choice-count';count.textContent=sl.songIds.length+' songs →';
+  b.append(name,count);
+  b.onclick=()=>{location.href='performance-show-history-v2-test.html?setlist='+encodeURIComponent(sl.id)};
+  target.append(b);
+ }
+ if(!target.childElementCount){const msg=document.createElement('div');msg.className='setlist-empty';msg.textContent='No locally saved setlists yet. Create one in Setlist Studio.';target.append(msg)}
+ $('setlists-panel').hidden=false;$('setlists-btn').classList.add('panel-open');
+}
+$('setlists-btn').onclick=showSavedSetlists;
+$('close-setlists').onclick=()=>{$('setlists-panel').hidden=true;$('setlists-btn').classList.remove('panel-open')};
+$('open-setlist-studio').onclick=()=>{location.href='setlist-manager-cross-set-fix-test.html'};
+$('playing-btn').onclick=()=>setMode('playing');$('between-btn').onclick=()=>setMode('between');
+function toggleRequestPanel(){$('dice-panel').hidden=true;$('request-panel').hidden=!$('request-panel').hidden;if(!$('request-panel').hidden)refreshRequests()}
+$('requests-btn').onclick=toggleRequestPanel;$('float-requests').onclick=toggleRequestPanel;
+$('refresh-requests').onclick=refreshRequests;$('close-requests').onclick=()=>{$('request-panel').hidden=true};
+let rollingDice=false;
+function rollAnimated(){
+ if(rollingDice)return;
+ rollingDice=true;
+ const die=$('dice-btn');die.classList.remove('is-rolling');void die.offsetWidth;die.classList.add('is-rolling');
+ $('dice-choice').textContent='Rolling…';$('dice-artist').textContent='';$('play-dice').disabled=true;
+ window.setTimeout(()=>{diceRoll();rollingDice=false;die.classList.remove('is-rolling')},550);
+}
+$('dice-btn').onclick=()=>{$('request-panel').hidden=true;$('setlists-panel').hidden=true;$('appearance-panel').hidden=true;$('dice-panel').hidden=false;rollAnimated()};
+$('close-dice').onclick=()=>{$('dice-panel').hidden=true};$('reroll').onclick=rollAnimated;
+$('play-dice').onclick=()=>{if(diceSuggestion){showSong(diceSuggestion);$('dice-panel').hidden=true}};
+
+// Full-screen controls and opt-in per-song auto-scroll. Never starts automatically.
+let autoScrolling=false,scrollFrame=0,lastFrameTime=0;
+let scrollSpeed=Math.max(5,Math.min(100,Number(localStorage.getItem('performance-scroll-speed'))||25));
+function updateScrollButtons(){
+ $('scroll-toggle').textContent=autoScrolling?'⏸ Pause':'▶ Scroll';
+ $('scroll-toggle').setAttribute('aria-label',autoScrolling?'Pause auto-scroll':'Start auto-scroll');
+ $('speed-down').title='Slower auto-scroll ('+scrollSpeed+' px/s)';
+ $('speed-up').title='Faster auto-scroll ('+scrollSpeed+' px/s)';
+}
+function pauseAutoScroll(){autoScrolling=false;if(scrollFrame)cancelAnimationFrame(scrollFrame);scrollFrame=0;lastFrameTime=0;updateScrollButtons()}
+function autoScrollStep(timestamp){
+ if(!autoScrolling||showMode!=='playing'){pauseAutoScroll();return;}
+ if(lastFrameTime){const elapsed=Math.min((timestamp-lastFrameTime)/1000,.1);$('stage').scrollTop+=scrollSpeed*elapsed;}
+ lastFrameTime=timestamp;
+ const stage=$('stage');
+ if(stage.scrollTop+stage.clientHeight>=stage.scrollHeight-2){pauseAutoScroll();return;}
+ scrollFrame=requestAnimationFrame(autoScrollStep);
+}
+function toggleAutoScroll(){
+ if(autoScrolling){pauseAutoScroll();return;}
+ if(showMode!=='playing')return;
+ const duration=readLearnedDuration(currentId);if(duration){const stage=$('stage');const distance=Math.max(0,stage.scrollHeight-stage.clientHeight);scrollSpeed=Math.max(5,Math.min(180,distance/(duration/1000)));}
+ autoScrolling=true;lastFrameTime=0;updateScrollButtons();scrollFrame=requestAnimationFrame(autoScrollStep);
+}
+function adjustSpeed(delta){scrollSpeed=Math.max(5,Math.min(180,scrollSpeed+delta));localStorage.setItem('performance-scroll-speed',String(scrollSpeed));updateScrollButtons()}
+function setToolbarHidden(hidden){document.body.classList.toggle('toolbar-hidden',Boolean(hidden)&&showMode==='playing');syncHeaderHeight()}
+function syncHeaderHeight(){const h=document.querySelector('header').getBoundingClientRect().height;document.documentElement.style.setProperty('--header-height',h+'px')}
+$('hide-controls').onclick=()=>setToolbarHidden(true);
+$('restore-controls').onclick=()=>setToolbarHidden(false);
+$('float-smaller').onclick=()=>changeFont(-2);
+$('float-larger').onclick=()=>changeFont(2);
+$('scroll-toggle').onclick=toggleAutoScroll;
+$('speed-down').onclick=()=>adjustSpeed(-5);
+$('speed-up').onclick=()=>adjustSpeed(5);
+$('float-between').onclick=()=>setMode('between');
+$('float-library').onclick=()=>{setMode('between');if(!selectedPerformanceSetlist)$('filter').value='ready';drawList();$('library').hidden=false;};
+$('float-setlist-prev').onclick=setlistPrevious;
+$('float-setlist-next').onclick=setlistNext;
+
+// Optional song timer and toolbar preferences. Stored per browser and per song.
+const SCROLL_VIS_KEY='performance-show-scroll-controls-v2';
+const LEARNING_ENABLED_KEY='performance-learning-enabled-v2';
+const DURATIONS_KEY='performance-learned-durations-v2';
+const TOOLBAR_SIZE_KEY='performance-toolbar-scale-v2';
+let learnedAt=null;
+function readLearnedDuration(id){try{const v=JSON.parse(localStorage.getItem(DURATIONS_KEY)||'{}');return Number(v[String(id)])||0}catch{return 0}}
+function saveLearnedDuration(id,ms){try{const v=JSON.parse(localStorage.getItem(DURATIONS_KEY)||'{}');v[String(id)]=ms;localStorage.setItem(DURATIONS_KEY,JSON.stringify(v))}catch(e){console.warn('Duration not saved',e)}}
+function syncLearningControls(){
+ const enabled=$('setting-learning').checked;
+ $('learning-start').hidden=!enabled||learnedAt!==null;
+ $('learning-stop').hidden=!enabled||learnedAt===null;
+ const d=readLearnedDuration(currentId);
+ $('learning-feedback').textContent=d?'Saved duration for this song: '+Math.round(d/1000)+' seconds. Start again to relearn.':'No duration saved for this song yet. Start the timer and scroll manually.';
+}
+$('setting-show-scroll').checked=localStorage.getItem(SCROLL_VIS_KEY)!=='false';
+$('setting-learning').checked=localStorage.getItem(LEARNING_ENABLED_KEY)==='true';
+function syncTransportOptions(){document.body.classList.toggle('show-scroll-controls',$('setting-show-scroll').checked);syncLearningControls();requestAnimationFrame(placeTransport)}
+$('setting-show-scroll').onchange=()=>{localStorage.setItem(SCROLL_VIS_KEY,String($('setting-show-scroll').checked));syncTransportOptions()};
+$('setting-learning').onchange=()=>{localStorage.setItem(LEARNING_ENABLED_KEY,String($('setting-learning').checked));if(!$('setting-learning').checked)learnedAt=null;syncTransportOptions()};
+$('learning-start').onclick=()=>{if(!currentId)return;learnedAt={id:String(currentId),started:performance.now()};syncLearningControls()};
+$('learning-stop').onclick=()=>{if(!learnedAt)return;const ms=Math.max(1000,performance.now()-learnedAt.started);saveLearnedDuration(learnedAt.id,Math.round(ms));learnedAt=null;syncLearningControls()};
+let toolbarScale=Math.max(.75,Math.min(1.7,Number(localStorage.getItem(TOOLBAR_SIZE_KEY))||1));
+function applyToolbarScale(){transport.style.setProperty('--control-scale',toolbarScale.toFixed(3));requestAnimationFrame(placeTransport)}
+const resizeGrip=$('toolbar-resize');let resizeTouch=null;
+resizeGrip.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();resizeTouch={id:e.pointerId,startX:e.clientX,startY:e.clientY,scale:toolbarScale};resizeGrip.setPointerCapture(e.pointerId)});
+resizeGrip.addEventListener('pointermove',e=>{if(!resizeTouch||e.pointerId!==resizeTouch.id)return;e.preventDefault();const delta=(e.clientX-resizeTouch.startX)+(e.clientY-resizeTouch.startY);toolbarScale=Math.max(.75,Math.min(1.7,resizeTouch.scale+delta/350));applyToolbarScale()});
+resizeGrip.addEventListener('pointerup',e=>{if(!resizeTouch||resizeTouch.id!==e.pointerId)return;resizeTouch=null;localStorage.setItem(TOOLBAR_SIZE_KEY,String(toolbarScale))});
+resizeGrip.addEventListener('pointercancel',()=>{resizeTouch=null;localStorage.setItem(TOOLBAR_SIZE_KEY,String(toolbarScale))});
+// Two-finger pinch changes chart lettering, not the entire stage or floating controls.
+let pinchStart=null;
+$('stage').addEventListener('touchstart',e=>{if(e.touches.length!==2||!e.target.closest('#chart'))return;const a=e.touches[0],b=e.touches[1];pinchStart={distance:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),font:fontSize}},{passive:true});
+$('stage').addEventListener('touchmove',e=>{if(!pinchStart||e.touches.length!==2)return;e.preventDefault();const a=e.touches[0],b=e.touches[1],dist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);fontSize=Math.max(14,Math.min(48,pinchStart.font*(dist/Math.max(1,pinchStart.distance))));$('chart').style.fontSize=fontSize+'px'},{passive:false});
+$('stage').addEventListener('touchend',e=>{if(pinchStart&&e.touches.length<2){pinchStart=null;localStorage.setItem('performance-font-size',String(fontSize))}},{passive:true});
+const originalShowSong=showSong;
+showSong=function(s){if(learnedAt)learnedAt=null;originalShowSong(s);syncLearningControls()};
+requestAnimationFrame(()=>{syncTransportOptions();applyToolbarScale()});
+
+// The floating transport snaps to an edge: top/bottom horizontal, sides vertical.
+// Its position is saved locally; nothing about movement changes the song or scrolling state.
+// Save a separate library width for Between Songs; charts remain untouched.
+const LIBRARY_WIDTH_KEY='performance-library-width-v1';
+let libraryWidth=Number(localStorage.getItem(LIBRARY_WIDTH_KEY))||340;
+const libraryResizer=$('library-resizer');
+function clampLibraryWidth(px){return Math.max(220,Math.min(px,Math.max(220,$('layout').clientWidth-280)));}
+function applyLibraryWidth(){
+ if(innerWidth<=780)return;
+ libraryWidth=clampLibraryWidth(libraryWidth);
+ document.documentElement.style.setProperty('--library-pane-width',libraryWidth+'px');
+}
+applyLibraryWidth();
+libraryResizer.addEventListener('pointerdown',e=>{
+ if(e.button!==0||innerWidth<=780||$('library').hidden)return;
+ e.preventDefault();document.body.classList.add('resizing-library');
+ libraryResizer.setPointerCapture(e.pointerId);
+});
+libraryResizer.addEventListener('pointermove',e=>{
+ if(!libraryResizer.hasPointerCapture(e.pointerId)||innerWidth<=780)return;
+ const bounds=$('layout').getBoundingClientRect();
+ libraryWidth=clampLibraryWidth(e.clientX-bounds.left-9);
+ document.documentElement.style.setProperty('--library-pane-width',libraryWidth+'px');
+});
+function finishLibraryResize(){
+ if(!document.body.classList.contains('resizing-library'))return;
+ document.body.classList.remove('resizing-library');
+ try{localStorage.setItem(LIBRARY_WIDTH_KEY,String(Math.round(libraryWidth)))}catch{}
+}
+libraryResizer.addEventListener('pointerup',finishLibraryResize);
+libraryResizer.addEventListener('pointercancel',finishLibraryResize);
+libraryResizer.addEventListener('keydown',e=>{
+ if(!['ArrowLeft','ArrowRight'].includes(e.key)||innerWidth<=780)return;
+ e.preventDefault();libraryWidth=clampLibraryWidth(libraryWidth+(e.key==='ArrowRight'?30:-30));
+ applyLibraryWidth();try{localStorage.setItem(LIBRARY_WIDTH_KEY,String(libraryWidth))}catch{}
+});
+window.addEventListener('resize',applyLibraryWidth);
+
+const transport=$('float-transport'), transportGrip=$('transport-grip');
+const TRANSPORT_POSITION_KEY='performance-transport-position-v1';
+let transportPlacement={edge:'bottom',fraction:0},transportDrag=null;
+try{const saved=JSON.parse(localStorage.getItem(TRANSPORT_POSITION_KEY)||'null');
+ if(saved&&['top','bottom','left','right'].includes(saved.edge)&&Number.isFinite(saved.fraction))transportPlacement={edge:saved.edge,fraction:Math.max(0,Math.min(1,saved.fraction))};
+}catch{}
+function transportViewSize(){
+ // visualViewport differs from the layout viewport in Safari after keyboard and Split View changes.
+ const visual=window.visualViewport;
+ return {w:Math.max(120,Math.min(innerWidth,visual?.width||innerWidth)),
+         h:Math.max(120,Math.min(innerHeight,visual?.height||innerHeight))};
+}
+function checkTransportReachable(){
+ if(showMode!=='playing'){document.body.classList.remove('toolbar-needs-recovery');return;}
+ const r=transport.getBoundingClientRect(),{w,h}=transportViewSize();
+ // Require at least a genuinely tappable portion, not just one narrow pixel at the edge.
+ const visibleW=Math.max(0,Math.min(r.right,w)-Math.max(r.left,0));
+ const visibleH=Math.max(0,Math.min(r.bottom,h)-Math.max(r.top,0));
+ document.body.classList.toggle('toolbar-needs-recovery',visibleW<48||visibleH<36);
+}
+function placeTransport(){
+ const edge=transportPlacement.edge;
+ transport.classList.toggle('edge-left',edge==='left');
+ transport.classList.toggle('edge-right',edge==='right');
+ transport.style.left='0px';transport.style.top='0px';transport.style.right='auto';transport.style.bottom='auto';
+ transport.scrollTop=0;
+ const {w,h}=transportViewSize(),margin=8;
+ // Sizing constraints apply before measuring, including on very narrow Split View windows.
+ transport.style.maxWidth=Math.max(120,w-2*margin)+'px';
+ transport.style.maxHeight=Math.max(120,h-2*margin)+'px';
+ const rect=transport.getBoundingClientRect();
+ const width=Math.min(rect.width,w-2*margin),height=Math.min(rect.height,h-2*margin);
+ const availableX=Math.max(0,w-width-2*margin),availableY=Math.max(0,h-height-2*margin);
+ const x=edge==='left'?margin:edge==='right'?margin+availableX:margin+availableX*transportPlacement.fraction;
+ const y=edge==='top'?margin:edge==='bottom'?margin+availableY:margin+availableY*transportPlacement.fraction;
+ transport.style.left=Math.round(Math.max(margin,Math.min(margin+availableX,x)))+'px';
+ transport.style.top=Math.round(Math.max(margin,Math.min(margin+availableY,y)))+'px';
+ requestAnimationFrame(checkTransportReachable);
+}
+$('toolbar-recover').onclick=()=>{
+ setTransportPlacement('bottom',0);
+ $('toolbar-recover').textContent='☷ SONGS · Reset controls';
+ setMode('between');$('filter').value='ready';drawList();$('library').hidden=false;
+};
+function setTransportPlacement(edge,fraction){
+ transportPlacement={edge,fraction:Math.max(0,Math.min(1,fraction))};
+ try{localStorage.setItem(TRANSPORT_POSITION_KEY,JSON.stringify(transportPlacement))}catch{}
+ placeTransport();
+}
+transportGrip.addEventListener('pointerdown',e=>{
+ if(e.button!==0)return;
+ e.preventDefault();
+ const rect=transport.getBoundingClientRect();
+ transportDrag={id:e.pointerId,dx:e.clientX-rect.left,dy:e.clientY-rect.top};
+ transportGrip.setPointerCapture(e.pointerId);
+});
+transportGrip.addEventListener('pointermove',e=>{
+ if(!transportDrag||transportDrag.id!==e.pointerId)return;
+ e.preventDefault();
+ transport.style.left=Math.max(0,Math.min(innerWidth-transport.offsetWidth,e.clientX-transportDrag.dx))+'px';
+ transport.style.top=Math.max(0,Math.min(innerHeight-transport.offsetHeight,e.clientY-transportDrag.dy))+'px';
+});
+function finishTransportDrag(e){
+ if(!transportDrag||transportDrag.id!==e.pointerId)return;
+ transportDrag=null;
+ const rect=transport.getBoundingClientRect();
+ const distances={left:rect.left,right:innerWidth-rect.right,top:rect.top,bottom:innerHeight-rect.bottom};
+ const edge=Object.keys(distances).reduce((best,k)=>distances[k]<distances[best]?k:best,'left');
+ const vertical=(edge==='left'||edge==='right');
+ const extent=vertical?innerHeight:innerWidth, size=vertical?rect.height:rect.width, position=vertical?rect.top:rect.left;
+ const fraction=(position-8)/Math.max(1,extent-size-16);
+ setTransportPlacement(edge,fraction);
+}
+transportGrip.addEventListener('pointerup',finishTransportDrag);
+transportGrip.addEventListener('pointercancel',finishTransportDrag);
+// Keyboard access to placement: arrow keys move to a screen edge.
+transportGrip.addEventListener('keydown',e=>{
+ const edges={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'top',ArrowDown:'bottom'};
+ if(edges[e.key]){e.preventDefault();setTransportPlacement(edges[e.key],.5);}
+});
+window.addEventListener('resize',()=>requestAnimationFrame(placeTransport));
+window.addEventListener('orientationchange',()=>requestAnimationFrame(placeTransport));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(placeTransport)});
+if(window.ResizeObserver){new ResizeObserver(()=>requestAnimationFrame(placeTransport)).observe(transport);}
+if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>requestAnimationFrame(placeTransport));window.visualViewport.addEventListener('scroll',()=>requestAnimationFrame(placeTransport));}
+requestAnimationFrame(placeTransport);
+// A deliberate touch, wheel movement, or pointer drag pauses scrolling immediately.
+$('stage').addEventListener('touchstart',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
+$('stage').addEventListener('wheel',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
+$('stage').addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&autoScrolling)pauseAutoScroll()});
+window.addEventListener('resize',syncHeaderHeight);
+updateScrollButtons();syncHeaderHeight();
+
+
+let historyShows=[],historyShowOffset=0,historySongOffset=0,historyEpoch=0,historyOwner=null,historySongCount=0;
+let historyTracking=localStorage.getItem('performance-track-history-v1')!=='off';
+$('setting-track-history').checked=historyTracking;
+$('setting-track-history').onchange=()=>{const input=$('setting-track-history');if(markingRequest){input.checked=historyTracking;return}try{localStorage.setItem('performance-track-history-v1',input.checked?'on':'off');historyTracking=input.checked;syncRecordButtons();performanceToast(historyTracking?'Performance history tracking on':'Performance history tracking off')}catch(e){input.checked=historyTracking;alert('Could not save this setting.')}};
+const loggedThisTab=new Set();let performanceToastTimer;
+function performanceToast(message){clearTimeout(performanceToastTimer);$('performance-toast').textContent=message;$('performance-toast').hidden=false;performanceToastTimer=setTimeout(()=>{$('performance-toast').hidden=true},5000)}
+function syncRecordButtons(){
+ const disabled=!historyTracking||!currentId||!requestShowId||!requestOwner||!navigator.onLine||markingRequest||requestLoading;
+ $('song-end-actions').hidden=!historyTracking||!currentId;
+ for(const id of ['record-played','float-played']){$(id).hidden=!historyTracking;$(id).disabled=disabled;$(id).textContent=markingRequest?'Saving…':'✓ Mark Played';}
+}
+async function recordSongPerformance(songId,expectedShow=requestShowId){
+ if(!historyTracking||markingRequest||requestLoading||!expectedShow)return;
+ const song=songs.find(s=>s.id===songId);if(!song)return;
+ const repeatKey=expectedShow+':'+songId;
+ if(loggedThisTab.has(repeatKey)&&!confirm('Record another performance of “'+song.title+'”?'))return;
+ markingRequest=true;drawRequests();$('record-feedback').textContent='Saving '+song.title+'…';
+ try{
+  const owner=await liveOwner(),show=await activeRequestShow(owner);
+  if(!show||show.id!==expectedShow)throw Error('The show changed. Refresh before recording a song.');
+  const key='performance-event-v1:'+owner+':'+show.id+':'+songId;
+  let eventId=localStorage.getItem(key);
+  if(!eventId){eventId=crypto.randomUUID();localStorage.setItem(key,eventId)}
+  const result=await delayLimit(db.rpc('beta_record_performance',{p_show_id:show.id,p_song_id:songId,p_event_id:eventId}));
+  if(result.error)throw result.error;if(result.data?.ok!==true)throw Error('The recording was not confirmed.');if(result.data.undone){localStorage.removeItem(key);throw Error('This saved entry was already undone. Press Mark Played again for a new performance.');}
+  localStorage.removeItem(key);loggedThisTab.add(repeatKey);performanceToast('Recorded: '+song.title);
+  $('record-feedback').textContent='Recorded: '+song.title+' · '+new Date(result.data.played_at).toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'});
+ }catch(e){$('record-feedback').textContent='Not confirmed: '+(e?.message||String(e))+' Retry Played for this song to check/save the same entry.';alert($('record-feedback').textContent)}
+ finally{markingRequest=false;await refreshRequests();syncRecordButtons()}
+}
+$('record-played').onclick=()=>recordSongPerformance(currentId);
+$('float-played').onclick=()=>recordSongPerformance(currentId);
+let historyReturnFocus=null;
+async function openHistory(){historyReturnFocus=document.activeElement;$('history-panel').hidden=false;$('history-close').focus();await loadHistoryShows(false)}
+function closeHistory(){historyEpoch++;$('history-panel').hidden=true;historyReturnFocus?.focus()}
+$('history-open').onclick=openHistory;$('history-request').onclick=openHistory;$('history-close').onclick=closeHistory;
+$('history-panel').addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory();if(e.key==='Tab'){const nodes=[...$('history-panel').querySelectorAll('button,select')].filter(x=>!x.hidden&&!x.disabled);if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}}});
+$('history-refresh').onclick=()=>loadHistoryShows(false);$('history-more-shows').onclick=()=>loadHistoryShows(true);$('history-more-songs').onclick=()=>loadHistorySongs(true);$('history-shows').onchange=()=>loadHistorySongs(false);
+function historyError(e){$('history-summary').textContent='History unavailable: '+(e?.message||String(e));$('history-results').replaceChildren();$('history-more-songs').hidden=true}
+function showLabel(s){return [s.show_date||new Date(s.created_at).toLocaleDateString(),s.start_time||'',s.venue_name||'Venue not entered',s.requests_open?'Active':'Ended'].filter(Boolean).join(' · ')}
+async function loadHistoryShows(more=false){
+ const epoch=++historyEpoch;$('history-summary').textContent='Loading shows…';$('history-more-shows').disabled=true;
+ if(!more){historyShows=[];historyShowOffset=0;$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-more-songs').hidden=true;}
+ try{
+  const owner=await liveOwner();historyOwner=owner;
+  const r=await delayLimit(db.from('shows').select('id,venue_name,show_date,start_time,requests_open,created_at').eq('musician_id',owner).order('created_at',{ascending:false}).order('id').range(historyShowOffset,historyShowOffset+49));
+  if(r.error)throw r.error;if(epoch!==historyEpoch)return;
+  historyShows.push(...r.data||[]);historyShowOffset+=(r.data||[]).length;
+  for(const s of r.data||[]){const o=document.createElement('option');o.value=s.id;o.textContent=showLabel(s);$('history-shows').append(o)}
+  $('history-more-shows').hidden=(r.data||[]).length<50;
+  if(!historyShows.length){$('history-summary').textContent='No shows yet.';return}
+  if(!more)await loadHistorySongs(false);else $('history-summary').textContent='Older shows added to the show selector.';
+ }catch(e){if(epoch===historyEpoch)historyError(e)}finally{$('history-more-shows').disabled=false}
+}
+async function loadHistorySongs(more=false){
+ const epoch=++historyEpoch,showId=$('history-shows').value;if(!showId)return;
+ if(!more){historySongOffset=0;historySongCount=0;$('history-results').replaceChildren()}
+ $('history-more-songs').disabled=true;$('history-summary').textContent='Loading performances…';
+ try{
+  const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed. Refresh shows.');
+  const r=await delayLimit(db.from('show_performances').select('id,song_title,song_artist,played_at,was_requested').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at').order('id').range(historySongOffset,historySongOffset+199));
+  if(r.error)throw r.error;if(epoch!==historyEpoch)return;
+  for(const row of r.data||[]){historySongCount++;const item=document.createElement('div');item.className='history-row';const title=document.createElement('strong');title.textContent=historySongCount+'. '+row.song_title;if(row.was_requested){const badge=document.createElement('span');badge.className='history-requested';badge.textContent='Requested';title.append(' ',badge)}const details=document.createElement('p');details.textContent=row.song_artist+' · Recorded '+new Date(row.played_at).toLocaleString();item.append(title,details);$('history-results').append(item)}
+  historySongOffset+=(r.data||[]).length;$('history-more-songs').hidden=(r.data||[]).length<200;
+  $('history-summary').textContent=historySongCount?historySongCount+' recorded performance'+(historySongCount===1?'':'s')+($('history-more-songs').hidden?'':' loaded; more available'):'No performances recorded for this show.';
+ }catch(e){if(epoch===historyEpoch)historyError(e)}finally{$('history-more-songs').disabled=false}
+}
+
+$('history-undo').onclick=async()=>{
+ if(markingRequest||requestLoading)return;
+ const showId=$('history-shows').value;if(!showId)return;
+ markingRequest=true;$('history-undo').disabled=true;syncRecordButtons();
+ try{
+  const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed. Refresh shows.');
+  const key='performance-undo-v1:'+owner+':'+showId;
+  let eventId=localStorage.getItem(key),title='the last recording';
+  if(!eventId){
+   const r=await delayLimit(db.from('show_performances').select('id,song_title').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at',{ascending:false}).order('id',{ascending:false}).limit(1));
+   if(r.error)throw r.error;if(!r.data?.length){performanceToast('No recording to undo for this show.');return}
+   eventId=r.data[0].id;title=r.data[0].song_title;
+   if(!confirm('Undo the last recording: “'+title+'”?'))return;
+   localStorage.setItem(key,eventId);
+  }
+  const r=await delayLimit(db.rpc('beta_undo_performance',{p_event_id:eventId}));
+  if(r.error){if(/newer recording/i.test(r.error.message||''))localStorage.removeItem(key);throw r.error}if(r.data?.ok!==true)throw Error('Undo was not confirmed.');
+  localStorage.removeItem(key);performanceToast('Last recording undone.');$('record-feedback').textContent='Last recording undone.';
+  await loadHistorySongs(false);
+ }catch(e){alert('Undo not confirmed: '+(e?.message||String(e))+' Try Undo again to check the same entry.');}
+ finally{markingRequest=false;$('history-undo').disabled=false;await refreshRequests();syncRecordButtons()}
+};
+
+// Remove private history immediately when the signed-in owner is cleared.
+const originalClearLiveRequests=clearLiveRequests;
+clearLiveRequests=function(){originalClearLiveRequests();historyEpoch++;historyShows=[];historyOwner=null;$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-summary').textContent='Sign in to view show history.';syncRecordButtons()};
+syncRecordButtons();
+
+setMode(showMode);
+requestAnimationFrame(()=>{placeTransport();checkTransportReachable()});
+if(onlineConnected&&navigator.onLine)refreshRequests();
+window.addEventListener('online',()=>{setBusy(`${songs.length} songs · RECONNECTING…`);connect().catch(e=>console.warn('Reconnect failed:',e));if(onlineConnected)refreshRequests()});
+window.addEventListener('offline',()=>{onlineConnected=false;signedInUserId=null;setBusy(`${songs.length} songs · OFFLINE COPY`);clearLiveRequests();requestsError='Requests require internet';drawRequests()});
+connect();
+</script>
+</body></html>
