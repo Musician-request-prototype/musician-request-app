@@ -439,7 +439,8 @@ let showMode=localStorage.getItem('performance-start-mode')==='between'?'between
 let incomingRequests=[], requestsError='', diceSuggestion=null, recentDiceIds=[], requestLoading=false, requestTimer=null, showActionBusy=false;
 const TEST_MUSICIAN_ID='adbce7b8-424e-4de3-84ed-7c4e68c64559';
 let requestShowId=null, requestOwner=null, requestEpoch=0, markingRequest=false;
-function clearLiveRequests(){requestEpoch++;incomingRequests=[];requestShowId=null;requestOwner=null;drawRequests()}
+function cancelRequestPoll(){requestEpoch++;requestLoading=false}
+function clearLiveRequests(){cancelRequestPoll();incomingRequests=[];requestShowId=null;requestOwner=null;drawRequests()}
 let fontSize=Number(localStorage.getItem('performance-font-size'))||24;
 const safeNumber=x=>Number.isFinite(x)?x:24;
 fontSize=Math.max(14,Math.min(48,safeNumber(fontSize)));
@@ -788,12 +789,17 @@ function drawFloatingRequests(pending){
  if(!pending.length){const e=document.createElement('span');e.className='request-float-empty';e.textContent=requestsError?'Connection unavailable':!requestOwner?'Sign in to connect':!requestShowId?'No active show':'No unplayed requests';floating.append(e);return;}
  for(const r of pending.slice(0,3)){const row=document.createElement('span');row.className='request-float-row';const name=document.createElement('span');name.className='request-float-title';name.textContent=r.song;row.append(name);floating.append(row)}
 }
+let requestRenderSignature='';
 function drawRequests(){
+ syncRecordButtons();
+ const signature=JSON.stringify([incomingRequests,requestsError,requestOwner,requestShowId,showMode,markingRequest,navigator.onLine]);
+ if(signature===requestRenderSignature)return;
+ requestRenderSignature=signature;
  const list=$('request-list');list.replaceChildren();const pending=incomingRequests.filter(isPending);
  $('request-button-label').textContent=`Requests (${pending.length})`;drawFloatingRequests(pending);
  $('float-requests').classList.toggle('has-requests',pending.length>0);$('requests-btn').classList.toggle('has-requests',pending.length>0);
  syncRecordButtons();$('show-state').textContent=requestsError?'Live requests unavailable':!requestOwner?'Sign in to your musician account':requestShowId?'Connected · Requests OPEN':'Connected · No active show';
- $('request-info').textContent=requestsError|| (requestLoading?'Checking this show…':requestShowId?`${pending.length} unplayed requests · Latest 100 submissions · Updates every 10 seconds.`:'Start a show in the dashboard to receive requests.');
+ $('request-info').textContent=requestsError|| (requestShowId?`${pending.length} unplayed requests · Latest 100 submissions · Updates every 10 seconds.`:'Start a show in the dashboard to receive requests.');
  for(const r of incomingRequests){
   const item=document.createElement('div');item.className='request-item'+(r.status==='played'?' is-played':'');
   const summary=document.createElement('div');summary.className='request-summary';
@@ -801,26 +807,26 @@ function drawRequests(){
   const details=document.createElement('div');details.className='request-details';details.style.whiteSpace='pre-wrap';details.style.overflowWrap='anywhere';details.textContent=[r.artist,r.requester_name?'From: '+r.requester_name:'',r.notes?'Notes: '+r.notes:''].filter(Boolean).join(' · ');summary.append(title,details);item.append(summary);
   const match=songs.find(s=>s.id===r.song_id);
   const open=document.createElement('button');open.type='button';open.className='request-open';open.textContent=showMode==='playing'?'Locked':match?'Open':'No chart';open.disabled=showMode!=='between'||!match;open.onclick=()=>{if(showMode!=='between'||!match)return;showSong(match);$('request-panel').hidden=true};item.append(open);
-  if(isPending(r)){const mark=document.createElement('button');mark.type='button';mark.className='request-mark';mark.textContent='✓ Played';mark.disabled=!requestShowId||markingRequest||requestLoading||!navigator.onLine;mark.onclick=()=>markLiveRequestPlayed(r);item.append(mark)}
+  if(isPending(r)){const mark=document.createElement('button');mark.type='button';mark.className='request-mark';mark.textContent='✓ Played';mark.disabled=!requestShowId||markingRequest||!navigator.onLine;mark.onclick=()=>markLiveRequestPlayed(r);item.append(mark)}
   list.append(item);
  }
 }
 async function refreshRequests(){
  if(requestLoading||markingRequest)return;
- requestLoading=true;const epoch=++requestEpoch;requestsError='';drawRequests();
+ requestLoading=true;const epoch=++requestEpoch;
  try{
   const owner=await liveOwner();const show=await activeRequestShow(owner);
   let rows=[];
   if(show){const result=await delayLimit(db.from('requests').select('id,song_id,requester_name,notes,status,created_at').eq('musician_id',owner).eq('show_id',show.id).order('created_at',{ascending:false}).order('id').limit(100));if(result.error)throw result.error;rows=result.data||[];}
   if(epoch!==requestEpoch)return;
-  requestOwner=owner;requestShowId=show?.id||null;
+  requestsError='';requestOwner=owner;requestShowId=show?.id||null;
   incomingRequests=rows.map(r=>({...r,show_id:show.id,song:songs.find(s=>s.id===r.song_id)?.title||'Song unavailable',artist:songs.find(s=>s.id===r.song_id)?.artist||''}));
  }catch(e){if(epoch===requestEpoch){incomingRequests=[];requestShowId=null;requestOwner=null;requestsError=e?.message||String(e)}}
- finally{requestLoading=false;drawRequests()}
+ finally{if(epoch===requestEpoch){requestLoading=false;drawRequests()}}
 }
 async function markRequestWithoutHistory(r){
- if(markingRequest||requestLoading||r.show_id!==requestShowId)return;
- markingRequest=true;drawRequests();
+ if(markingRequest||r.show_id!==requestShowId)return;
+ cancelRequestPoll();markingRequest=true;drawRequests();
  try{
   const owner=await liveOwner();const show=await activeRequestShow(owner);
   if(!show||show.id!==r.show_id)throw new Error('The show changed. Refresh requests before marking played.');
@@ -831,7 +837,7 @@ async function markRequestWithoutHistory(r){
 }
 
 async function markLiveRequestPlayed(r){
- if(markingRequest||requestLoading||r.show_id!==requestShowId)return;
+ if(markingRequest||r.show_id!==requestShowId)return;
  if(historyTracking)await recordSongPerformance(r.song_id,r.show_id);else await markRequestWithoutHistory(r);
 }
 function diceRoll(){const ready=songs.filter(s=>statusOf(s)==='Ready to Play'&&s.id!==currentId);let choices=ready.filter(s=>!recentDiceIds.includes(s.id));if(!choices.length){recentDiceIds=[];choices=ready}if(!choices.length){$('dice-choice').textContent='No other Ready to Play songs';$('dice-artist').textContent='';diceSuggestion=null;$('play-dice').disabled=true;return}diceSuggestion=choices[Math.floor(Math.random()*choices.length)];recentDiceIds.push(diceSuggestion.id);if(recentDiceIds.length>15)recentDiceIds.shift();$('dice-choice').textContent=diceSuggestion.title||'Untitled';$('dice-artist').textContent=diceSuggestion.artist||'';$('play-dice').disabled=false}
@@ -1129,16 +1135,16 @@ $('setting-track-history').onchange=()=>{const input=$('setting-track-history');
 const loggedThisTab=new Set();let performanceToastTimer;
 function performanceToast(message){clearTimeout(performanceToastTimer);$('performance-toast').textContent=message;$('performance-toast').hidden=false;performanceToastTimer=setTimeout(()=>{$('performance-toast').hidden=true},5000)}
 function syncRecordButtons(){
- const disabled=!historyTracking||!currentId||!requestShowId||!requestOwner||!navigator.onLine||markingRequest||requestLoading;
+ const disabled=!historyTracking||!currentId||!requestShowId||!requestOwner||!navigator.onLine||markingRequest;
  $('song-end-actions').hidden=!historyTracking||!currentId;
  for(const id of ['record-played','float-played']){$(id).hidden=!historyTracking;$(id).disabled=disabled;$(id).textContent=markingRequest?'Saving…':'✓ Mark Played';}
 }
 async function recordSongPerformance(songId,expectedShow=requestShowId){
- if(!historyTracking||markingRequest||requestLoading||!expectedShow)return;
+ if(!historyTracking||markingRequest||!expectedShow)return;
  const song=songs.find(s=>s.id===songId);if(!song)return;
  const repeatKey=expectedShow+':'+songId;
  if(loggedThisTab.has(repeatKey)&&!confirm('Record another performance of “'+song.title+'”?'))return;
- markingRequest=true;drawRequests();$('record-feedback').textContent='Saving '+song.title+'…';
+ cancelRequestPoll();markingRequest=true;drawRequests();$('record-feedback').textContent='Saving '+song.title+'…';
  try{
   const owner=await liveOwner(),show=await activeRequestShow(owner);
   if(!show||show.id!==expectedShow)throw Error('The show changed. Refresh before recording a song.');
@@ -1191,9 +1197,9 @@ async function loadHistorySongs(more=false){
 }
 
 $('history-undo').onclick=async()=>{
- if(markingRequest||requestLoading)return;
+ if(markingRequest)return;
  const showId=$('history-shows').value;if(!showId)return;
- markingRequest=true;$('history-undo').disabled=true;syncRecordButtons();
+ cancelRequestPoll();markingRequest=true;$('history-undo').disabled=true;syncRecordButtons();
  try{
   const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed. Refresh shows.');
   const key='performance-undo-v1:'+owner+':'+showId;
