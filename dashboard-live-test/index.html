@@ -23,28 +23,50 @@ const msg=(id,t,error=false)=>{const n=$('#'+id);n.textContent=t;n.className='st
 const localDate=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const localTime=()=>{const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`};
 let client, currentUser, activeShow, busy=false;
+let dashboardEpoch=0,pollingShow=false,requestRenderSignature='';
+const setText=(id,text)=>{const n=$('#'+id);if(n.textContent!==text)n.textContent=text};
+function clearDashboardRequests(text){if($('#requestList').childNodes.length)$('#requestList').replaceChildren();requestRenderSignature='';setText('requestSummary',text)}
 function fail(t){show('loading',false);show('login',true);msg('loginMsg',t,true)}
 async function verifyUser(){const {data:{user},error}=await client.auth.getUser();if(error||!user){show('loading',false);show('login',true);show('dashboard',false);return}if(user.id.toLowerCase()!==OWNER_USER_ID.toLowerCase()){await client.auth.signOut();fail('This test page is configured only for the original musician account. Other musician accounts will be supported in the multi-user dashboard.');return}currentUser=user;try{const {data:profile,error:profileError}=await client.from('musicians').select('id,display_name').eq('user_id',user.id).eq('is_active',true).single();if(profileError)throw profileError;if(!profile)throw Error('No active musician profile found.');MUSICIAN_ID=profile.id;$('#musicianName').textContent=profile.display_name;}catch(e){currentUser=null;await client.auth.signOut();fail('Cannot verify musician profile: '+e.message);return}show('loading',false);show('login',false);show('dashboard',true);$('#signedInEmail').textContent=user.email||'';await loadShow()}
-async function loadShow(){try{msg('showMsg','Checking for an active show…');const {data,error}=await client.from('shows').select('id,venue_name,show_date,start_time,requests_open,created_at').eq('musician_id',MUSICIAN_ID).eq('requests_open',true).order('created_at',{ascending:false}).limit(1);if(error)throw error;activeShow=data?.[0]||null;$('#showBadge').textContent=activeShow?'SHOW ACTIVE':'NO ACTIVE SHOW';$('#showBadge').classList.toggle('active',!!activeShow);$('#showDetails').textContent=activeShow?`Started ${activeShow.show_date||'today'} at ${activeShow.start_time||'unknown time'} • Requests open`:'Ready to start a new show. Venue can be added later.';show('startBtn',!activeShow);show('endBtn',!!activeShow);msg('showMsg','');await loadRequests()}catch(e){activeShow=null;$('#requestList').replaceChildren();$('#requestSummary').textContent='Cannot determine the current show.';show('startBtn',false);show('endBtn',false);msg('showMsg','Cannot read shows: '+e.message,true)}}
-let loadingRequests=false;
-async function loadRequests(){
- const list=$('#requestList');list.replaceChildren();
- if(!activeShow){$('#requestSummary').textContent='Start a show to receive requests. Previous shows stay in the database.';return}
- const showId=activeShow.id;loadingRequests=true;
- try{const {data:requests,error}=await client.from('requests').select('id,song_id,requester_name,notes,status,created_at').eq('musician_id',MUSICIAN_ID).eq('show_id',showId).order('created_at',{ascending:false}).limit(100);
- if(error)throw error;const ids=[...new Set((requests||[]).map(r=>r.song_id))];let songMap={};
- if(ids.length){const {data:titles,error:titleError}=await client.from('songs').select('id,title,artist').eq('musician_id',MUSICIAN_ID).in('id',ids);if(titleError)throw titleError;songMap=Object.fromEntries((titles||[]).map(s=>[s.id,s]))}
- if(activeShow?.id!==showId)return;
- $('#requestSummary').textContent=(requests?.length?requests.length+' request'+(requests.length===1?'':'s')+(requests.length===100?' (showing latest 100)':''):'No requests yet')+' · Updates every 8 seconds.';
- for(const r of requests||[]){const card=document.createElement('article');card.style.cssText='padding:14px 0;border-bottom:1px solid #2c5138';const heading=document.createElement('strong'),detail=document.createElement('p');const s=songMap[r.song_id];heading.textContent=s?s.title+' — '+(s.artist||'Unknown artist'):'Song no longer in library';detail.className='small';detail.style.whiteSpace='pre-wrap';detail.textContent=[r.requester_name?'From: '+r.requester_name:'Anonymous request',r.notes?'Notes: '+r.notes:'','Status: '+r.status].filter(Boolean).join('\n');card.append(heading,detail);list.append(card)}
- }catch(e){$('#requestSummary').textContent='Cannot load requests: '+e.message}finally{loadingRequests=false}
+async function loadShow({silent=false}={}){
+ const epoch=++dashboardEpoch,owner=MUSICIAN_ID;
+ try{
+  if(!silent)msg('showMsg','Checking for an active show…');
+  const {data,error}=await client.from('shows').select('id,venue_name,show_date,start_time,requests_open,created_at').eq('musician_id',owner).eq('requests_open',true).order('created_at',{ascending:false}).limit(1);
+  if(error)throw error;if(epoch!==dashboardEpoch||!currentUser)return;
+  activeShow=data?.[0]||null;
+  setText('showBadge',activeShow?'SHOW ACTIVE':'NO ACTIVE SHOW');$('#showBadge').classList.toggle('active',!!activeShow);
+  setText('showDetails',activeShow?`Started ${activeShow.show_date||'today'} at ${activeShow.start_time||'unknown time'} • Requests open`:'Ready to start a new show. Venue can be added later.');
+  show('startBtn',!activeShow);show('endBtn',!!activeShow);
+  if(!silent||$('#showMsg').classList.contains('err'))msg('showMsg','');
+  await loadRequests(epoch,owner);
+ }catch(e){if(epoch!==dashboardEpoch||!currentUser)return;activeShow=null;clearDashboardRequests('Cannot determine the current show.');show('startBtn',false);show('endBtn',false);msg('showMsg','Cannot read shows: '+e.message,true)}
 }
-async function withBusy(fn){if(busy)return;busy=true;['startBtn','endBtn','refreshBtn'].forEach(id=>$('#'+id).disabled=true);try{await fn()}finally{busy=false;['startBtn','endBtn','refreshBtn'].forEach(id=>$('#'+id).disabled=false)}}
+let loadingRequests=false;
+async function loadRequests(epoch=dashboardEpoch,owner=MUSICIAN_ID){
+ if(!activeShow){clearDashboardRequests('Start a show to receive requests. Previous shows stay in the database.');return}
+ const showId=activeShow.id;loadingRequests=true;
+ try{
+  const {data:requests,error}=await client.from('requests').select('id,song_id,requester_name,notes,status,created_at').eq('musician_id',owner).eq('show_id',showId).order('created_at',{ascending:false}).limit(100);
+  if(error)throw error;
+  const ids=[...new Set((requests||[]).map(r=>r.song_id))];let songMap={};
+  if(ids.length){const {data:titles,error:titleError}=await client.from('songs').select('id,title,artist').eq('musician_id',owner).in('id',ids);if(titleError)throw titleError;songMap=Object.fromEntries((titles||[]).map(s=>[s.id,s]))}
+  if(epoch!==dashboardEpoch||!currentUser||activeShow?.id!==showId)return;
+  setText('requestSummary',(requests?.length?requests.length+' request'+(requests.length===1?'':'s')+(requests.length===100?' (showing latest 100)':''):'No requests yet')+' · Updates every 8 seconds.');
+  const signature=JSON.stringify([owner,showId,requests,songMap]);if(signature===requestRenderSignature)return;
+  const fragment=document.createDocumentFragment();
+  for(const r of requests||[]){const card=document.createElement('article');card.style.cssText='padding:14px 0;border-bottom:1px solid #2c5138';const heading=document.createElement('strong'),detail=document.createElement('p');const song=songMap[r.song_id];heading.textContent=song?song.title+' — '+(song.artist||'Unknown artist'):'Song no longer in library';detail.className='small';detail.style.whiteSpace='pre-wrap';detail.textContent=[r.requester_name?'From: '+r.requester_name:'Anonymous request',r.notes?'Notes: '+r.notes:'','Status: '+r.status].filter(Boolean).join('\n');card.append(heading,detail);fragment.append(card)}
+  $('#requestList').replaceChildren(fragment);requestRenderSignature=signature;
+ }catch(e){if(epoch===dashboardEpoch&&currentUser)clearDashboardRequests('Cannot load requests: '+e.message)}
+ finally{if(epoch===dashboardEpoch)loadingRequests=false}
+}
+async function pollShow(){if(!currentUser||busy||pollingShow||document.hidden)return;pollingShow=true;try{await loadShow({silent:true})}finally{pollingShow=false}}
+async function withBusy(fn){if(busy)return;busy=true;dashboardEpoch++;loadingRequests=false;['startBtn','endBtn','refreshBtn'].forEach(id=>$('#'+id).disabled=true);try{await fn()}finally{busy=false;['startBtn','endBtn','refreshBtn'].forEach(id=>$('#'+id).disabled=false)}}
 async function startShow(){if(!currentUser||activeShow)return;if(!confirm('Start a new show now and open requests? This will create a real show record in Supabase.'))return;await withBusy(async()=>{try{const {data:existing,error:checkError}=await client.from('shows').select('id').eq('musician_id',MUSICIAN_ID).eq('requests_open',true).limit(1);if(checkError)throw checkError;if(existing?.length){msg('showMsg','A show is already active.');await loadShow();return}const {error}=await client.from('shows').insert({musician_id:MUSICIAN_ID,venue_name:'To be added',show_date:localDate(),start_time:localTime(),requests_open:true});if(error)throw error;await loadShow();msg('showMsg','Show started successfully!')}catch(e){msg('showMsg','Could not start show: '+e.message,true)}})}
 async function endShow(){if(!activeShow)return;if(!confirm('End this show and close requests?'))return;await withBusy(async()=>{try{const {error}=await client.from('shows').update({requests_open:false,end_time:localTime()}).eq('id',activeShow.id).eq('musician_id',MUSICIAN_ID);if(error)throw error;await loadShow();msg('showMsg','Show ended.')}catch(e){msg('showMsg','Could not end show: '+e.message,true)}})}
 $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();$('#loginBtn').disabled=true;msg('loginMsg','Signing in…');try{const {error}=await client.auth.signInWithPassword({email:$('#email').value.trim(),password:$('#password').value});if(error)throw error;$('#password').value='';await verifyUser()}catch(err){msg('loginMsg',err.message,true)}finally{$('#loginBtn').disabled=false}});
 $('#startBtn').onclick=startShow;$('#endBtn').onclick=endShow;$('#refreshBtn').onclick=()=>withBusy(loadShow);
-$('#signOutBtn').onclick=async()=>{await client.auth.signOut();currentUser=null;activeShow=null;$('#requestList').replaceChildren();$('#requestSummary').textContent='';show('dashboard',false);show('login',true)};
+$('#signOutBtn').onclick=async()=>{await client.auth.signOut();dashboardEpoch++;loadingRequests=false;currentUser=null;activeShow=null;$('#requestList').replaceChildren();$('#requestSummary').textContent='';show('dashboard',false);show('login',true)};
 try{if(!window.supabase?.createClient)throw Error('Supabase library did not load; check your internet connection.');client=window.supabase.createClient(SUPABASE_URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});verifyUser()}catch(e){fail('Unable to initialize login: '+e.message)}
-setInterval(()=>{if(currentUser&&!busy&&!document.hidden&&!loadingRequests)withBusy(loadShow)},8000);
+setInterval(pollShow,8000);
 </script></body></html>
