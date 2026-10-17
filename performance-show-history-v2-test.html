@@ -366,7 +366,7 @@ body.resizing-toolbar,body.resizing-toolbar *{user-select:none!important;-webkit
 <section id="dice-panel" hidden aria-label="Random song picker"><div class="panel-head"><strong>🎲 What should I play?</strong><button id="close-dice" type="button" aria-label="Close dice">✕</button></div><p class="muted">Picks from Ready to Play songs, avoiding recent suggestions.</p><div id="dice-choice">Roll the dice!</div><div id="dice-artist" class="muted"></div><div class="dice-controls"><button id="reroll" type="button">🎲 Roll Again</button><button id="play-dice" type="button" disabled>Open Song</button></div></section>
 
 <section id="appearance-panel" hidden aria-label="Performance settings"><div class="panel-head"><strong>Settings</strong><button id="close-appearance" type="button" aria-label="Close settings">✕</button></div><label for="ui-font-choice" id="appearance-font-label">App Font</label><div id="settings-font-slot"></div><p class="muted">The app font is shared with Song Manager and Setlist Studio. Chart text stays independent to preserve chord alignment.</p><div class="settings-row"><span>Chart size</span><div><button id="settings-smaller" type="button">A−</button> <button id="settings-larger" type="button">A+</button></div></div><label class="settings-row settings-check"><span>Track songs played</span><input id="setting-track-history" type="checkbox"></label><p class="muted">Optional. Saves each Mark Played press in show order, including repeats. This setting is remembered in this browser. Turning it off keeps existing history and audience request controls available.</p><label class="settings-row settings-check"><span>Show Auto-Scroll controls on toolbar</span><input id="setting-show-scroll" type="checkbox"></label><label class="settings-row settings-check"><span>Enable Learning Mode timer</span><input id="setting-learning" type="checkbox"></label><p id="learning-feedback">Start and stop the timer while playing any song. Its duration will be remembered for Auto-Scroll.</p><div class="settings-row"><span>Offline Library</span><button id="settings-update-offline" type="button">Update Offline Copy</button></div><p id="settings-offline-status" class="muted" role="status">Loading library status…</p></section>
-<section id="history-panel" hidden role="dialog" aria-modal="true" aria-label="Show history"><div class="panel-head"><strong>Show History</strong><button id="history-close" type="button">Close</button></div><p id="history-note">When tracking is on, each Mark Played press records one performance. Repeat songs appear separately. History starts with this update; older shows may have no recorded songs.</p><button id="history-refresh" type="button">Refresh Shows</button> <button id="history-undo" type="button">Undo last recording</button><select id="history-shows" aria-label="Choose a show"></select><button id="history-more-shows" type="button" hidden>Load older shows</button><div id="history-summary" role="status" aria-live="polite"></div><div id="history-results"></div><button id="history-more-songs" type="button" hidden>Load more performances</button></section>
+<section id="history-panel" hidden role="dialog" aria-modal="true" aria-label="Show history"><div class="panel-head"><strong>Show History</strong><button id="history-close" type="button">Close</button></div><p id="history-note">When tracking is on, each Mark Played press records one performance. Repeat songs appear separately. History starts with this update; older shows may have no recorded songs.</p><button id="history-refresh" type="button">Refresh Shows</button> <button id="history-undo" type="button">Undo last recording</button><button id="history-copy" type="button">Copy Show</button><p style="font-size:12px">💵 Tipped markers are manually confirmed by you; payment apps are not connected.</p><select id="history-shows" aria-label="Choose a show"></select><button id="history-more-shows" type="button" hidden>Load older shows</button><label for="history-venue">Venue / location (optional)</label><input id="history-venue" maxlength="160" placeholder="e.g. Lansdowne, Mohegan Sun" style="width:100%;margin:8px 0"><button id="history-save-venue" type="button">Save Venue</button><p id="show-tools-feedback" role="status" aria-live="polite"></p><textarea id="history-copy-text" readonly hidden aria-label="Copied show text" style="width:100%;min-height:180px"></textarea><div id="history-summary" role="status" aria-live="polite"></div><div id="history-results"></div><button id="history-more-songs" type="button" hidden>Load more performances</button></section>
 <script>
 'use strict';
 // Same font preference key already used by Setlist Studio on this origin.
@@ -808,6 +808,7 @@ function drawRequests(){
   const match=songs.find(s=>s.id===r.song_id);
   const open=document.createElement('button');open.type='button';open.className='request-open';open.textContent=showMode==='playing'?'Locked':match?'Open':'No chart';open.disabled=showMode!=='between'||!match;open.onclick=()=>{if(showMode!=='between'||!match)return;showSong(match);$('request-panel').hidden=true};item.append(open);
   if(isPending(r)){const mark=document.createElement('button');mark.type='button';mark.className='request-mark';mark.textContent='✓ Played';mark.disabled=!requestShowId||markingRequest||!navigator.onLine;mark.onclick=()=>markLiveRequestPlayed(r);item.append(mark)}
+  const tip=tipButton(r,()=>refreshRequests());item.append(tip);
   list.append(item);
  }
 }
@@ -817,7 +818,7 @@ async function refreshRequests(){
  try{
   const owner=await liveOwner();const show=await activeRequestShow(owner);
   let rows=[];
-  if(show){const result=await delayLimit(db.from('requests').select('id,song_id,requester_name,notes,status,created_at').eq('musician_id',owner).eq('show_id',show.id).order('created_at',{ascending:false}).order('id').limit(100));if(result.error)throw result.error;rows=result.data||[];}
+  if(show){const result=await delayLimit(db.from('requests').select('id,song_id,requester_name,notes,status,created_at,manual_tip_confirmed').eq('musician_id',owner).eq('show_id',show.id).order('created_at',{ascending:false}).order('id').limit(100));if(result.error)throw result.error;rows=result.data||[];}
   if(epoch!==requestEpoch)return;
   requestsError='';requestOwner=owner;requestShowId=show?.id||null;
   incomingRequests=rows.map(r=>({...r,show_id:show.id,song:songs.find(s=>s.id===r.song_id)?.title||'Song unavailable',artist:songs.find(s=>s.id===r.song_id)?.artist||''}));
@@ -1164,10 +1165,10 @@ let historyReturnFocus=null;
 async function openHistory(){historyReturnFocus=document.activeElement;$('history-panel').hidden=false;$('history-close').focus();await loadHistoryShows(false)}
 function closeHistory(){historyEpoch++;$('history-panel').hidden=true;historyReturnFocus?.focus()}
 $('history-open').onclick=openHistory;$('history-request').onclick=openHistory;$('history-close').onclick=closeHistory;
-$('history-panel').addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory();if(e.key==='Tab'){const nodes=[...$('history-panel').querySelectorAll('button,select')].filter(x=>!x.hidden&&!x.disabled);if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}}});
+$('history-panel').addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory();if(e.key==='Tab'){const nodes=[...$('history-panel').querySelectorAll('button,select,input,textarea')].filter(x=>!x.hidden&&!x.disabled);if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}}});
 $('history-refresh').onclick=()=>loadHistoryShows(false);$('history-more-shows').onclick=()=>loadHistoryShows(true);$('history-more-songs').onclick=()=>loadHistorySongs(true);$('history-shows').onchange=()=>loadHistorySongs(false);
 function historyError(e){$('history-summary').textContent='History unavailable: '+(e?.message||String(e));$('history-results').replaceChildren();$('history-more-songs').hidden=true}
-function showLabel(s){return [s.show_date||new Date(s.created_at).toLocaleDateString(),s.start_time||'',s.venue_name||'Venue not entered',s.requests_open?'Active':'Ended'].filter(Boolean).join(' · ')}
+function showLabel(s){return [s.show_date||new Date(s.created_at).toLocaleDateString(),s.start_time||'',cleanVenue(s.venue_name)||'Venue not entered',s.requests_open?'Active':'Ended'].filter(Boolean).join(' · ')}
 async function loadHistoryShows(more=false){
  const epoch=++historyEpoch;$('history-summary').textContent='Loading shows…';$('history-more-shows').disabled=true;
  if(!more){historyShows=[];historyShowOffset=0;$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-more-songs').hidden=true;}
@@ -1184,13 +1185,14 @@ async function loadHistoryShows(more=false){
 }
 async function loadHistorySongs(more=false){
  const epoch=++historyEpoch,showId=$('history-shows').value;if(!showId)return;
+ $('history-copy-text').hidden=true;$('history-copy-text').value='';$('show-tools-feedback').textContent='';$('history-venue').value=cleanVenue(historyShows.find(s=>s.id===showId)?.venue_name);
  if(!more){historySongOffset=0;historySongCount=0;$('history-results').replaceChildren()}
  $('history-more-songs').disabled=true;$('history-summary').textContent='Loading performances…';
  try{
   const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed. Refresh shows.');
-  const r=await delayLimit(db.from('show_performances').select('id,song_title,song_artist,played_at,was_requested').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at').order('id').range(historySongOffset,historySongOffset+199));
+  const r=await delayLimit(db.from('show_performances').select('id,song_title,song_artist,played_at,was_requested,was_tipped,previous_requests').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at').order('id').range(historySongOffset,historySongOffset+199));
   if(r.error)throw r.error;if(epoch!==historyEpoch)return;
-  for(const row of r.data||[]){historySongCount++;const item=document.createElement('div');item.className='history-row';const title=document.createElement('strong');title.textContent=historySongCount+'. '+row.song_title;if(row.was_requested){const badge=document.createElement('span');badge.className='history-requested';badge.textContent='Requested';title.append(' ',badge)}const details=document.createElement('p');details.textContent=row.song_artist+' · Recorded '+new Date(row.played_at).toLocaleString();item.append(title,details);$('history-results').append(item)}
+  for(const row of r.data||[]){historySongCount++;const item=document.createElement('div');item.className='history-row';const title=document.createElement('strong');title.textContent=historySongCount+'. '+row.song_title;if(row.was_requested){const badge=document.createElement('span');badge.className='history-requested';badge.textContent='Requested';title.append(' ',badge)}if(row.was_tipped){const tipBadge=document.createElement('span');tipBadge.className='history-requested';tipBadge.textContent='💵 Tipped';title.append(' ',tipBadge)}const details=document.createElement('p');details.textContent=row.song_artist+' · Recorded '+new Date(row.played_at).toLocaleString();item.append(title,details);if(row.previous_requests?.length){const tips=document.createElement('button');tips.type='button';tips.textContent='Tip markers';tips.onclick=()=>showLinkedTips(row,item,showId);item.append(tips)}$('history-results').append(item)}
   historySongOffset+=(r.data||[]).length;$('history-more-songs').hidden=(r.data||[]).length<200;
   $('history-summary').textContent=historySongCount?historySongCount+' recorded performance'+(historySongCount===1?'':'s')+($('history-more-songs').hidden?'':' loaded; more available'):'No performances recorded for this show.';
  }catch(e){if(epoch===historyEpoch)historyError(e)}finally{$('history-more-songs').disabled=false}
@@ -1219,9 +1221,44 @@ $('history-undo').onclick=async()=>{
  finally{markingRequest=false;$('history-undo').disabled=false;await refreshRequests();syncRecordButtons()}
 };
 
+
+function cleanVenue(value){return value==='To be added'?'':value||''}
+function tipButton(r,after){
+ const b=document.createElement('button');b.type='button';b.textContent=r.manual_tip_confirmed?'💵 Tipped · Undo':'Mark 💵 Tipped';b.setAttribute('aria-pressed',String(!!r.manual_tip_confirmed));b.title='Manual confirmation only. No payment amount is recorded.';
+ b.disabled=!navigator.onLine;
+ b.onclick=async()=>{if(markingRequest)return;const desired=!r.manual_tip_confirmed;if(!confirm(desired?'Confirm you received a tip for this specific request? This only saves a manual marker.':'Remove the tip marker for this request?'))return;
+ cancelRequestPoll();markingRequest=true;b.disabled=true;
+ try{await liveOwner();const result=await delayLimit(db.rpc('beta_set_request_tip',{p_request_id:r.id,p_tipped:desired}));if(result.error)throw result.error;if(!result.data?.ok)throw Error('Tip marker not confirmed.');r.manual_tip_confirmed=desired;await after();}
+ catch(e){alert('Tip marker not confirmed: '+(e.message||e)+'. You can retry the same change.');}
+ finally{markingRequest=false;await refreshRequests();b.disabled=false;}
+ };return b;
+}
+async function showLinkedTips(row,item,showId){
+ if(item.querySelector('.linked-tips'))return;const box=document.createElement('div');box.className='linked-tips';box.textContent='Loading linked requests…';item.append(box);
+ try{const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed.');const result=await delayLimit(db.from('requests').select('id,requester_name,manual_tip_confirmed').eq('musician_id',owner).eq('show_id',showId).in('id',row.previous_requests.map(x=>x.id)));
+ if(result.error)throw result.error;if($('history-shows').value!==showId||owner!==historyOwner){box.remove();return}box.replaceChildren();
+ for(const r of result.data||[]){const line=document.createElement('p');line.append(document.createTextNode((r.requester_name||'Anonymous request')+' '));line.append(tipButton(r,()=>loadHistorySongs(false)));box.append(line)}if(!result.data?.length)box.textContent='Linked requests are no longer available.';
+ }catch(e){box.textContent='Cannot load tip markers: '+(e.message||e)}
+}
+$('history-save-venue').onclick=async()=>{
+ const showId=$('history-shows').value,venue=$('history-venue').value.trim();if(!showId)return;const b=$('history-save-venue');b.disabled=true;
+ try{const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed.');const r=await delayLimit(db.rpc('beta_set_show_venue',{p_show_id:showId,p_venue:venue}));if(r.error)throw r.error;if(!r.data?.ok)throw Error('Venue not confirmed.');if(historyOwner!==owner||$('history-shows').value!==showId)return;
+ const s=historyShows.find(s=>s.id===showId);s.venue_name=venue;const o=[...$('history-shows').options].find(o=>o.value===showId);if(o)o.textContent=showLabel(s);$('show-tools-feedback').textContent='Venue saved.';
+ }catch(e){$('show-tools-feedback').textContent='Venue not saved: '+(e.message||e)}finally{b.disabled=false}
+};
+$('history-copy').onclick=async()=>{
+ const showId=$('history-shows').value,owner=historyOwner,epoch=historyEpoch,s=historyShows.find(s=>s.id===showId);if(!s)return;
+ const b=$('history-copy');b.disabled=true;$('history-copy-text').hidden=true;$('history-copy-text').value='';
+ try{if(await liveOwner()!==owner)throw Error('Account changed.');let rows=[],offset=0;while(true){const r=await delayLimit(db.from('show_performances').select('id,song_title,song_artist,played_at,was_requested,was_tipped').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at').order('id').range(offset,offset+199));if(r.error)throw r.error;if(epoch!==historyEpoch||owner!==historyOwner)throw Error('Show selection changed. Copy again.');rows.push(...r.data||[]);if((r.data||[]).length<200)break;offset+=200;}
+ const value=[showLabel(s),rows.length+' recorded performances','',...rows.map((r,i)=>(i+1)+'. '+r.song_title+' — '+r.song_artist+(r.was_requested?' [Requested]':'')+(r.was_tipped?' [💵 Tipped]':'')+' · '+new Date(r.played_at).toLocaleTimeString()),...(!rows.length?['No performances recorded for this show.']:[])].join('\n');
+ $('history-copy-text').value=value;$('history-copy-text').hidden=false;
+ try{await navigator.clipboard.writeText(value);$('show-tools-feedback').textContent='Show copied. Paste it into Notes, email, or another app.';}catch{ $('history-copy-text').focus();$('history-copy-text').select();$('show-tools-feedback').textContent='Select and copy the text below.';}
+ }catch(e){$('show-tools-feedback').textContent='Could not copy show: '+(e.message||e)}finally{b.disabled=false}
+};
+
 // Remove private history immediately when the signed-in owner is cleared.
 const originalClearLiveRequests=clearLiveRequests;
-clearLiveRequests=function(){originalClearLiveRequests();historyEpoch++;historyShows=[];historyOwner=null;$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-summary').textContent='Sign in to view show history.';syncRecordButtons()};
+clearLiveRequests=function(){originalClearLiveRequests();historyEpoch++;historyShows=[];historyOwner=null;$('history-copy-text').value='';$('history-copy-text').hidden=true;$('history-venue').value='';$('show-tools-feedback').textContent='';$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-summary').textContent='Sign in to view show history.';syncRecordButtons()};
 syncRecordButtons();
 
 setMode(showMode);
