@@ -338,6 +338,15 @@ body.mode-playing .performance-log-actions{display:none}
 
 .history-requested{display:inline-block;font:600 12px system-ui;color:#caffd3;background:#234b30;border:1px solid #609d70;border-radius:12px;padding:3px 8px;margin-left:5px}
 #song-end-actions{margin:35px 0 25px;padding:20px 0;border-top:1px solid #355640;text-align:center}#song-end-actions button{background:#245836;border:1px solid #78be88;min-height:48px;padding:12px 28px}#song-end-actions p{font:13px system-ui;color:#b3c9bb}#song-end-actions[hidden],body.showing-set-break #song-end-actions,body.editor-active #song-end-actions{display:none!important}
+
+/* A fixed touch target and SVG avoid font-dependent resize glyphs. */
+#float-transport #toolbar-resize{width:44px;height:44px;min-width:44px;min-height:44px;padding:9px!important;right:-12px;bottom:-12px;background:transparent;border:0;border-radius:8px;box-shadow:none;display:grid;place-items:center;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:nwse-resize}
+#toolbar-resize::before{content:'';position:absolute;inset:8px;background:#297347;border:1px solid #b0e2bd;border-radius:6px;box-shadow:0 1px 6px #000b;pointer-events:none}
+#toolbar-resize svg{position:relative;z-index:1;pointer-events:none;width:22px;height:22px}
+#float-transport.edge-right #toolbar-resize{left:-12px;right:auto;cursor:nesw-resize}
+#float-transport.edge-right #toolbar-resize svg,#float-transport.edge-bottom #toolbar-resize svg{transform:scaleX(-1)}
+#float-transport.edge-bottom #toolbar-resize{top:-12px;bottom:auto;cursor:nesw-resize}
+body.resizing-toolbar,body.resizing-toolbar *{user-select:none!important;-webkit-user-select:none!important}
 </style>
 </head>
 <body>
@@ -348,7 +357,7 @@ body.mode-playing .performance-log-actions{display:none}
 <button id="float-smaller" type="button" aria-label="Smaller lyrics">A−</button><button id="float-larger" type="button" aria-label="Larger lyrics">A+</button>
 <button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button>
 <button id="float-library" type="button" title="Open Ready to Play songs" aria-label="Open Ready to Play songs"><span aria-hidden="true">☷</span> SONGS</button><button id="float-played" type="button" disabled>✓ Played</button><button id="float-between" type="button" title="Between Songs controls">Between</button><button id="float-setlist-prev" type="button" hidden title="Previous setlist song">Back</button><button id="float-setlist-next" type="button" hidden title="Next setlist song">Next</button><button id="learning-start" type="button" hidden>▶ Start Timer</button><button id="learning-stop" type="button" hidden>■ Stop Timer</button><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
-<button id="toolbar-resize" type="button" aria-label="Drag to resize toolbar" title="Drag corner to resize">◢</button></div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span></button></div>
+<button id="toolbar-resize" type="button" aria-label="Drag to resize toolbar" title="Drag to resize; arrow keys adjust size"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M5 10V5h5M14 19h5v-5M5 5l14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span></button></div>
 <button id="toolbar-recover" type="button">☷ SONGS · Reset controls</button>
 <div id="layout"><aside id="library" hidden><div id="browser-top"><div id="setlist-browser-bar" hidden><strong id="active-setlist-title">Setlist</strong><button id="toggle-setlist-library" type="button">All Songs</button><button id="exit-setlist" type="button" title="Exit the active setlist">Exit</button></div><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="ready">Ready to Play</option><option value="all">All Songs</option><option value="learning">Still Learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside><button id="library-resizer" type="button" aria-label="Drag to resize the song library" title="Drag to resize song list" tabindex="0"></button>
 <main id="stage"><div id="set-break-screen" hidden role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div class="performance-log-actions"><button id="history-open" type="button">Show History</button><span id="record-feedback" role="status" aria-live="polite"></span></div><button id="editor-launch" type="button">✎ Edit Song</button><section id="song-editor" hidden aria-label="Edit lyrics and chords"><h2>Edit Song</h2><p class="editor-help">Edit the original text, including spaces between chords. Save requires an internet connection. Use Cancel to discard edits.</p><textarea id="editor-text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Song lyrics and chords"></textarea><div class="edit-controls"><button id="editor-save" type="button">Save Changes</button><button id="editor-cancel" type="button">Cancel</button></div><div id="editor-feedback" role="status" aria-live="polite"></div></section><div id="chart" aria-label="Lyrics and chords"></div><div id="song-end-actions"><button id="record-played" type="button" disabled>✓ Mark Played</button><p>Record this song in tonight’s performance history.</p></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
@@ -920,18 +929,56 @@ function syncLearningControls(){
 }
 $('setting-show-scroll').checked=localStorage.getItem(SCROLL_VIS_KEY)!=='false';
 $('setting-learning').checked=localStorage.getItem(LEARNING_ENABLED_KEY)==='true';
-function syncTransportOptions(){document.body.classList.toggle('show-scroll-controls',$('setting-show-scroll').checked);syncLearningControls();requestAnimationFrame(placeTransport)}
+function syncTransportOptions(){document.body.classList.toggle('show-scroll-controls',$('setting-show-scroll').checked);syncLearningControls();scheduleTransportPlacement()}
 $('setting-show-scroll').onchange=()=>{localStorage.setItem(SCROLL_VIS_KEY,String($('setting-show-scroll').checked));syncTransportOptions()};
 $('setting-learning').onchange=()=>{localStorage.setItem(LEARNING_ENABLED_KEY,String($('setting-learning').checked));if(!$('setting-learning').checked)learnedAt=null;syncTransportOptions()};
 $('learning-start').onclick=()=>{if(!currentId)return;learnedAt={id:String(currentId),started:performance.now()};syncLearningControls()};
 $('learning-stop').onclick=()=>{if(!learnedAt)return;const ms=Math.max(1000,performance.now()-learnedAt.started);saveLearnedDuration(learnedAt.id,Math.round(ms));learnedAt=null;syncLearningControls()};
 let toolbarScale=Math.max(.75,Math.min(1.7,Number(localStorage.getItem(TOOLBAR_SIZE_KEY))||1));
-function applyToolbarScale(){transport.style.setProperty('--control-scale',toolbarScale.toFixed(3));requestAnimationFrame(placeTransport)}
+let transportPlacementFrame=0;
+function scheduleTransportPlacement(){if(!transportPlacementFrame)transportPlacementFrame=requestAnimationFrame(()=>{transportPlacementFrame=0;placeTransport()})}
+function applyToolbarScale(){transport.style.setProperty('--control-scale',toolbarScale.toFixed(3));scheduleTransportPlacement()}
 const resizeGrip=$('toolbar-resize');let resizeTouch=null;
-resizeGrip.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();resizeTouch={id:e.pointerId,startX:e.clientX,startY:e.clientY,scale:toolbarScale};resizeGrip.setPointerCapture(e.pointerId)});
-resizeGrip.addEventListener('pointermove',e=>{if(!resizeTouch||e.pointerId!==resizeTouch.id)return;e.preventDefault();const delta=(e.clientX-resizeTouch.startX)+(e.clientY-resizeTouch.startY);toolbarScale=Math.max(.75,Math.min(1.7,resizeTouch.scale+delta/350));applyToolbarScale()});
-resizeGrip.addEventListener('pointerup',e=>{if(!resizeTouch||resizeTouch.id!==e.pointerId)return;resizeTouch=null;localStorage.setItem(TOOLBAR_SIZE_KEY,String(toolbarScale))});
-resizeGrip.addEventListener('pointercancel',()=>{resizeTouch=null;localStorage.setItem(TOOLBAR_SIZE_KEY,String(toolbarScale))});
+function persistToolbarSize(){try{localStorage.setItem(TOOLBAR_SIZE_KEY,String(toolbarScale))}catch{}}
+resizeGrip.addEventListener('pointerdown',e=>{
+ if(resizeTouch||(e.pointerType==='mouse'&&e.button!==0))return;
+ e.preventDefault();e.stopPropagation();pauseAutoScroll();
+ const rect=transport.getBoundingClientRect(),edge=transportPlacement.edge;
+ resizeTouch={id:e.pointerId,startX:e.clientX,startY:e.clientY,scale:toolbarScale,rect,
+  sx:edge==='right'?-1:1,sy:edge==='bottom'?-1:1,edge};
+ document.body.classList.add('resizing-toolbar');
+ try{resizeGrip.setPointerCapture(e.pointerId)}catch{}
+});
+function moveToolbarResize(e){
+ if(!resizeTouch||e.pointerId!==resizeTouch.id)return;
+ e.preventDefault();
+ const r=resizeTouch,dx=(e.clientX-r.startX)*r.sx,dy=(e.clientY-r.startY)*r.sy;
+ const w=Math.max(44,r.rect.width),h=Math.max(44,r.rect.height);
+ const delta=(dx*w+dy*h)/(w*w+h*h);
+ toolbarScale=Math.max(.75,Math.min(1.7,r.scale*(1+delta)));
+ applyToolbarScale();
+}
+function finishToolbarResize(e){
+ if(!resizeTouch||e.pointerId!==resizeTouch.id)return;
+ // Apply the last position once before releasing the fixed opposite corner.
+ if(e.type==='pointerup')moveToolbarResize(e);
+ placeTransport();const r=transport.getBoundingClientRect(),edge=resizeTouch.edge;
+ resizeTouch=null;document.body.classList.remove('resizing-toolbar');
+ const {w,h}=transportViewSize(),vertical=edge==='left'||edge==='right',margin=16;
+ const fraction=((vertical?r.top:r.left)-margin)/Math.max(1,(vertical?h-r.height:w-r.width)-2*margin);
+ transportPlacement.fraction=Math.max(0,Math.min(1,fraction));
+ try{localStorage.setItem(TRANSPORT_POSITION_KEY,JSON.stringify(transportPlacement))}catch{}
+ persistToolbarSize();scheduleTransportPlacement();
+}
+// Window listeners also cover Safari cases where pointer capture is interrupted.
+window.addEventListener('pointermove',moveToolbarResize,{passive:false});
+window.addEventListener('pointerup',finishToolbarResize);
+window.addEventListener('pointercancel',finishToolbarResize);
+resizeGrip.addEventListener('lostpointercapture',e=>{if(resizeTouch&&resizeTouch.id===e.pointerId)finishToolbarResize(e)});
+resizeGrip.addEventListener('keydown',e=>{
+ const direction=['ArrowUp','ArrowRight','+','='].includes(e.key)?1:['ArrowDown','ArrowLeft','-','_'].includes(e.key)?-1:0;
+ if(!direction)return;e.preventDefault();toolbarScale=Math.max(.75,Math.min(1.7,toolbarScale+direction*.05));applyToolbarScale();persistToolbarSize();
+});
 // Two-finger pinch changes chart lettering, not the entire stage or floating controls.
 let pinchStart=null;
 $('stage').addEventListener('touchstart',e=>{if(e.touches.length!==2||!e.target.closest('#chart'))return;const a=e.touches[0],b=e.touches[1];pinchStart={distance:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),font:fontSize}},{passive:true});
@@ -1003,17 +1050,19 @@ function placeTransport(){
  const edge=transportPlacement.edge;
  transport.classList.toggle('edge-left',edge==='left');
  transport.classList.toggle('edge-right',edge==='right');
- transport.style.left='0px';transport.style.top='0px';transport.style.right='auto';transport.style.bottom='auto';
+ transport.classList.toggle('edge-bottom',edge==='bottom');
+ transport.style.right='auto';transport.style.bottom='auto';
  transport.scrollTop=0;
- const {w,h}=transportViewSize(),margin=8;
+ const {w,h}=transportViewSize(),margin=16;
  // Sizing constraints apply before measuring, including on very narrow Split View windows.
  transport.style.maxWidth=Math.max(120,w-2*margin)+'px';
  transport.style.maxHeight=Math.max(120,h-2*margin)+'px';
  const rect=transport.getBoundingClientRect();
  const width=Math.min(rect.width,w-2*margin),height=Math.min(rect.height,h-2*margin);
  const availableX=Math.max(0,w-width-2*margin),availableY=Math.max(0,h-height-2*margin);
- const x=edge==='left'?margin:edge==='right'?margin+availableX:margin+availableX*transportPlacement.fraction;
- const y=edge==='top'?margin:edge==='bottom'?margin+availableY:margin+availableY*transportPlacement.fraction;
+ let x=edge==='left'?margin:edge==='right'?margin+availableX:margin+availableX*transportPlacement.fraction;
+ let y=edge==='top'?margin:edge==='bottom'?margin+availableY:margin+availableY*transportPlacement.fraction;
+ if(resizeTouch){const a=resizeTouch;x=a.edge==='right'?a.rect.right-width:a.rect.left;y=a.edge==='bottom'?a.rect.bottom-height:a.rect.top;}
  transport.style.left=Math.round(Math.max(margin,Math.min(margin+availableX,x)))+'px';
  transport.style.top=Math.round(Math.max(margin,Math.min(margin+availableY,y)))+'px';
  requestAnimationFrame(checkTransportReachable);
@@ -1029,7 +1078,7 @@ function setTransportPlacement(edge,fraction){
  placeTransport();
 }
 transportGrip.addEventListener('pointerdown',e=>{
- if(e.button!==0)return;
+ if(resizeTouch||e.button!==0)return;
  e.preventDefault();
  const rect=transport.getBoundingClientRect();
  transportDrag={id:e.pointerId,dx:e.clientX-rect.left,dy:e.clientY-rect.top};
@@ -1049,7 +1098,7 @@ function finishTransportDrag(e){
  const edge=Object.keys(distances).reduce((best,k)=>distances[k]<distances[best]?k:best,'left');
  const vertical=(edge==='left'||edge==='right');
  const extent=vertical?innerHeight:innerWidth, size=vertical?rect.height:rect.width, position=vertical?rect.top:rect.left;
- const fraction=(position-8)/Math.max(1,extent-size-16);
+ const fraction=(position-16)/Math.max(1,extent-size-32);
  setTransportPlacement(edge,fraction);
 }
 transportGrip.addEventListener('pointerup',finishTransportDrag);
@@ -1059,12 +1108,12 @@ transportGrip.addEventListener('keydown',e=>{
  const edges={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'top',ArrowDown:'bottom'};
  if(edges[e.key]){e.preventDefault();setTransportPlacement(edges[e.key],.5);}
 });
-window.addEventListener('resize',()=>requestAnimationFrame(placeTransport));
-window.addEventListener('orientationchange',()=>requestAnimationFrame(placeTransport));
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(placeTransport)});
-if(window.ResizeObserver){new ResizeObserver(()=>requestAnimationFrame(placeTransport)).observe(transport);}
-if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>requestAnimationFrame(placeTransport));window.visualViewport.addEventListener('scroll',()=>requestAnimationFrame(placeTransport));}
-requestAnimationFrame(placeTransport);
+window.addEventListener('resize',()=>scheduleTransportPlacement());
+window.addEventListener('orientationchange',()=>scheduleTransportPlacement());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleTransportPlacement()});
+if(window.ResizeObserver){new ResizeObserver(()=>scheduleTransportPlacement()).observe(transport);}
+if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>scheduleTransportPlacement());window.visualViewport.addEventListener('scroll',()=>scheduleTransportPlacement());}
+scheduleTransportPlacement();
 // A deliberate touch, wheel movement, or pointer drag pauses scrolling immediately.
 $('stage').addEventListener('touchstart',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
 $('stage').addEventListener('wheel',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
