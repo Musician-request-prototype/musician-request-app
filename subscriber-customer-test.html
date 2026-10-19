@@ -101,12 +101,13 @@ body{background:var(--bg);color:var(--fg)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}#connectionDiagnostic[hidden]{display:none}
 
 #volumePage .volume-votes button.chosen{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.public-show{border:1px solid color-mix(in srgb,var(--fg) 25%,transparent);background:color-mix(in srgb,var(--fg) 5%,var(--bg));padding:18px;border-radius:14px;margin:12px 0}.public-show h3{font-size:17px;color:var(--accent);margin:0 0 10px}.public-show strong{font-size:20px}.public-show p{margin:8px 0;color:var(--fg)}#public-shows>h3{margin-top:26px}
 </style></head><body>
 <div class="wrap">
 <header class="hero"><img id="brandLogo" class="logo" alt="Musician logo" hidden><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
 <div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice" hidden></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><div id="filters" class="filters"></div></div>
-<div class="sortbar"><div class="sorttabs" role="group" aria-label="Sort songs"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">♨ Popular</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p class="tab-note">The show schedule is not available yet.</p></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. Choose your preferred payment app and enter any amount there.</p><div class="tip-links" id="pageTipLinks"></div></section>
+<div class="sortbar"><div class="sorttabs" role="group" aria-label="Sort songs"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">♨ Popular</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. Choose your preferred payment app and enter any amount there.</p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestHeading"><div class="sheet">
 <div id="formView"><h2 id="requestHeading">Request this song</h2><div id="selected" class="selected"></div>
@@ -167,7 +168,7 @@ async function api(action,payload={}){
  throw Error('Unsupported action');
 }
 async function init(){
- try{await loadConfig();renderFilters();setStatus(false);render();await refresh();render();}
+ try{await loadConfig();renderFilters();setStatus(false);render();await refresh();render();if(location.hash==='#shows')setTab('shows');}
  catch(e){v4LiveSongs=false;songs=[];setStatus(false);render();v4Message(e.message||'Page unavailable',true);}
 }
 function v4Message(message,failed=false){const el=document.getElementById('connectionDiagnostic');el.textContent=message;el.hidden=!failed;el.dataset.state=failed?'error':'ok'}
@@ -187,7 +188,7 @@ async function refresh(){
  catch(e){setStatus(false);v4Message('Cannot check show status: '+e.message+'. Requests are disabled until connection returns.',true);return false}})();
  try{return await refreshPromise}finally{refreshPromise=null}
 }
-async function autoRefresh(){if(document.hidden||!v4LiveSongs)return;await refresh();render()}
+async function autoRefresh(){if(document.hidden||!v4LiveSongs)return;await refresh();render();if(activeTab==='shows')await loadPublicSchedule()}
 function setStatus(open){state.open=open;syncAudienceVolume();document.getElementById('diceRequest').disabled=!open||!diceChoice;const el=document.getElementById("status"),t=document.getElementById("statusText"),n=document.getElementById("notice");el.classList.toggle("off",!open);t.textContent=open?"Song requests are OPEN":"Song requests are CLOSED";n.innerHTML=open?"":'<div class="notice"><strong>Song requests are closed</strong>Check back when the show starts.</div>'}
 function renderFilters(){const f=document.getElementById("filters");f.replaceChildren();["All","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"].forEach(x=>{const b=document.createElement("button");b.className="filter"+(x===filter?" active":"");b.textContent=x;b.onclick=()=>{filter=x;renderFilters();render()};f.appendChild(b)})}
 function render(){const q=searchKey(document.getElementById("search").value);const arr=songs.filter(x=>(filter==="All"||x.decade===filter)&&(searchKey(x.song+" "+x.artist+" "+x.decade).includes(q)));
@@ -234,7 +235,7 @@ function buildTipLinks(){
 }
 let currentDisplayed=[],diceChoice=null,lastDiceIndex=-1,activeTab='songs';
 function setTab(tab){
- activeTab=tab;
+ activeTab=tab;if(tab==='shows')loadPublicSchedule();
  for(const name of ['shows','volume','tips'])document.getElementById(name+'Page').hidden=tab!==name;
  for(const id of ['previewNotice','notice'])document.getElementById(id).hidden=tab!=='songs';
  for(const el of document.querySelectorAll('.controls,.sortbar,#songBrowser,#dicePanel')){
@@ -305,6 +306,27 @@ async function voteVolume(vote){
  finally{volumeBusy=false;if(state.show_id!==show)syncAudienceVolume();else{for(const b of document.querySelectorAll('[data-volume]')){b.disabled=!state.open||!state.show_id;const saved=readVolume();b.classList.toggle('chosen',!saved.pending&&saved.vote===b.dataset.volume);b.setAttribute('aria-pressed',String(!saved.pending&&saved.vote===b.dataset.volume))}}}
 }
 document.querySelectorAll('[data-volume]').forEach(b=>b.onclick=()=>voteVolume(b.dataset.volume));
+
+let scheduleLoading=false,scheduleSignature='';
+function scheduleClock(v){return v?new Date('2000-01-01T'+v.slice(0,5)+':00').toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'}):''}
+async function loadPublicSchedule(){
+ if(scheduleLoading)return;scheduleLoading=true;
+ try{
+  const rows=[];
+  for(let offset=0;offset<=20000;offset+=200){const page=await betaRpc('beta_schedule_public',{p_musician_slug:musicianSlug,p_offset:offset,p_limit:200});if(!Array.isArray(page))throw Error('Invalid schedule response');rows.push(...page);if(page.length<200)break;if(offset===20000)throw Error('Schedule could not be loaded completely')}
+  const signature=JSON.stringify(rows);document.getElementById('schedule-status').textContent=rows.length?'Times are shown in each venue’s local time.':'No upcoming shows published yet.';
+  if(signature===scheduleSignature)return;scheduleSignature=signature;
+  const host=document.getElementById('public-shows');host.replaceChildren();let month='';
+  for(const s of rows){
+   const date=new Date(s.show_date+'T12:00:00'),monthName=date.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+   if(month!==monthName){month=monthName;const h=document.createElement('h3');h.textContent=month;host.append(h)}
+   const article=document.createElement('article');article.className='public-show';const heading=document.createElement('h3'),venue=document.createElement('strong'),time=document.createElement('p'),town=document.createElement('p');
+   heading.textContent=date.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});venue.textContent=s.venue_name;time.textContent=scheduleClock(s.start_time)+(s.end_time?' – '+scheduleClock(s.end_time)+(s.end_time<s.start_time?' (next day)':''):'');town.textContent=s.location||'';article.append(heading,venue,time);if(s.location)article.append(town);host.append(article);
+  }
+ }catch(e){document.getElementById('schedule-status').textContent='The schedule could not be refreshed. Please try again.';}
+ finally{scheduleLoading=false}
+}
+document.getElementById('refresh-shows').onclick=loadPublicSchedule;
 
 init();setInterval(autoRefresh,8000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)autoRefresh()});
 
