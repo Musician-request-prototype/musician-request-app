@@ -100,6 +100,7 @@ body{background:var(--bg);color:var(--fg)}
 .sheet{padding-bottom:calc(25px + env(safe-area-inset-bottom))}.sheet input,.sheet textarea{font-family:inherit}.sheet button{min-height:46px}
 button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}#connectionDiagnostic[hidden]{display:none}
 
+#volumePage .volume-votes button.chosen{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 </style></head><body>
 <div class="wrap">
 <header class="hero"><img id="brandLogo" class="logo" alt="Musician logo" hidden><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
@@ -145,7 +146,7 @@ async function loadConfig(){
  buildTipLinks();
 }
 document.querySelectorAll('[data-sort]').forEach(button=>button.onclick=()=>{sortBy=button.dataset.sort;document.querySelectorAll('[data-sort]').forEach(b=>b.classList.toggle('active',b===button));render()});
-document.querySelectorAll('[data-volume]').forEach(b=>b.disabled=true);document.getElementById('volumeFeedback').textContent='Volume feedback is coming soon.';
+document.querySelectorAll('[data-volume]').forEach(b=>b.disabled=true);
 let songs=[],state={open:false,counts:{},played:{},requests:{},tips:{}} ,selected=null,filter="All",pendingTip=null;
 async function betaRpc(name,payload){
  const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);
@@ -187,7 +188,7 @@ async function refresh(){
  try{return await refreshPromise}finally{refreshPromise=null}
 }
 async function autoRefresh(){if(document.hidden||!v4LiveSongs)return;await refresh();render()}
-function setStatus(open){state.open=open;document.getElementById('diceRequest').disabled=!open||!diceChoice;const el=document.getElementById("status"),t=document.getElementById("statusText"),n=document.getElementById("notice");el.classList.toggle("off",!open);t.textContent=open?"Song requests are OPEN":"Song requests are CLOSED";n.innerHTML=open?"":'<div class="notice"><strong>Song requests are closed</strong>Check back when the show starts.</div>'}
+function setStatus(open){state.open=open;syncAudienceVolume();document.getElementById('diceRequest').disabled=!open||!diceChoice;const el=document.getElementById("status"),t=document.getElementById("statusText"),n=document.getElementById("notice");el.classList.toggle("off",!open);t.textContent=open?"Song requests are OPEN":"Song requests are CLOSED";n.innerHTML=open?"":'<div class="notice"><strong>Song requests are closed</strong>Check back when the show starts.</div>'}
 function renderFilters(){const f=document.getElementById("filters");f.replaceChildren();["All","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"].forEach(x=>{const b=document.createElement("button");b.className="filter"+(x===filter?" active":"");b.textContent=x;b.onclick=()=>{filter=x;renderFilters();render()};f.appendChild(b)})}
 function render(){const q=searchKey(document.getElementById("search").value);const arr=songs.filter(x=>(filter==="All"||x.decade===filter)&&(searchKey(x.song+" "+x.artist+" "+x.decade).includes(q)));
  const cmpTitle=(a,b)=>a.song.localeCompare(b.song,undefined,{sensitivity:'base'});
@@ -267,6 +268,44 @@ function updateAlphabetRail(arr){
  function touchJump(e){e.preventDefault();const t=e.touches[0];if(!t)return;const node=document.elementFromPoint(t.clientX,t.clientY);const b=node?.closest('#azRail button');if(b&&!b.disabled)jumpLetter(b.dataset.letter)}
  rail.ontouchstart=touchJump;rail.ontouchmove=touchJump;
 }
+let volumeBusy=false,volumeShow=null;
+const volumeMemory=new Map();
+function volumeKey(){return 'subscriber-volume-v1:'+musicianSlug+':'+state.show_id}
+function readVolume(){
+ const key=volumeKey();let value=volumeMemory.get(key);
+ try{value=JSON.parse(localStorage.getItem(key)||'null')||value}catch{}
+ if(!value||!value.voter||!Number.isInteger(value.revision)||value.revision<0)value={voter:crypto.randomUUID(),revision:0,vote:'',pending:false};
+ volumeMemory.set(key,value);return {...value};
+}
+function writeVolume(value){const key=volumeKey();volumeMemory.set(key,{...value});try{localStorage.setItem(key,JSON.stringify(value))}catch{}}
+function syncAudienceVolume(){
+ const changed=volumeShow!==state.show_id;volumeShow=state.show_id;
+ const saved=state.show_id?readVolume():null;
+ for(const b of document.querySelectorAll('[data-volume]')){b.disabled=volumeBusy||!state.open||!state.show_id;b.classList.toggle('chosen',!!saved&&!saved.pending&&saved.vote===b.dataset.volume);b.setAttribute('aria-pressed',String(!!saved&&!saved.pending&&saved.vote===b.dataset.volume))}
+ if(volumeBusy)return;
+ const feedback=document.getElementById('volumeFeedback');
+ if(!state.open||!state.show_id){feedback.textContent='Volume feedback is closed. Check back when the show starts.';return;}
+ if(saved?.pending){feedback.textContent='Your last response was not confirmed. Tap it again to retry, or choose a new response.';return;}
+ if(saved?.vote){feedback.textContent='Thanks for helping us sound our best!';return;}
+ if(changed||!feedback.textContent||/closed|coming soon/.test(feedback.textContent))feedback.textContent='Tap the response that best describes the sound where you are.';
+}
+async function voteVolume(vote){
+ if(volumeBusy||!state.open||!state.show_id)return;
+ const show=state.show_id;const old=readVolume();
+ const draft=old.pending&&old.vote===vote?old:{...old,revision:old.revision+1,vote,pending:true};
+ writeVolume(draft);volumeBusy=true;syncAudienceVolume();document.getElementById('volumeFeedback').textContent='Sending your feedback…';
+ try{
+  const r=await betaRpc('beta_subscriber_vote_volume',{p_musician_slug:musicianSlug,p_show_id:show,p_voter_id:draft.voter,p_vote:draft.vote,p_revision:draft.revision});
+  if(!r?.ok)throw Error('Feedback was not confirmed');
+  if(state.show_id!==show)return;
+  writeVolume({...draft,revision:r.revision,vote:r.vote,pending:false});
+  document.getElementById('volumeFeedback').textContent='Thanks for helping us sound our best!';
+  const card=document.querySelector('#volumePage .volume-card');if(card){card.classList.remove('vote-glow');void card.offsetWidth;card.classList.add('vote-glow')}
+ }catch(e){if(state.show_id===show)document.getElementById('volumeFeedback').textContent='Feedback not confirmed: '+e.message+' Tap the same response to retry safely.';}
+ finally{volumeBusy=false;if(state.show_id!==show)syncAudienceVolume();else{for(const b of document.querySelectorAll('[data-volume]')){b.disabled=!state.open||!state.show_id;const saved=readVolume();b.classList.toggle('chosen',!saved.pending&&saved.vote===b.dataset.volume);b.setAttribute('aria-pressed',String(!saved.pending&&saved.vote===b.dataset.volume))}}}
+}
+document.querySelectorAll('[data-volume]').forEach(b=>b.onclick=()=>voteVolume(b.dataset.volume));
+
 init();setInterval(autoRefresh,8000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)autoRefresh()});
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('cancel').disabled)document.getElementById('modal').classList.remove('open')});
