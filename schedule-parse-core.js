@@ -44,7 +44,18 @@
     const one=rest.match(/(?:^|[\s(@,])(\d{1,2}(?::\d{2})?\s*[ap]\.?m\.?)(?!\w)/i);if(one){const t=token(one[1]);if(t)start=time(t,t.period);rest=clean(rest.slice(0,one.index)+' '+rest.slice(one.index+one[0].length));}else issues.push('Start time missing — enter it.');
    }
    rest=rest.replace(/^(?:at\s+|@\s*)/i,'').replace(/\s*\(\s*\)\s*$/,'').trim();
-   const parts=rest.split(/\s+[|–—-]\s+|,\s*/).map(clean).filter(Boolean),venue=parts.shift()||'',location=parts.join(', ');
+   const parts=rest.split(/\s+[|–—-]\s+|,\s*/).map(clean).filter(Boolean);let venue=parts.shift()||'',location=parts.join(', ');
+   // Only split unmarked towns explicitly supplied by the musician. A venue
+   // can legitimately contain a town name, so never guess from a global list.
+   if(!location&&Array.isArray(options.towns)){
+    const towns=[...new Set(options.towns.filter(t=>typeof t==='string').map(t=>t.trim()).filter(Boolean))].sort((a,b)=>b.length-a.length);
+    for(const town of towns){
+     const at=venue.length-town.length;
+     if(at>0&&/\s/.test(venue[at-1])&&venue.slice(at).toLocaleLowerCase()===town.toLocaleLowerCase()){
+      location=venue.slice(at);venue=venue.slice(0,at).trim();issues.push('Trailing town separated using your town list — verify venue and town.');break;
+     }
+    }
+   }
    if(!venue)issues.push('Venue missing — enter it.');if(start&&end&&start===end)issues.push('Start and end are the same — correct or clear the end time.');
    rows.push({show_date:date,start_time:start,end_time:end,venue_name:venue,location,source_text:source.slice(0,4000),issues,line:index+1});
   });
