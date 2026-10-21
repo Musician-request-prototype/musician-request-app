@@ -1,4 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#10261a"><title>Performance · Downloaded library</title><style>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Performance · Your musician account</title>
+<style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,Arial,sans-serif;background:#090909;color:#f7f7f7}
 *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;background:#252525;color:#fff;border:1px solid #484848;border-radius:10px;padding:10px 13px;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #87baff;outline-offset:2px}button:disabled{opacity:.5}header{height:64px;background:#171717;border-bottom:1px solid #343434;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;gap:12px}.head-title{font-size:17px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.actions{display:flex;gap:7px;flex-shrink:0}#layout{display:flex;height:calc(100dvh - 64px);min-height:0}aside{width:min(42%,420px);min-width:240px;flex-shrink:0;display:flex;flex-direction:column;background:#171717;border-right:1px solid #353535}aside[hidden]{display:none}#browser-top{padding:12px;display:grid;gap:9px;border-bottom:1px solid #333}input,select{background:#272727;color:white;border:1px solid #555;border-radius:9px;padding:11px;width:100%;font-size:16px}#song-list{overflow:auto;flex:1;min-height:0}.song-row{display:block;text-align:left;border:0;border-bottom:1px solid #333;border-radius:0;padding:13px 15px;width:100%;background:none}.song-row.active{background:#264267}.song-name{font-size:17px;font-weight:600}.song-meta{font-size:13px;color:#bbb;margin-top:4px}.muted{color:#aaa}.missing{color:#efbd79}#stage{min-width:0;flex:1;overflow:auto;padding:25px 30px 80px;overscroll-behavior:contain}#song-title{text-align:center;font-size:28px;margin:0;font-weight:700}#song-artist{text-align:center;color:#b5b5b5;margin:8px 0 4px}#song-status{text-align:center;color:#9e9e9e;font-size:13px;margin:7px 0 25px}#chart{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;line-height:1.25;overflow-x:auto;overflow-y:visible;margin:0;min-height:50vh;overscroll-behavior-x:contain;font-variant-ligatures:none;letter-spacing:0;font-weight:400}
 /* Chords and their lyrics use EXACTLY the same font, size, character advance and whitespace rules. */
@@ -346,43 +351,161 @@ body.resizing-toolbar,body.resizing-toolbar *{user-select:none!important;-webkit
 #owner-volume{border-block:1px solid #355640;padding:16px 0;margin:16px 0}#owner-volume small{color:#b3c9bb;font:12px/1.4 system-ui}#float-volume-summary{border-top:1px solid #355640;margin-top:6px;padding-top:6px;font-size:11px;white-space:normal}
 
 body.mode-playing #float-volume-summary,body.mode-playing #owner-volume,body.mode-playing #volume-btn{display:none!important}
-
-[hidden]{display:none!important}#layout[hidden]{display:none!important}body{min-height:0}#stage{background:#080c09}#chart{font-size:var(--offline-chart-size,26px)}#song-list .song{display:block;text-align:left;border:0;border-bottom:1px solid #2a3f30;border-radius:0;padding:13px 15px;width:100%;background:none}#song-list .song[aria-pressed=true]{background:#214d33}#song-list .song strong{font:500 17px var(--shared-font);display:block}#song-list .song small{display:block;font:13px system-ui;color:#aabdaf;margin-top:4px}#library-resizer[hidden]{display:none}#appearance-panel p,#offline-info p{font:14px/1.5 system-ui;color:#c6dbcd}.connection-guidance{padding:12px;border:1px solid #5b8665;border-radius:10px;background:#193023}.connection-guidance strong{color:#effaf2}#appearance-panel h2{font:700 21px var(--shared-font)}#appearance-panel .actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}#appearance-panel .actions button{flex:1 1 140px;min-height:46px}#appearance-panel .notice{border:1px solid #50775d;border-radius:12px;padding:12px;margin:14px 0}#appearance-panel small{color:#b8cdbe;line-height:1.5}#appearance-panel details{margin:12px 0}#snapshot-info{white-space:normal}.status{white-space:pre-wrap}#offline-info{position:fixed;z-index:30;inset:16px;margin:auto;width:min(500px,calc(100vw - 32px));height:max-content;max-height:calc(100dvh - 32px);overflow:auto;padding:20px;border:1px solid #81bd93;border-radius:16px;background:#11231a;box-shadow:0 0 0 100vmax #000a}#float-requests{cursor:pointer}#float-played{min-width:90px}#connection-status{white-space:normal}#playing-offline{position:fixed;left:12px;top:6px;z-index:7;font:600 11px system-ui;color:#ffcf77;pointer-events:none;display:none}body.mode-playing #playing-offline{display:block}body.mode-playing #stage{padding-top:27px}body.mode-playing #library{display:none}body.mode-playing.library-open #library{display:flex;position:fixed;z-index:15;top:0;bottom:0;left:0;width:min(88vw,420px);max-width:none;min-width:0;box-shadow:14px 0 30px #0009}#library-close{display:none}body.mode-playing #library-close{display:block}#float-transport{overflow:visible!important}#float-transport:after{content:'';display:block}#online-performance{display:inline-block}#float-smaller,#float-larger{display:none}#status{font-size:13px}body:not(.has-library) #playing-floats{display:none!important}@media(max-width:780px){#library{top:var(--header-height,160px)}body:not(.library-open) #library{display:none}#chart{font-size:var(--offline-chart-size,23px)}}
-</style></head><body><header><div class="performance-brand"><span class="brand-mark" aria-hidden="true">🎸</span><div class="brand-copy"><span class="head-title" id="identity">Performance</span><div class="brand-status"><span id="header-count">Your library</span><span id="connection-status" class="connection-offline">● Downloaded copy</span></div></div></div><div class="actions"><span id="busy" class="visually-hidden" role="status" aria-live="polite"></span><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" aria-pressed="false">Playing</button><button id="between-btn" type="button" class="chosen" aria-pressed="true">Between Songs</button></div><button id="setlists-btn" hidden type="button" title="Choose or edit a setlist">☷ <span>Setlists</span></button><button id="requests-btn" type="button" aria-label="Open incoming requests">◉ <span id="request-button-label">Requests · offline</span></button><button id="schedule-btn" type="button">📅 Shows</button><button id="volume-btn" type="button" aria-label="View audience volume feedback">🔊 Volume</button><button id="dice-btn" type="button" aria-label="Roll for a random Ready to Play song" title="Random Song"><span class="dice-art" aria-hidden="true">🎲</span></button><button id="settings-btn" type="button" aria-expanded="false" aria-controls="appearance-panel" aria-label="Performance settings" title="Settings">⚙</button><button id="songs-btn" type="button">☷ Songs</button></div></header><span id="playing-offline">Downloaded copy · live tools unavailable</span><div id="playing-floats" aria-label="Playing controls"><div id="float-transport" class="float-control" aria-label="Movable performance controls">
+#connection-banner{flex:0 0 auto;padding:9px 14px;background:#24301b;border-bottom:1px solid #6b8053;color:#f0f5db;font:14px/1.4 system-ui}#connection-banner button{padding:6px 10px;margin-left:10px;font-size:13px}#stage-connection{display:none;position:fixed;left:12px;top:7px;z-index:7;color:#ffcf77;font:600 11px system-ui;pointer-events:none}body.mode-playing #connection-banner{display:none}body.mode-playing #stage-connection:not([hidden]){display:block}body.mode-playing:has(#stage-connection:not([hidden])) #stage{padding-top:28px}#prepare-device-section{border-block:1px solid #416849;padding:12px 0;margin:16px 0}#prepare-device-section small{color:#c1d6c6;line-height:1.5}#prepare-device{width:100%;background:#245836;border-color:#78be88}#device-status{white-space:pre-wrap}#connection-banner[hidden]{display:none!important}
+.account-top{padding:10px;border:1px solid #63816a;border-radius:10px;color:#b1f1c1;font:600 14px system-ui}body.mode-playing .account-top{display:none}#learning-start[hidden],#learning-stop[hidden]{display:none!important}</style>
+<style id="musician-help-style">.musician-tools{margin:14px 0;padding:12px 14px;border:1px solid #567560;border-radius:12px;color:#e0f5e7;background:#11231a;font:15px/1.5 system-ui;text-align:left}.musician-tools summary{cursor:pointer;font-weight:700;min-height:32px}.musician-tools p{color:#bbd0c1;white-space:normal}.musician-tools a{color:#9cf0b4}.musician-tools label{display:flex;gap:12px;align-items:center;margin:12px 0}.musician-tools input{width:23px!important;height:23px;min-height:23px!important;flex:0 0 23px;padding:0}.musician-help-tip{display:inline-flex!important;align-items:center;justify-content:center;width:32px!important;min-width:32px!important;min-height:32px!important;height:32px;padding:0!important;margin:4px 6px!important;border:1px solid #81bd93!important;border-radius:50%!important;background:#173d26!important;color:#c9f9d6!important;font:700 16px system-ui!important;vertical-align:middle;flex:0 0 32px}.musician-help-off .musician-help-tip,body.mode-playing .musician-help-tip{display:none!important}#musician-help-dialog{color:#effaf2;background:#11231a;border:1px solid #81bd93;border-radius:18px;padding:24px;max-width:min(440px,90vw);font:16px/1.6 system-ui}#musician-help-dialog::backdrop{background:#000a}#musician-help-dialog h2{margin-top:0;font-size:23px}#musician-help-dialog p{color:#d8ebdf;white-space:normal}#musician-help-close{font:inherit;min-height:44px;border-radius:8px;padding:10px 22px;background:#69e38e;color:#062310;cursor:pointer;border:0}.musician-help-entry{font:14px system-ui;margin:10px 0}.musician-help-entry a{color:#9cf0b4}[hidden]{display:none!important}</style><style>.owner-navigation{display:flex;gap:10px;flex-wrap:wrap;padding:10px 0;font:600 15px/1.5 system-ui}.owner-navigation a{display:inline-block;padding:9px 12px;border:1px solid #63816a;border-radius:8px;color:#b1f1c1;background:#11291b;text-decoration:none}.device-copy-panel{margin:18px 0;padding:16px;border:1px solid #63816a;border-radius:12px;background:#11251a;color:#e1f5e7;font:15px/1.5 system-ui}.device-copy-panel h2{font-size:18px}.device-copy-panel button,.app-update-tools button{font:inherit;min-height:44px;padding:8px 14px;border-radius:8px;background:#245836;color:#e1f5e7;border:1px solid #63816a}.device-copy-panel[hidden]{display:none}.app-update-tools{margin:18px 0;border-top:1px solid #63816a;padding-top:14px}.app-update-tools p{font:14px/1.5 system-ui}</style></head>
+<body>
+<header><div class="performance-brand"><span class="brand-mark" aria-hidden="true">🎸</span><div class="brand-copy"><span class="head-title" id="workspace-name">Performance</span><div class="brand-status"><span id="song-count-status">Your library</span><span id="connection-status" class="connection-pending">● Connecting…</span></div></div></div><div class="actions"><a class="account-top" href="subscriber-signup-test.html">Account menu</a><span id="busy" class="visually-hidden" role="status" aria-live="polite"></span><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" aria-pressed="false">Playing</button><button id="between-btn" type="button" class="chosen" aria-pressed="true">Between Songs</button></div><button id="setlists-btn" hidden type="button" title="Choose or edit a setlist">☷ <span>Setlists</span></button><button id="requests-btn" type="button" aria-label="Open incoming requests">◉ <span id="request-button-label">Requests (0)</span></button><button id="schedule-btn" type="button">📅 Shows</button><button id="volume-btn" type="button" aria-label="View audience volume feedback">🔊 Volume</button><button id="dice-btn" type="button" aria-label="Roll for a random Ready to Play song" title="Random Song"><span class="dice-art" aria-hidden="true">🎲</span></button><button id="settings-btn" type="button" aria-label="Performance settings" title="Settings">⚙</button><button id="songs-btn" type="button" hidden>Open Songs</button><button id="save-offline" type="button" title="Refresh song library" hidden>Refresh library</button><label id="font-choice-label" for="ui-font-choice" hidden>App font</label><select id="ui-font-choice" aria-label="App appearance font" hidden><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select><button id="setlist-prev" type="button" hidden title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden></span><button id="setlist-next" type="button" hidden title="Next setlist song">Next ▶</button><button id="setlist-resume" type="button" hidden title="Return to your current setlist song">↩ Return to Setlist</button><button id="smaller" type="button" hidden aria-label="Smaller text">A−</button><button id="larger" type="button" hidden aria-label="Larger text">A+</button><button id="hide-controls" type="button" hidden aria-label="Hide top toolbar">Hide controls ▴</button></div></header><div id="connection-banner" role="status" aria-live="polite"><span id="connection-copy">Checking your connection…</span> <button id="retry-connection" type="button">Retry connection</button></div><span id="stage-connection" hidden>Offline · songs available</span>
+<button id="restore-controls" type="button" aria-label="Show top controls">Controls ▾</button>
+<div id="performance-toast" role="status" aria-live="polite" hidden></div><div id="playing-floats" aria-label="Playing controls"><div id="float-transport" class="float-control" aria-label="Movable performance controls">
 <span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"/></svg></span>
 <button id="float-smaller" type="button" aria-label="Smaller lyrics">A−</button><button id="float-larger" type="button" aria-label="Larger lyrics">A+</button>
 <button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button>
-<button id="float-library" type="button" title="Open Ready to Play songs" aria-label="Open Ready to Play songs"><span aria-hidden="true">☷</span> SONGS</button><button id="float-played" type="button" disabled>✓ Mark Played</button><button id="float-between" type="button" title="Between Songs controls">Between</button><button id="float-setlist-prev" type="button" hidden title="Previous setlist song">Back</button><button id="float-setlist-next" type="button" hidden title="Next setlist song">Next</button><button id="learning-start" type="button" hidden>▶ Start Timer</button><button id="learning-stop" type="button" hidden>■ Stop Timer</button><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
-<button id="toolbar-resize" type="button" aria-label="Drag to resize toolbar" title="Drag to resize; arrow keys adjust size"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M5 10V5h5M14 19h5v-5M5 5l14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><button id="float-requests" class="float-control" type="button" aria-label="Offline connection information"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">Offline · requests unavailable</span></button></div>
+<button id="float-library" type="button" title="Open Ready to Play songs" aria-label="Open Ready to Play songs"><span aria-hidden="true">☷</span> SONGS</button><button id="float-played" type="button" disabled>✓ Played</button><button id="float-between" type="button" title="Between Songs controls">Between</button><button id="float-setlist-prev" type="button" hidden title="Previous setlist song">Back</button><button id="float-setlist-next" type="button" hidden title="Next setlist song">Next</button><button id="learning-start" type="button" hidden>▶ Start Timer</button><button id="learning-stop" type="button" hidden>■ Stop Timer</button><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button>
+<button id="toolbar-resize" type="button" aria-label="Drag to resize toolbar" title="Drag to resize; arrow keys adjust size"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M5 10V5h5M14 19h5v-5M5 5l14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><button id="float-requests" class="float-control" type="button" aria-label="Open full incoming requests"><span class="request-float-head">SONG REQUESTS</span><span class="request-float-empty">No requests</span><span id="float-volume-summary"></span></button></div>
 <button id="toolbar-recover" type="button">☷ SONGS · Reset controls</button>
-<div id="layout" hidden><aside id="library"><div id="browser-top"><button id="library-close" type="button">Close songs ✕</button><div id="setlist-browser-bar" hidden><strong id="active-setlist-title">Setlist</strong><button id="toggle-setlist-library" type="button">All Songs</button><button id="exit-setlist" type="button" title="Exit the active setlist">Exit</button></div><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="ready">Ready to Play</option><option value="all">All Songs</option><option value="learning">Learning song</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside><button id="library-resizer" type="button" aria-label="Drag to resize the song library" title="Drag to resize song list" tabindex="0"></button>
-<main id="stage"><h1 id="song-title">Your Songbook</h1><p id="song-artist">Choose a downloaded song</p><p id="song-status"></p><div class="performance-log-actions"><button id="show-controls-open" type="button">Start / End Show</button><button id="history-open" type="button">Show History</button></div><button id="editor-launch" type="button">✎ Manage songs</button><div id="chart" tabindex="0" aria-label="Private lyrics and chords"></div><div id="song-end-actions"><button id="record-played" disabled type="button" title="Recording songs played requires internet">✓ Mark Played</button><p>Recording songs played requires internet.</p></div><div id="message" role="status" aria-live="polite"></div></main></div><section id="appearance-panel" hidden aria-label="Performance settings"><div class="panel-head"><strong>Settings</strong><button id="close-appearance" type="button" aria-label="Close settings">✕</button></div><p><a href="subscriber-signup-test.html">Account menu · Audience Link &amp; QR Code</a></p><p class="connection-guidance"><strong>For the best experience, connect to Wi-Fi or cellular data, including your phone’s personal hotspot. Live requests and volume feedback need internet; downloaded songs and charts remain available offline.</strong></p><label for="ui-font-choice">App font</label><select id="ui-font-choice"><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select><label for="font">Chart font</label><select id="font"><option value="native">Device sans-serif</option><option value="arial">Arial</option><option value="helvetica">Helvetica</option><option value="mono">Monospace</option></select><div class="settings-row"><span>Chart size</span><div><button id="settings-smaller" type="button">A−</button> <button id="settings-larger" type="button">A+</button></div></div><label for="speed">Scroll speed <output id="speed-label">20</output></label><input id="speed" type="range" min="1" max="100" value="20"><button id="stage-top" type="button">Back to top</button><label class="settings-row settings-check"><span>Show Auto-Scroll controls on toolbar</span><input id="setting-show-scroll" type="checkbox" checked></label><button id="reset-toolbar" type="button">Reset toolbar position &amp; size</button><hr><h2>Download library for this device</h2><p>Download your songs and private charts while connected. Use Playing and Between Songs just as you do online; edit songs in your online Song Library, then download again.</p><div class="actions"><button id="download" class="primary">Download library for offline use</button><button id="remove">Remove this device’s download</button><a href="subscriber-performance-test.html" id="online-performance">Online Performance →</a></div><p id="status" class="status" role="status" aria-live="polite"></p><p id="storage-info" class="muted"></p><div class="notice"><strong id="readiness">Not ready offline yet</strong><p id="snapshot-info"></p><small>Prepare this download in the browser or Home Screen app you will use onstage. Each may have separate storage. Before a gig, check this status and test airplane mode. Clearing website data or device storage can remove downloads; your online library stays saved.</small></div><details><summary>How offline access works</summary><p>All downloaded songs, artists, readiness labels, lyrics and chords are available here without internet. The latest completed download replaces the previous copy only after every song has loaded and the library has been checked.</p><p>Signing out locks this device copy. Sign back into the same account while online to unlock it. No passwords are stored by the offline library.</p><p>Requests, volume feedback, song editing, show controls and recording songs played still require internet. Reconnecting does not upload or change any songs from this reading copy.</p></details></section>
-<section id="offline-info" hidden role="dialog" aria-modal="true" aria-labelledby="offline-info-title"><div class="panel-head"><strong id="offline-info-title">Using your downloaded library</strong><button id="close-offline-info" type="button">Close</button></div><p class="connection-guidance"><strong>For the best experience, connect to Wi-Fi or cellular data, including your phone’s personal hotspot. Live requests and volume feedback need internet; downloaded songs and charts remain available offline.</strong></p><p>Your downloaded songs, charts, Playing toolbar and song browser work here without internet.</p><p>Live requests, volume feedback, show controls, recording songs played and online edits require an internet connection. This screen does not queue those actions.</p><p id="return-online" hidden><a href="subscriber-performance-test.html">Return to online Performance →</a></p></section><script src="subscriber-offline-core.js"></script><script>'use strict';
-const OFFLINE_BUILD='subscriber-offline-20261021-v3',O=window.MusicianOffline,$=id=>document.getElementById(id);
-let snapshot=null,activeId=null,busy=false,client=null,epoch=0,sdkPromise=null,scrollFrame=0,lastFrame=0,scrollCarry=0,size=Number(localStorage.getItem('subscriber-performance-font-size'))||26;
-function status(text){$('status').textContent=text}
-function identity(){return O.identity(localStorage)}
-function lock(){epoch++;pause();snapshot=null;activeId=null;$('layout').hidden=true;$('chart').replaceChildren();$('song-list').replaceChildren();$('song-title').textContent='Choose a song';$('song-artist').textContent='';$('song-status').textContent='';$('header-count').textContent='';$('identity').textContent='Sign in online to use your private library.';$('readiness').textContent='Sign in required';$('snapshot-info').textContent='';setMode('between');document.body.classList.remove('has-library');$('appearance-panel').hidden=false;$('offline-info').hidden=true;status('Open Account menu and sign in. Downloaded songs are locked while signed out.')}
-async function shellReady(){try{const reg=await navigator.serviceWorker.getRegistration(new URL('subscriber-offline-test.html',location.href));if(!reg?.active||reg.active.scriptURL!==new URL('subscriber-offline-sw.js',location.href).href||!reg.scope.endsWith('/subscriber-'))return false;const cache=await caches.open(OFFLINE_BUILD);return !!(await cache.match(new URL('subscriber-offline-test.html',location.href).href))&&!!(await cache.match(new URL('subscriber-offline-core.js',location.href).href))}catch{return false}}
-async function showReadiness(){const ready=await shellReady();if(!snapshot||snapshot.userId!==identity())return;if(ready){$('readiness').textContent='Ready for offline reading';}else{$('readiness').textContent='Songs saved; offline startup is not ready';}const missing=snapshot.songs.filter(s=>!s.lyrics_chords.trim()).length;$('snapshot-info').textContent=snapshot.songs.length.toLocaleString()+' songs · Downloaded '+new Date(snapshot.savedAt).toLocaleString()+(missing?' · '+missing+' without chart text':'')+'.'+(ready?'':' Connect and press Download library to finish preparing this device.')}
-function show(s,keepSettings=false){if(s.userId!==identity()){lock();return}snapshot=O.validate(s,identity());$('layout').hidden=false;$('identity').textContent=s.musician.display_name+' · Performance';$('header-count').textContent=s.songs.length.toLocaleString()+' songs';document.body.classList.add('has-library');$('appearance-panel').hidden=true;setMode(localStorage.getItem('subscriber-performance-start-mode')||'between');const key='song-library-chart-font:'+s.musician.id;try{$('font').value=localStorage.getItem(key)||'native'}catch{}applyFont();draw();const saved=readPref('subscriber-offline-selected:'+s.userId,'');const first=s.songs.find(song=>song.id===saved)||s.songs.find(song=>song.song_status==='ready')||s.songs[0];if(first)openSong(first.id);showReadiness();if(keepSettings)$('appearance-panel').hidden=false}
-async function loadSaved(){const user=identity(),step=++epoch;if(!user){lock();return}try{const data=await O.read(indexedDB,user);if(step!==epoch||identity()!==user)return;if(data){show(data);status(navigator.onLine?'Reading your saved device copy. Download again after editing or importing songs.':'Offline · reading your downloaded library. Live requests and online saves are unavailable.')}else{$('identity').textContent='Your musician account';$('layout').hidden=true;$('readiness').textContent='Not ready offline yet';$('appearance-panel').hidden=false;status('Connect and download your library on this device before going offline.')}}catch(e){if(step===epoch)status('Device storage unavailable: '+e.message)}}
-function draw(){if(!snapshot||snapshot.userId!==identity()){lock();return}const q=$('search').value.trim().toLocaleLowerCase().replace(/[’']/g,''),scope=$('filter').value;const list=snapshot.songs.filter(s=>(scope==='all'||scope==='missing'&&!s.lyrics_chords.trim()||s.song_status===scope)&&(!q||(s.title+' '+s.artist).toLocaleLowerCase().replace(/[’']/g,'').includes(q))).sort((a,b)=>a.title.localeCompare(b.title)||a.artist.localeCompare(b.artist));$('song-list').replaceChildren();$('count').textContent=list.length+' of '+snapshot.songs.length+' downloaded songs';const frag=document.createDocumentFragment();let letter=null;for(const song of list){const next=/^[a-z]/i.test(song.title)?song.title[0].toUpperCase():'#';if(next!==letter){letter=next;const heading=document.createElement('div');heading.className='az-heading';heading.dataset.letter=letter;heading.textContent=letter;frag.append(heading)}const b=document.createElement('button');b.className='song';b.setAttribute('aria-pressed',String(song.id===activeId));const title=document.createElement('strong'),artist=document.createElement('small');title.textContent=song.title;artist.textContent=song.artist+' · '+(song.song_status==='ready'?'Ready to play':'Learning song');b.append(title,artist);b.onclick=()=>openSong(song.id);frag.append(b)}$('song-list').append(frag)}
-function openSong(id){if(!snapshot||snapshot.userId!==identity()){lock();return}const song=snapshot.songs.find(s=>s.id===id);if(!song)return;pause();activeId=id;try{localStorage.setItem('subscriber-offline-selected:'+snapshot.userId,id)}catch{}$('song-title').textContent=song.title;$('song-artist').textContent=song.artist;$('song-status').textContent=song.song_status==='ready'?'Ready to Play':'Learning song';document.body.classList.remove('library-open');renderChart(song.lyrics_chords||'No chart text was saved for this song.');$('stage').scrollTop=0;draw()}
-function applyFont(){const fonts={native:'-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif',arial:'Arial,Helvetica,sans-serif',helvetica:'"Helvetica Neue",Helvetica,Arial,sans-serif',mono:'ui-monospace,Menlo,monospace'};$('chart').style.fontFamily=fonts[$('font').value]||fonts.native;$('chart').style.setProperty('--subscriber-chart-font',fonts[$('font').value]||fonts.native);if(snapshot)try{localStorage.setItem('song-library-chart-font:'+snapshot.musician.id,$('font').value)}catch{}}
-function pause(){cancelAnimationFrame(scrollFrame);scrollFrame=0;lastFrame=0;scrollCarry=0;$('scroll-toggle').textContent='▶ Scroll'}
-function tick(t){if(!snapshot||snapshot.userId!==identity()||document.hidden){pause();return}const el=$('stage');if(lastFrame){scrollCarry+=Math.min(t-lastFrame,100)*Number($('speed').value)/2000;const whole=Math.floor(scrollCarry);if(whole){el.scrollTop+=whole;scrollCarry-=whole}}lastFrame=t;if(el.scrollTop+el.clientHeight>=el.scrollHeight-1){pause();return}scrollFrame=requestAnimationFrame(tick)}
-$('scroll-toggle').onclick=()=>{if(scrollFrame){pause();return}if(!activeId)return;$('scroll-toggle').textContent='❚❚ Scroll';scrollFrame=requestAnimationFrame(tick)};
-for(const event of ['touchstart','wheel','pointerdown','keydown'])$('chart').addEventListener(event,pause,{passive:true});document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();else if(snapshot&&snapshot.userId!==identity())lock()});
-$('search').oninput=draw;$('filter').onchange=draw;$('font').onchange=applyFont;
-async function ensureSdk(){if(window.supabase?.createClient)return;if(!sdkPromise)sdkPromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';script.onload=resolve;script.onerror=()=>{sdkPromise=null;reject(Error('Connect to the internet to download your library.'))};document.head.append(script)});await withTimeout(sdkPromise,15000)}
-function withTimeout(p,ms=30000){let timer;return Promise.race([p,new Promise((_,reject)=>timer=setTimeout(()=>reject(Error('The connection timed out. Your last completed download is unchanged.')),ms))]).finally(()=>clearTimeout(timer))}
-async function prepareShell(){if(!('serviceWorker' in navigator)||!window.isSecureContext)throw Error('This browser cannot prepare offline startup. Open this page in Safari or Chrome over HTTPS.');const reg=await navigator.serviceWorker.register(new URL('subscriber-offline-sw.js',location.href),{scope:new URL('subscriber-',location.href).pathname,updateViaCache:'none'});await withTimeout(navigator.serviceWorker.ready,20000);let worker=reg.installing||reg.waiting||reg.active;if(worker?.state!=='activated')await withTimeout(new Promise((resolve,reject)=>{worker.addEventListener('statechange',()=>{if(worker.state==='activated')resolve();if(worker.state==='redundant')reject(Error('Could not save offline startup files.'))})}),20000);worker=reg.active;if(!worker)throw Error('Offline startup is not active. Reload and try again.');await withTimeout(new Promise((resolve,reject)=>{const ch=new MessageChannel();ch.port1.onmessage=e=>{ch.port1.close();if(e.data?.ready&&e.data.version===OFFLINE_BUILD)resolve();else reject(Error('Offline startup files are not ready.'))};worker.postMessage({type:'OFFLINE_READY'},[ch.port2])}),10000);if(!await shellReady())throw Error('Offline startup files were not saved.');}
-async function download(){if(busy)return;if(!navigator.onLine){status('Connect to the internet to download. Your last completed copy is still available.');return}busy=true;$('download').disabled=true;$('remove').disabled=true;pause();const step=++epoch;let user;try{await ensureSdk();if(step!==epoch)throw Error('Account changed.');if(!client){client=window.supabase.createClient('https://sluffhedekxnoasndnid.supabase.co','sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8',{auth:{storageKey:O.AUTH_KEY,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'||event==='USER_DELETED')lock()})}status('Verifying your account…');const auth=await withTimeout(client.auth.getUser());if(auth.error||!auth.data?.user)throw Error('Sign in online before downloading your library.');user=auth.data.user.id;if(step!==epoch||identity()!==user)throw Error('Account changed. Download cancelled.');const allowed=()=>step===epoch&&identity()===user;const data=await withTimeout(O.prepare(client,user,allowed,n=>status('Downloading '+n.toLocaleString()+' songs… Please keep this page open.')),180000);if(!data.songs.length&&snapshot?.songs.length&&!confirm('Your online library is empty. Replace this device’s previous download with an empty library?'))throw Error('Download cancelled. Previous copy kept.');status('Preparing offline startup…');await prepareShell();if(!allowed())throw Error('Account changed. Download cancelled.');if(navigator.storage?.persist)try{await navigator.storage.persist()}catch{}await O.write(indexedDB,data,allowed);if(!allowed())return;const checked=await O.read(indexedDB,user);O.validate(checked,user);if(checked.savedAt!==data.savedAt||JSON.stringify(checked.songs)!==JSON.stringify(data.songs))throw Error('Download verification failed. Try again before going offline.');show(checked,true);status('Download complete in this app window. Close this app, reopen its Home Screen icon while still online, and check Ready for offline reading there before switching to airplane mode.');if(navigator.storage?.persisted)$('storage-info').textContent=await navigator.storage.persisted()?'This browser granted persistent storage. Clearing website data still removes this device copy.':'Device download saved. Browser storage protection was not granted; check offline readiness before each gig.';}catch(e){if(step===epoch){status((e.message||String(e))+' No partial library was saved.');if(snapshot)showReadiness()}}finally{busy=false;$('download').disabled=false;$('remove').disabled=false}}
-$('download').onclick=download;
-$('remove').onclick=async()=>{if(busy)return;const user=identity();if(!user||!confirm('Remove this device’s downloaded library? Your online songs will stay saved.'))return;busy=true;try{await O.remove(indexedDB,user);lock();$('identity').textContent='Device download removed';$('readiness').textContent='Not ready offline yet';status('This device copy was removed. Your online library is unchanged.')}catch(e){status(e.message)}finally{busy=false}};
-window.addEventListener('storage',e=>{if(e.key===O.AUTH_KEY&&snapshot?.userId!==identity())lock()});window.addEventListener('pageshow',()=>{if(snapshot?.userId&&snapshot.userId!==identity())lock()});setInterval(()=>{if(snapshot&&snapshot.userId!==identity())lock()},1000);
-window.addEventListener('offline',()=>{pause();if(snapshot)status('Offline · downloaded songs and charts remain available. Online requests and saves are unavailable.');else status('Offline. No library has been downloaded for this account on this device.')});window.addEventListener('online',()=>{if(snapshot)status('Connection restored. This is still your downloaded copy; download again to include online changes.')});
+<div id="layout"><aside id="library" hidden><div id="browser-top"><div id="setlist-browser-bar" hidden><strong id="active-setlist-title">Setlist</strong><button id="toggle-setlist-library" type="button">All Songs</button><button id="exit-setlist" type="button" title="Exit the active setlist">Exit</button></div><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="ready">Ready to Play</option><option value="all">All Songs</option><option value="learning">Learning song</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside><button id="library-resizer" type="button" aria-label="Drag to resize the song library" title="Drag to resize song list" tabindex="0"></button>
+<main id="stage"><div id="set-break-screen" hidden role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div class="performance-log-actions"><button id="show-controls-open" type="button">Start / End Show</button><button id="history-open" type="button">Show History</button><span id="record-feedback" role="status" aria-live="polite"></span></div><button id="editor-launch" type="button">✎ Manage songs</button><section id="song-editor" hidden aria-label="Edit lyrics and chords"><h2>Edit Song</h2><p class="editor-help">Edit the original text, including spaces between chords. Save requires an internet connection. Use Cancel to discard edits.</p><textarea id="editor-text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Song lyrics and chords"></textarea><div class="edit-controls"><button id="editor-save" type="button">Save Changes</button><button id="editor-cancel" type="button">Cancel</button></div><div id="editor-feedback" role="status" aria-live="polite"></div></section><div id="chart" aria-label="Lyrics and chords"></div><div id="song-end-actions"><button id="record-played" type="button" disabled>✓ Mark Played</button><p>Record this song in tonight’s performance history.</p></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
+<section id="request-panel" hidden aria-label="Incoming requests"><div class="panel-head"><strong>Incoming Requests</strong><div><button id="refresh-requests" type="button">Refresh</button> <button id="close-requests" type="button" aria-label="Close requests">✕</button></div></div><p id="mode-hint">Playing: requests can't replace your song.</p><div id="show-state" aria-live="polite">Checking your musician login…</div><div class="show-controls"><label for="show-venue">Venue / location (optional)</label><input id="show-venue" maxlength="160" placeholder="Where are you playing?"><div class="show-buttons"><button id="start-show" type="button">Start show</button><button id="end-show" type="button" disabled>End show</button></div><p id="show-feedback" role="status" aria-live="polite"></p><a href="subscriber-library-test.html">Manage your songs</a> · <a id="public-page-link" target="_blank" rel="noopener" hidden>Open audience page ↗</a></div><p><button id="history-request" type="button">Show History</button></p><div id="request-info">Waiting for connection…</div><section id="owner-volume" aria-label="Audience volume feedback"><strong>🔊 How’s My Volume?</strong><p id="owner-volume-summary" style="white-space:pre-wrap;line-height:1.5" role="status"></p><small>Each browser has one current response per show. Changing a response replaces it. The corner summary shows the last five minutes.</small><p><button id="refresh-volume" type="button">Refresh volume</button></p></section><div id="request-list"></div></section>
+<section id="setlists-panel" hidden aria-label="Saved setlists"><div class="panel-head"><strong class="hand-heading">Your Setlists</strong><button id="close-setlists" type="button" aria-label="Close setlists">✕</button></div><p class="setlist-subtitle">Choose a saved setlist, or open Setlist Studio to edit one.</p><div id="setlists-choices"></div><div class="setlists-footer"><button id="open-setlist-studio" type="button">✎ Open Setlist Studio</button></div></section>
+<section id="dice-panel" hidden aria-label="Random song picker"><div class="panel-head"><strong>🎲 What should I play?</strong><button id="close-dice" type="button" aria-label="Close dice">✕</button></div><p class="muted">Picks from Ready to Play songs, avoiding recent suggestions.</p><div id="dice-choice">Roll the dice!</div><div id="dice-artist" class="muted"></div><div class="dice-controls"><button id="reroll" type="button">🎲 Roll Again</button><button id="play-dice" type="button" disabled>Open Song</button></div></section>
+
+<section id="appearance-panel" hidden aria-label="Performance settings"><div class="panel-head"><strong>Settings</strong><button id="close-appearance" type="button" aria-label="Close settings">✕</button></div><nav class="owner-navigation" aria-label="Account navigation"><a href="subscriber-signup-test.html">Account menu</a><a href="subscriber-performance-test.html">Performance</a><a href="subscriber-library-test.html">Songs</a><a href="subscriber-shows-test.html">Show Schedule</a><a href="subscriber-signup-test.html#share-audience">QR Code</a></nav><details class="musician-tools"><summary>Help &amp; settings</summary><p><a href="#prepare-device">Prepare this device for offline use →</a></p><label><input class="musician-help-toggle" type="checkbox" checked> Show help tips</label><small>Tap a ? for a short explanation. This choice is remembered on this device.</small><p><strong>For the best experience, connect to Wi-Fi or cellular data, including your phone’s personal hotspot.</strong><br>Live requests, volume feedback, saves and show controls need an internet connection: Wi-Fi or cellular. If your tablet has no cellular service, connect it to your phone’s personal hotspot. Prepare this device below before your first gig. Keep using Performance when internet drops.</p><details><summary>Add to your Home Screen</summary><p>For your performer tools, open <a href="subscriber-signup-test.html">your account menu</a> and save that page. Share your audience link with fans instead.</p><p><strong>iPhone · Safari</strong><br>Open the page in Safari. Tap Share (or Page Menu → Share), then Add to Home Screen. If offered, turn on Open as Web App, then tap Add.</p><p><strong>iPad · Safari</strong><br>Open the page in Safari, tap Share, then View More if needed, then Add to Home Screen. If offered, turn on Open as Web App, then tap Add.</p><p><strong>Android · Chrome</strong><br>Open the page in Chrome. Tap the three-dot menu → Install and create shortcut → Create shortcut → Add. Some versions label this Add to Home screen.</p><p>Open the new icon once to check it. You may need to sign in again there. Prepare this device in Performance Settings before using it without internet. Live requests and online saves still need a connection.</p><p><a href="https://support.apple.com/guide/iphone/open-as-web-app-iphea86e5236/ios" target="_blank" rel="noopener">Apple iPhone guide ↗</a> · <a href="https://support.apple.com/guide/ipad/bookmark-a-website-ipadc602b75b/ipados" target="_blank" rel="noopener">Apple iPad guide ↗</a> · <a href="https://support.google.com/chrome/answer/15085120?co=GENIE.Platform%3DAndroid" target="_blank" rel="noopener">Chrome guide ↗</a></p></details></details><section id="prepare-device-section"><h3>Prepare this device for offline use</h3><p><strong>For the best experience, connect to Wi-Fi or cellular data, including your phone’s personal hotspot.</strong></p><p>Your songs are prepared automatically when you open the app online and after imports or saved changes. Wait until ready before your first gig. If internet drops, keep using this screen; live features resume after reconnection.</p><button id="prepare-device" type="button">Retry or update offline songs</button><p id="device-status" role="status" aria-live="polite">Checking this device’s download…</p><small>Wait for Your songs are ready offline on this device. Prepare each device or Home Screen app separately, then test closing and reopening in airplane mode with Wi-Fi off. Clearing website data removes the device copy; your online library stays saved.</small></section><label for="ui-font-choice" id="appearance-font-label">App Font</label><div id="settings-font-slot"></div><p class="muted">Chart text uses the font selected in your Song Library. Lyrics and chords stay private.</p><label for="stage-scroll-speed">Constant scroll speed <output id="stage-scroll-label">20</output></label><input id="stage-scroll-speed" type="range" min="1" max="100" step="1" value="20"><small>Constant speed is used when no scroll timing is saved. Clear saved timing below to use this control.</small><button id="save-stage-speed" type="button">Save speed for this song</button><button id="stage-top" type="button">Back to top</button><p id="stage-scroll-status" role="status"></p><div class="settings-row"><span>Chart size</span><div><button id="settings-smaller" type="button">A−</button> <button id="settings-larger" type="button">A+</button></div></div><label class="settings-row settings-check"><span>Track songs played</span><input id="setting-track-history" type="checkbox"></label><p class="muted">Optional. Saves each Mark Played press in show order, including repeats. This setting is remembered in this browser. Turning it off keeps existing history and audience request controls available.</p><label class="settings-row settings-check"><span>Show Auto-Scroll controls on toolbar</span><input id="setting-show-scroll" type="checkbox"></label><label class="settings-row settings-check"><span>Show Learn scroll timing buttons</span><input id="setting-learning" type="checkbox"></label><h3>Learn scroll timing</h3><p>Record once while playing the song and scrolling manually. Start at the top; your pauses and scroll movements are remembered. Tap <strong>Finish &amp; save</strong> at the end. Next time, press <strong>Scroll</strong> in Playing to replay the timing. Opening a song never starts scrolling automatically.</p><p>Use the buttons below to adjust replay speed, record again or clear saved timing. Recordings stay on this device and work offline. If you edit the chart, record its timing again.</p><div><button id="timing-restart" type="button">Record timing again</button> <button id="timing-clear" type="button">Clear saved timing</button></div><p>Timing playback: <button id="timing-slower" type="button" aria-label="Slower timing playback">−</button> <output id="timing-rate">100%</output> <button id="timing-faster" type="button" aria-label="Faster timing playback">+</button></p><p id="learning-feedback" role="status"></p><section class="app-update-tools"><button class="check-app-update" type="button">Check for app updates</button><p class="app-update-status" role="status" aria-live="polite">Checks for a newer version without interrupting your chart.</p><button class="reload-app-update" type="button" hidden>Restart to update</button></section><div class="settings-row"><span>Song library</span><button id="settings-update-offline" type="button">Refresh library</button></div><p id="settings-offline-status" class="muted" role="status">Loading library status…</p></section>
+<section id="history-panel" hidden role="dialog" aria-modal="true" aria-label="Show history"><div class="panel-head"><strong>Show History</strong><button id="history-close" type="button">Close</button></div><p id="history-note">When tracking is on, each Mark Played press records one performance. Repeat songs appear separately. History starts with this update; older shows may have no recorded songs.</p><button id="history-refresh" type="button">Refresh Shows</button> <button id="history-undo" type="button">Undo last recording</button><button id="history-copy" type="button">Copy Show</button><select id="history-shows" aria-label="Choose a show"></select><button id="history-more-shows" type="button" hidden>Load older shows</button><label for="history-venue">Venue / location (optional)</label><input id="history-venue" maxlength="160" placeholder="e.g. Lansdowne, Mohegan Sun" style="width:100%;margin:8px 0"><button id="history-save-venue" type="button">Save Venue</button><p id="show-tools-feedback" role="status" aria-live="polite"></p><textarea id="history-copy-text" readonly hidden aria-label="Copied show text" style="width:100%;min-height:180px"></textarea><div id="history-summary" role="status" aria-live="polite"></div><div id="history-results"></div><button id="history-more-songs" type="button" hidden>Load more performances</button></section>
+<script>/* Private offline snapshots: only complete, validated downloads replace prior copies. */
+(function(root){'use strict';
+const AUTH_KEY='musician-subscriber-beta-auth-v1',DB_NAME='musician-subscriber-offline-v1',STORE='libraries',VERSION='subscriber-offline-20261021-v5';
+function identity(storage){try{const s=JSON.parse(storage.getItem(AUTH_KEY)||'null');return typeof s?.user?.id==='string'&&s.access_token?s.user.id:null}catch{return null}}
+function normalize(rows){if(!Array.isArray(rows)||rows.length>20000)throw Error('Library is too large or incomplete.');const seen=new Set();return rows.map(s=>{if(!s||typeof s.id!=='string'||!s.id||seen.has(s.id)||typeof s.title!=='string'||(s.lyrics_chords!==null&&s.lyrics_chords!==undefined&&typeof s.lyrics_chords!=='string'))throw Error('Library data could not be verified.');seen.add(s.id);return{id:s.id,title:s.title,artist:typeof s.artist==='string'?s.artist:'',lyrics_chords:s.lyrics_chords||'',song_status:s.song_status==='ready'?'ready':'learning'}}).sort((a,b)=>a.id.localeCompare(b.id))}
+function validate(snapshot,user){if(!snapshot||snapshot.schema!==1||snapshot.userId!==user||!snapshot.musician?.id||!snapshot.savedAt)throw Error('No verified download for this signed-in account.');normalize(snapshot.songs);return snapshot}
+function open(indexedDB){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(STORE))req.result.createObjectStore(STORE,{keyPath:'userId'})};req.onsuccess=()=>{req.result.onversionchange=()=>req.result.close();resolve(req.result)};req.onerror=()=>reject(req.error||Error('Device storage unavailable.'));req.onblocked=()=>reject(Error('Close other copies of the app and try again.'))})}
+async function read(indexedDB,user){const db=await open(indexedDB);return new Promise((resolve,reject)=>{let value;const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(user);r.onsuccess=()=>value=r.result;tx.oncomplete=()=>{db.close();resolve(value||null)};tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||Error('Could not read device storage.'))}})}
+async function write(indexedDB,snapshot,allowed){validate(snapshot,snapshot.userId);const db=await open(indexedDB);return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.oncomplete=()=>{db.close();resolve(snapshot)};tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||Error('Download was not saved. Your previous copy is unchanged.'))};try{if(!allowed())tx.abort();else tx.objectStore(STORE).put(snapshot)}catch(e){try{tx.abort()}catch{}db.close();reject(e)}})}
+async function remove(indexedDB,user){const db=await open(indexedDB);return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(user);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||Error('Could not remove this device copy.'))}})}
+async function collect(client,musicianId,allowed,progress){const rows=[];for(let offset=0;offset<=20000;offset+=500){if(!allowed())throw Error('Account changed. Download cancelled.');const r=await client.from('songs').select('id,title,artist,lyrics_chords,song_status').eq('musician_id',musicianId).eq('is_active',true).order('id').range(offset,offset+499);if(!allowed())throw Error('Account changed. Download cancelled.');if(r.error)throw Error(r.error.message||'Download failed.');if(!Array.isArray(r.data))throw Error('Incomplete download.');rows.push(...r.data);if(rows.length>20000)throw Error('Library exceeds this beta’s 20,000-song download limit.');progress?.(rows.length);if(r.data.length<500)return normalize(rows)}throw Error('Incomplete library.')}
+async function prepare(client,user,allowed,progress){const lookup=await client.rpc('beta_my_workspace');if(lookup.error)throw Error(lookup.error.message);const m=lookup.data;if(!m?.id||!m?.slug)throw Error('Finish setting up your musician account first.');const first=await collect(client,m.id,allowed,progress);const second=await collect(client,m.id,allowed,()=>{});if(JSON.stringify(first)!==JSON.stringify(second))throw Error('Your library changed during the download. Try again when editing is finished.');if(!allowed())throw Error('Account changed. Download cancelled.');return{schema:1,userId:user,musician:{id:m.id,slug:m.slug,display_name:String(m.display_name||'Your library')},savedAt:new Date().toISOString(),songs:first}}
+const api={AUTH_KEY,DB_NAME,STORE,VERSION,identity,normalize,validate,open,read,write,remove,collect,prepare};if(typeof module==='object'&&module.exports)module.exports=api;else root.MusicianOffline=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script><script>// Complete private device copies. A failed or superseded update never deletes the last copy.
+(function(){'use strict';
+const O=window.MusicianOffline,VERSION=O.VERSION;
+let client=null,timer=0,running=null,again=false,generation=0,lastState={state:'waiting',text:'Checking this device’s offline songs…'};
+const listeners=new Set(),uid=()=>O.identity(localStorage),revision=id=>localStorage.getItem('musician-library-revision:'+id)||'';
+function emit(state,text){lastState={state,text};listeners.forEach(fn=>fn(lastState))}
+function limit(p,ms=25000){let t;return Promise.race([p,new Promise((_,reject)=>t=setTimeout(()=>reject(Error('Connection timed out.')),ms))]).finally(()=>clearTimeout(t))}
+async function shell(){
+ if(!isSecureContext||!navigator.serviceWorker)throw Error('Offline access requires HTTPS and a supported browser.');
+ const reg=await navigator.serviceWorker.register(new URL('subscriber-offline-sw.js',location.href),{scope:new URL('subscriber-',location.href).pathname,updateViaCache:'none'});
+ const worker=reg.installing||reg.waiting||reg.active;if(!worker)throw Error('Offline startup is not installed.');
+ if(worker.state!=='activated')await limit(new Promise((resolve,reject)=>{worker.addEventListener('statechange',()=>{if(worker.state==='activated')resolve();if(worker.state==='redundant')reject(Error('Offline startup could not install.'))})}));
+ await limit(new Promise((resolve,reject)=>{const c=new MessageChannel();c.port1.onmessage=e=>{c.port1.close();e.data?.ready&&e.data.version===VERSION?resolve():reject(Error('App update is still publishing. Please retry shortly.'))};(reg.active||worker).postMessage({type:'OFFLINE_READY'},[c.port2])}));
+}
+async function ready(){const id=uid();if(!id)return false;try{const saved=O.validate(await O.read(indexedDB,id),id),reg=await navigator.serviceWorker?.getRegistration(new URL('subscriber-performance-test.html',location.href));return !!saved&&reg?.active?.scriptURL===new URL('subscriber-offline-sw.js',location.href).href&&reg.scope.endsWith('/subscriber-')&&!!await(await caches.open(VERSION)).match(new URL('subscriber-performance-test.html',location.href).href)}catch{return false}}
+async function perform(){
+ const id=uid(),step=generation,rev=id&&revision(id);if(!id||!client)return;
+ const allowed=()=>uid()===id&&generation===step&&revision(id)===rev&&navigator.onLine;
+ let committed=false;
+ try{
+  if(!navigator.onLine){emit('offline',await ready()?'Offline · your downloaded songs are available.':'Offline · connect once to prepare your songs on this device.');return}
+  emit('saving','Preparing your songs for offline use… Keep this app open.');
+  const auth=await limit(client.auth.getUser());if(auth.error||auth.data?.user?.id!==id||!allowed())throw Error('Account or connection changed.');
+  const snapshot=await limit(O.prepare(client,id,allowed,n=>emit('saving','Saving '+n.toLocaleString()+' songs for offline use… Keep this app open.')),180000);
+  await shell();if(!allowed())throw Error('Account or connection changed.');
+  await O.write(indexedDB,snapshot,allowed);committed=true;
+  if(!allowed())return;
+  const stored=O.validate(await O.read(indexedDB,id),id);if(JSON.stringify(stored.songs)!==JSON.stringify(snapshot.songs))throw Error('Device verification failed.');
+  if(!await ready())throw Error('Offline startup could not be verified.');
+  if(!allowed())return;emit('ready','Your songs are ready offline on this device · '+stored.songs.length.toLocaleString()+' songs.');
+ }catch(e){if(uid()!==id)return;if(generation!==step||revision(id)!==rev){again=true;return}emit('error','Your online songs are saved. Offline update needs another try. '+(committed?'Check readiness before a gig.':'Your previous completed offline copy is kept.')+' '+(e.message||String(e)))}
+}
+function run(){clearTimeout(timer);if(running){again=true;return running}again=false;running=perform().finally(()=>{running=null;if(again&&navigator.onLine)schedule()});return running}
+function schedule(){clearTimeout(timer);timer=setTimeout(run,900)}
+function changed(){const id=uid();if(id){localStorage.setItem('musician-library-revision:'+id,Date.now()+':'+Math.random());generation++;schedule()}}
+window.addEventListener('offline',()=>{generation++;emit('offline','Offline · keep using your downloaded songs. Live features need internet.');});
+window.addEventListener('online',schedule);
+window.addEventListener('storage',e=>{if(e.key===O.AUTH_KEY){generation++;clearTimeout(timer);emit('waiting','Checking this account’s offline songs…')}else if(e.key==='musician-library-revision:'+uid()){generation++;schedule()}});
+window.MusicianDevice={attach(c){client=c;if(!c){generation++;clearTimeout(timer);emit('waiting','Offline preparation waits until library changes finish.')}},schedule,changed,run,ready,subscribe(fn){listeners.add(fn);fn(lastState);return()=>listeners.delete(fn)}};
+})();
+</script>
+<script>
+'use strict';
+// Same font preference key already used by Setlist Studio on this origin.
+const SHARED_FONT_KEY='subscriber-app-font-v1';
+function useSharedUiFont(value,write=false){
+ const selected=['hand','modern','classic'].includes(value)?value:'hand';
+ document.body.dataset.font=selected;
+ const choice=document.getElementById('ui-font-choice');if(choice)choice.value=selected;
+ if(write){try{localStorage.setItem(SHARED_FONT_KEY,selected)}catch(e){console.warn('Font preference could not be saved',e)}}
+}
+useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand');
+document.getElementById('ui-font-choice').addEventListener('change',e=>useSharedUiFont(e.target.value,true));
+document.getElementById('settings-font-slot').append(document.getElementById('ui-font-choice'));
+document.getElementById('ui-font-choice').hidden=false;
+document.getElementById('settings-btn').onclick=()=>{const panel=document.getElementById('appearance-panel');panel.hidden=!panel.hidden;document.getElementById('dice-panel').hidden=true;document.getElementById('request-panel').hidden=true;document.getElementById('setlists-panel').hidden=true};
+document.getElementById('close-appearance').onclick=()=>{document.getElementById('appearance-panel').hidden=true};
+document.getElementById('settings-update-offline').onclick=()=>document.getElementById('save-offline').click();
+document.getElementById('settings-smaller').onclick=()=>document.getElementById('smaller').click();
+document.getElementById('settings-larger').onclick=()=>document.getElementById('larger').click();
+
+window.addEventListener('storage',e=>{if(e.key===SHARED_FONT_KEY)useSharedUiFont(e.newValue||'hand')});
+window.addEventListener('pageshow',()=>useSharedUiFont(localStorage.getItem(SHARED_FONT_KEY)||'hand'));
+
+const SUPABASE_URL='https://sluffhedekxnoasndnid.supabase.co';
+const SUPABASE_KEY='sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8';
+const $=id=>document.getElementById(id);
+let db=null, musician=null, songs=[], currentId=null;
+let volumeSummary=null,volumeLoading=false,volumeEpoch=0,volumeTarget=null;
+const LIBRARY_DB='subscriber-performance-unused';
+const OFFLINE_CDN='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+let offlineSnapshot=null;
+let signedInUserId=null;
+let onlineConnected=false;
+let syncingLibrary=null;
+let connectionState='starting';
+function fillLibrary(list,fromCache=false){
+ const preserve=!!currentId&&!!$('chart').textContent;
+ songs=list;$('song-count-status').textContent=list.length.toLocaleString()+' songs';drawList();
+ if(!requestTimer)requestTimer=setInterval(()=>{if(!document.hidden&&navigator.onLine&&onlineConnected)refreshRequests()},10000);
+ if(!preserve){if(!songs.length){showMessage('No songs in this library.');return}const remembered=localStorage.getItem('subscriber-performance-selected:'+signedInUserId);showSong(songs.find(s=>s.id===remembered)||songs.find(s=>s.song_status==='ready')||songs[0]);$('library').hidden=showMode==='playing'}
+ requestAnimationFrame(()=>{placeTransport();checkTransportReachable()});drawRequests();connectionUI(fromCache?'offline':'online');
+}
+function ensureSupabaseSdk(){
+ if(!navigator.onLine)return Promise.reject(Error('Offline'));if(window.supabase?.createClient)return Promise.resolve();
+ return new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=OFFLINE_CDN;el.onload=()=>window.supabase?.createClient?resolve():reject(new Error('Supabase library did not load'));el.onerror=()=>reject(new Error('Internet required to sync songs'));document.head.append(el)});
+}
+
+let showMode='between';
+let incomingRequests=[], requestsError='', diceSuggestion=null, recentDiceIds=[], requestLoading=false, requestTimer=null, showActionBusy=false;
+let accessEpoch=0;
+let requestShowId=null, requestOwner=null, requestEpoch=0, markingRequest=false;
+function cancelRequestPoll(){requestEpoch++;requestLoading=false}
+function clearLiveRequests(){cancelRequestPoll();incomingRequests=[];requestShowId=null;requestOwner=null;drawRequests()}
+let fontSize=Number(localStorage.getItem('subscriber-performance-font-size'))||24;
+const safeNumber=x=>Number.isFinite(x)?x:24;
+fontSize=Math.max(14,Math.min(48,safeNumber(fontSize)));
+$('chart').style.fontSize=fontSize+'px';
+const delayLimit=(promise,ms=15000)=>Promise.race([Promise.resolve(promise),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Connection timed out. Try reloading the page.')),ms))]);
+function statusOf(s){return s.song_status==='ready'?'Ready to Play':s.song_status==='learning'?'Learning song':(s.public_request_enabled?'Ready to Play':'Learning song')}
+function chartOf(s){return typeof s.lyrics_chords==='string'?s.lyrics_chords:''}
+function showMessage(t){$('message').hidden=false;$('message').textContent=t}
+function hideMessage(){$('message').hidden=true}
+function setBusy(t){
+ $('busy').textContent=t;
+ const match=String(t).match(/(\d+)\s+songs?/i);
+ if(match)$('song-count-status').textContent=match[1]+' songs';
+ const label=$('connection-status');
+ const value=String(t).toUpperCase();
+ const connected= value.includes('CONNECTED')||value.includes('SONG SAVED');
+ const offline=value.includes('OFFLINE');
+ label.className=connected?'connection-ok':offline?'connection-offline':'connection-pending';
+ label.textContent=connected?'● Connected':offline?'● Offline':value.includes('SIGN IN')?'● Sign in needed':'● Connecting…';
+ const info=$('settings-offline-status');if(info)info.textContent=t;
+}
+// BandHelper exports preserve chord line whitespace, including NBSP.
+// BandHelper's display uses a proportional font: the width of a space is
+ // smaller than a monospace cell. Chord lines and lyric lines therefore need
+ // the SAME proportional font and white-space:pre to reproduce source layout.
+ // Unlike v4, no independent absolute-positioned chords can collide.
 const chordToken=/^(?:[A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|M|ø|°|\+|\-)?(?:\d{0,2})?(?:\([^\s)]*\))?(?:\/[A-G](?:#|b)?)?|N\/?C|NC|\||:|%|\/|\(|\)|\.|\-)+$/;
 function chartLineKind(line){
   const t=line.trim();
@@ -415,52 +538,396 @@ function renderChart(raw){
   chart.appendChild(fragment);
 }
 
+let selectedPerformanceSetlist=null, selectedPerformanceIndex=0, setBreakPending=null, viewingAllSongsInSetlist=false;
+function setlistBrowserUI(){
+ const on=Boolean(selectedPerformanceSetlist);
+ document.body.classList.toggle('active-setlist',on);
+ document.body.classList.toggle('all-songs-view',on&&viewingAllSongsInSetlist);
+ $('setlist-browser-bar').hidden=!on;
+ if(!on)return;
+ $('active-setlist-title').textContent='☷ '+selectedPerformanceSetlist.name;
+ $('toggle-setlist-library').textContent=viewingAllSongsInSetlist?'Show Setlist':'All Songs';
+ $('filter').hidden=!viewingAllSongsInSetlist;
+}
+$('toggle-setlist-library').onclick=()=>{viewingAllSongsInSetlist=!viewingAllSongsInSetlist;$('search').value='';drawList()};
+$('exit-setlist').onclick=()=>{if(!confirm('Exit active setlist? Your saved setlist will not be deleted.'))return;selectedPerformanceSetlist=null;setBreakPending=null;viewingAllSongsInSetlist=false;clearSetBreak();for(const el of ['setlist-prev','setlist-next','setlist-info','float-setlist-prev','float-setlist-next','setlist-resume'])$(el).hidden=true;history.replaceState(null,'',location.pathname);drawList()};
+function setNumberAt(index){return 1+(selectedPerformanceSetlist?.breaks||[]).filter(n=>n<=index).length}
+function updateSetlistControls(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const number=setNumberAt(selectedPerformanceIndex);
+ $('setlist-info').textContent=`${sl.name} · Set ${number} · ${selectedPerformanceIndex+1}/${sl.ids.length}`;
+ $('setlist-prev').disabled=selectedPerformanceIndex===0&&setBreakPending===null&&!(sl.breaks.includes(0));
+ $('setlist-next').disabled=selectedPerformanceIndex===sl.ids.length-1&&setBreakPending===null;
+ $('setlist-next').textContent=setBreakPending?`Begin Set ${number+1} ▶`:'Next ▶';
+ $('float-setlist-prev').hidden=false;$('float-setlist-next').hidden=false;
+ $('float-setlist-prev').disabled=$('setlist-prev').disabled;
+ $('float-setlist-next').disabled=$('setlist-next').disabled;
+ $('float-setlist-next').title=setBreakPending?`Begin Set ${number+1}`:'Next setlist song';
+ $('float-setlist-next').setAttribute('aria-label',$('float-setlist-next').title);
+ $('float-setlist-prev').setAttribute('aria-label','Previous setlist song');
 
+ $('setlist-resume').hidden=setBreakPending!==null||String(currentId)===String(sl.ids[selectedPerformanceIndex]);
+}
+function clearSetBreak(){setBreakPending=null;document.body.classList.remove('showing-set-break');$('set-break-screen').hidden=true;}
+function openSelectedSetlist(){
+ const id=new URLSearchParams(location.search).get('setlist');
+ if(!id||!musician?.id||!songs.length)return false;
+ try{
+  const lists=JSON.parse(localStorage.getItem('musician-setlists-v1:'+musician.id)||'[]');
+  const sl=lists.find(s=>String(s.id)===id);
+  if(!sl||!Array.isArray(sl.songIds))return false;
+  // Keep the original index positions so set breaks do not drift if a chart is missing.
+  const ids=sl.songIds.map(String);
+  const breaks=(Array.isArray(sl.breaks)?sl.breaks:(Number.isInteger(sl.breakAfter)?[sl.breakAfter]:[]))
+   .filter(n=>Number.isInteger(n)&&n>=0&&n<ids.length).sort((a,b)=>a-b);
+  if(!ids.length)return false;
+  selectedPerformanceSetlist={name:sl.name,ids,breaks};selectedPerformanceIndex=0;viewingAllSongsInSetlist=false;
+  for(const el of ['setlist-prev','setlist-info','setlist-next'])$(el).hidden=false;
+  goToSetlistIndex(0);if(breaks.includes(0))showSetBreakAt(0);return true;
+ }catch(e){console.warn('Could not open setlist',e);return false}
+}
+function goToSetlistIndex(index){
+ const sl=selectedPerformanceSetlist;if(!sl||index<0||index>=sl.ids.length)return;
+ const song=songs.find(s=>String(s.id)===sl.ids[index]);
+ if(!song){alert('This setlist song was not found in your library. Open the Setlist Manager to correct it.');return}
+ clearSetBreak();selectedPerformanceIndex=index;showSong(song);updateSetlistControls();drawList();
+}
+function showSetBreakAt(boundary){
+ pauseAutoScroll();setBreakPending=boundary;document.body.classList.add('showing-set-break');$('set-break-screen').hidden=false;
+ const priorNumber=1+(selectedPerformanceSetlist?.breaks||[]).filter(n=>n<boundary).length;
+ const endNumber=Math.max(1,priorNumber);
+ $('set-break-heading').textContent='End of Set '+endNumber;
+ $('continue-next-set').textContent='▶ Begin Set '+(endNumber+1);
+ $('stage').scrollTop=0;updateSetlistControls();
+}
+function setlistNext(){
+ const sl=selectedPerformanceSetlist;if(!sl)return;
+ const next=selectedPerformanceIndex+1;
+ if(next>=sl.ids.length)return;
+ if(setBreakPending!==null){goToSetlistIndex(next);return}
+ if(sl.breaks.includes(next)){showSetBreakAt(next);return;}
+ goToSetlistIndex(next);
+}
+function setlistPrevious(){
+ if(!selectedPerformanceSetlist)return;
+ if(setBreakPending!==null){goToSetlistIndex(Math.max(0,setBreakPending-1));return}
+ if(selectedPerformanceSetlist.breaks.includes(selectedPerformanceIndex)){showSetBreakAt(selectedPerformanceIndex);return;}
+ goToSetlistIndex(selectedPerformanceIndex-1);
+}
+let editorActive=false;
+function closeEditor(){editorActive=false;}
+$('editor-launch').onclick=()=>{if(!onlineConnected){performanceToast('Connect to the internet to manage or edit songs.');return}location.href='subscriber-library-test.html'};
+function showSong(s){if(editorActive&&s.id!==currentId&&!confirm('Discard unsaved song edits?'))return; if(editorActive)closeEditor();clearSetBreak();pauseAutoScroll();currentId=s.id;try{localStorage.setItem('subscriber-performance-selected:'+signedInUserId,s.id)}catch{}$('song-title').textContent=s.title||'Untitled';$('song-artist').textContent=s.artist||'';$('song-status').textContent=statusOf(s)+(chartOf(s).trim()?'':' · Chart missing');renderChart(chartOf(s).trim()?chartOf(s):'No lyrics or chords yet. This song is still in your library.');$('stage').scrollTop=0;hideMessage();if(showMode==='playing')$('library').hidden=true;drawList();updateSetlistControls();syncRecordButtons();loadSubscriberScroll()}
+function drawList(){
+ const term=searchKey($('search').value),filter=$('filter').value;
+ const active=selectedPerformanceSetlist&&!viewingAllSongsInSetlist;
+ setlistBrowserUI();
+ const list=$('song-list'),rail=$('az-rail');list.replaceChildren();rail.replaceChildren();
+ const matches=s=>searchKey(`${s.title||''} ${s.artist||''}`).includes(term);
+ if(active){
+  let matching=0;
+  selectedPerformanceSetlist.ids.forEach((id,i)=>{
+   if(selectedPerformanceSetlist.breaks.includes(i)){
+    const br=document.createElement('div');br.className='setlist-break-row';br.textContent=`☕ SET BREAK · SET ${setNumberAt(i)}`;list.append(br);
+   }
+   const s=songs.find(x=>String(x.id)===id);
+   if(s&&!matches(s))return;
+   matching++;
+   const b=document.createElement('button');b.type='button';b.className='song-row'+(i===selectedPerformanceIndex?' setlist-current':'');
+   const title=document.createElement('div');title.className='song-name';title.textContent=(i===selectedPerformanceIndex?'▶ ':'')+(i+1)+'. '+(s?.title||'Missing song');
+   const meta=document.createElement('div');meta.className='song-meta';meta.textContent=s?(s.artist||'Unknown artist'):'Song is missing from your library';
+   b.append(title,meta);b.onclick=()=>goToSetlistIndex(i);list.append(b);
+   if(i===selectedPerformanceIndex&&!term)requestAnimationFrame(()=>{if(!list.contains(b))return;const r=b.getBoundingClientRect(),outer=list.getBoundingClientRect();if(r.top<outer.top||r.bottom>outer.bottom)b.scrollIntoView({block:'nearest'});});
+  });
+  $('count').textContent=`${matching} of ${selectedPerformanceSetlist.ids.length} setlist songs`;
+  return;
+ }
+ const shown=songs.filter(matches).filter(s=>filter==='all'||(filter==='ready'&&statusOf(s)==='Ready to Play')||(filter==='learning'&&statusOf(s)==='Learning song')||(filter==='missing'&&!chartOf(s).trim()));
+ $('count').textContent=`${shown.length} of ${songs.length} songs`;
+ const sections=new Map(),frag=document.createDocumentFragment();
+ const letterFor=s=>{const a=String(s.title||'').trim().charAt(0).toUpperCase();return /^[A-Z]$/.test(a)?a:'#'};
+ for(const s of shown){
+  const letter=letterFor(s);
+  if(!sections.has(letter)){const heading=document.createElement('div');heading.className='az-heading';heading.textContent=letter;sections.set(letter,heading);frag.append(heading)}
+  const btn=document.createElement('button');btn.type='button';btn.className='song-row'+(s.id===currentId?' active':'');
+  const title=document.createElement('div');title.className='song-name';title.textContent=s.title||'Untitled';
+  const meta=document.createElement('div');meta.className='song-meta';meta.textContent=(s.artist||'Unknown artist')+' · '+statusOf(s)+(chartOf(s).trim()?'':' · Needs chart');
+  btn.append(title,meta);btn.onclick=()=>showSong(s);frag.append(btn);
+ }
+ list.append(frag);
+ // Measure positions in list content coordinates, never from sticky viewport coordinates.
+ const positions=new Map();let contentY=0;
+ for(const child of list.children){
+  if(child.classList.contains('az-heading'))positions.set(child.textContent,contentY);
+  contentY+=child.getBoundingClientRect().height;
+ }
+ for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){
+  const btn=document.createElement('button');btn.type='button';btn.textContent=letter;
+  btn.setAttribute('aria-label','Jump to '+letter);btn.disabled=!positions.has(letter);
+  if(btn.disabled)btn.style.opacity='.28';
+  btn.addEventListener('click',()=>{
+   const top=positions.get(letter);if(top===undefined)return;
+   list.scrollTop=Math.min(top,Math.max(0,list.scrollHeight-list.clientHeight));
+  });
+  rail.append(btn);
+ }
+}
 
-// The same stage controls and saved appearance used by online Performance.
-let showMode='between',returnFocus=null;
+async function connect(){
+ if(syncingLibrary)return syncingLibrary;
+ syncingLibrary=connectCore();
+ try{return await syncingLibrary}finally{syncingLibrary=null}
+}
+function clearPrivateStage(){
+ clearOwnerVolume();
+ $('public-page-link').hidden=true;$('public-page-link').removeAttribute('href');accessEpoch++;scrollLoad++;pauseAutoScroll();clearLiveRequests();signedInUserId=null;onlineConnected=false;musician=null;songs=[];currentId=null;
+ selectedPerformanceSetlist=null;recentDiceIds=[];diceSuggestion=null;loggedThisTab.clear();
+ for(const id of ['chart','song-list','az-rail'])$(id).replaceChildren();
+ for(const id of ['song-title','song-artist','song-status','record-feedback','editor-text','dice-choice','dice-artist','performance-toast','show-feedback','show-venue']){$(id).textContent='';$(id).value='';}
+ for(const id of ['history-panel','request-panel','song-editor','dice-panel','setlists-panel'])$(id).hidden=true;
+ timingRecording=null;timingPlayback=null;learnedAt=null;offlineSnapshot=null;downloadEpoch++;$('device-status').textContent='Sign in to prepare or use this device’s private download.';$('workspace-name').textContent='Performance';$('song-count-status').textContent='Your library';$('count').textContent='';
+ setBusy('SIGN IN REQUIRED');showMessage('Sign in to your musician account to open your private library.');
+ const a=document.createElement('a');a.href='subscriber-signup-test.html';a.textContent=' Sign in';$('message').append(a);syncShowControls();
+}
+async function connectCore(){
+ if(!navigator.onLine){await savedLibrary();useOffline();return}let epoch=++accessEpoch;onlineConnected=false;clearLiveRequests();
+ try{
+  connectionUI('checking');await delayLimit(ensureSupabaseSdk());if(epoch!==accessEpoch)return;
+  if(!db){
+   db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storageKey:'musician-subscriber-beta-auth-v1',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+   db.auth.onAuthStateChange?.((event,session)=>{if(event==='SIGNED_OUT'||event==='USER_DELETED'||(signedInUserId&&session?.user?.id&&session.user.id!==signedInUserId))clearPrivateStage()});
+  }
+  const auth=await delayLimit(db.auth.getUser());if(epoch!==accessEpoch)return;if(auth.error)throw auth.error;
+  if(!auth.data?.user){clearPrivateStage();return;}
+  const user=auth.data.user;if(deviceUser()!==user.id){clearPrivateStage();return}if(signedInUserId&&signedInUserId!==user.id){clearPrivateStage();epoch=++accessEpoch;}const lookup=await delayLimit(db.rpc('beta_my_workspace'));if(epoch!==accessEpoch)return;
+  if(lookup.error)throw lookup.error;const m=lookup.data;if(!m)throw Error('Finish setting up your musician page first.');
+  const loaded=[];
+  for(let offset=0;;offset+=500){
+   const r=await delayLimit(db.from('songs').select('id,title,artist,lyrics_chords,song_status,public_request_enabled').eq('musician_id',m.id).eq('is_active',true).order('id').range(offset,offset+499),20000);
+   if(epoch!==accessEpoch||deviceUser()!==user.id)return;if(r.error)throw r.error;loaded.push(...r.data||[]);if((r.data||[]).length<500)break;
+  }
+  if(epoch!==accessEpoch||deviceUser()!==user.id)return;signedInUserId=user.id;musician=m;onlineConnected=true;
+  loaded.sort((a,b)=>(a.title||'').localeCompare(b.title||'')||(a.artist||'').localeCompare(b.artist||'')||a.id.localeCompare(b.id));
+  $('public-page-link').href='subscriber-audience-preview.html?musician='+encodeURIComponent(m.slug);$('public-page-link').hidden=false;applySubscriberChartFont();$('workspace-name').textContent=m.display_name+' · Performance';
+  fillLibrary(loaded,false);MusicianDevice.attach(db);MusicianDevice.schedule();await refreshRequests();
+ }catch(e){if(epoch!==accessEpoch)return;if(!deviceUser()){clearPrivateStage();return}if(!songs.length)await savedLibrary();if(epoch!==accessEpoch)return;useOffline('Connection unavailable. Connect to load your library, then prepare this device for offline use.');}
+}
+$('save-offline').onclick=async()=>{if(!navigator.onLine){alert('Connect to the internet to refresh your library.');return;}$('save-offline').disabled=true;try{await connect()}finally{$('save-offline').disabled=false}};
+$('setlist-prev').onclick=setlistPrevious;$('setlist-next').onclick=setlistNext;$('continue-next-set').onclick=setlistNext;$('setlist-resume').onclick=()=>goToSetlistIndex(selectedPerformanceIndex);
+$('songs-btn').onclick=()=>{$('library').hidden=!$('library').hidden};$('filter').value='ready';$('search').oninput=drawList;$('filter').onchange=drawList;
+function changeFont(delta){fontSize=Math.max(14,Math.min(48,fontSize+delta));$('chart').style.fontSize=fontSize+'px';if(currentId){const active=songs.find(s=>s.id===currentId);if(active)renderChart(chartOf(active))}localStorage.setItem('subscriber-performance-font-size',String(fontSize))}
+$('smaller').onclick=()=>changeFont(-2);$('larger').onclick=()=>changeFont(2);
+// Only the musician's account can be queried; Supabase RLS remains authoritative.
+function requestTitle(r){return String(r.song_title||r.title||r.song_name||r.song?.title||'Requested song')}
+function requestArtist(r){return String(r.artist||r.song_artist||r.song?.artist||'')}
+function isPending(r){const v=String(r.status||r.request_status||'pending').toLowerCase();return !['played','rejected','declined','cancelled','canceled','completed','done'].includes(v)}
+function requestSong(r){
+ const id=r.song_id||r.requested_song_id;
+ if(id){const found=songs.find(s=>String(s.id)===String(id));if(found)return found;}
+ const title=requestTitle(r).trim().toLocaleLowerCase();
+ const artist=requestArtist(r).trim().toLocaleLowerCase();
+ let hits=songs.filter(s=>String(s.title||'').trim().toLocaleLowerCase()===title);
+ if(artist)hits=hits.filter(s=>String(s.artist||'').trim().toLocaleLowerCase()===artist);
+ return hits.length===1?hits[0]:null;
+}
+function setMode(mode){if(mode==='playing'&&editorActive){if(!confirm('Discard unsaved edits and enter Playing Mode?'))return;closeEditor();}showMode=mode==='between'?'between':'playing';if(showMode==='playing'){$('setlists-panel').hidden=true;$('setlists-btn').classList.remove('panel-open');}if(showMode==='playing'){$('library').hidden=true;} document.body.classList.toggle('mode-playing',showMode==='playing');if(showMode!=='playing'){$('library').hidden=false;pauseAutoScroll();setToolbarHidden(false);}else{$('dice-panel').hidden=true;} localStorage.setItem('subscriber-performance-start-mode',showMode);$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('mode-hint').textContent=showMode==='playing'?"Playing: requests are visible, but can't replace your current chart.":'Between Songs: tap a request to open its chart. Requests are not automatically marked played.';drawRequests()}
+// Compact, non-interrupting song titles on the Playing screen.
+// Only authenticated owner queries; public customers use the existing beta RPCs.
+async function liveOwner(){
+ const epoch=accessEpoch;
+ if(!db||!navigator.onLine||!onlineConnected)throw new Error('Connect online and sign in to receive requests.');
+ const {data,error}=await delayLimit(db.auth.getUser());if(error)throw error;
+ if(!data?.user||data.user.id!==signedInUserId||!musician||epoch!==accessEpoch)throw new Error('Your account changed. Reopen Performance from your Song Library.');
+ return musician.id;
+}
+async function activeRequestShow(owner){
+ const {data,error}=await delayLimit(db.from('shows').select('id,show_date,start_time').eq('musician_id',owner).eq('requests_open',true).order('created_at',{ascending:false}).limit(2));
+ if(error)throw error;if(data?.length>1)throw new Error('Multiple open shows. Close the extra shows in the dashboard.');
+ return data?.[0]||null;
+}
+function drawFloatingRequests(pending){
+ const floating=$('float-requests');floating.replaceChildren();
+ const heading=document.createElement('span');heading.className='request-float-head';heading.textContent='SONG REQUESTS';floating.append(heading);
+ if(!onlineConnected){const e=document.createElement('span');e.className='request-float-empty';e.textContent='Offline · live requests unavailable';floating.append(e);return;}if(!pending.length){const e=document.createElement('span');e.className='request-float-empty';e.textContent=requestsError?'Connection unavailable':!requestOwner?'Sign in to connect':!requestShowId?'No active show':'No unplayed requests';floating.append(e);return;}
+ for(const r of pending.slice(0,3)){const row=document.createElement('span');row.className='request-float-row';const name=document.createElement('span');name.className='request-float-title';name.textContent=r.song;row.append(name);floating.append(row)}
+}
+let requestRenderSignature='';
+function drawRequests(){
+ syncRecordButtons();
+ const signature=JSON.stringify([incomingRequests,requestsError,requestOwner,requestShowId,showMode,markingRequest,navigator.onLine]);
+ if(signature===requestRenderSignature)return;
+ requestRenderSignature=signature;
+ const list=$('request-list');list.replaceChildren();const pending=incomingRequests.filter(isPending);
+ $('request-button-label').textContent=onlineConnected?`Requests (${pending.length})`:'Requests · offline';drawFloatingRequests(pending);renderOwnerVolume();
+ $('float-requests').classList.toggle('has-requests',pending.length>0);$('requests-btn').classList.toggle('has-requests',pending.length>0);
+ syncRecordButtons();syncShowControls();$('show-state').textContent=requestsError?'Live requests unavailable':!requestOwner?'Sign in to your musician account':requestShowId?'Connected · Requests OPEN':'Connected · No active show';
+ $('request-info').textContent=requestsError|| (requestShowId?`${pending.length} unplayed requests · Latest 100 submissions · Updates every 10 seconds.`:'Start a show below to record songs played and receive requests.');
+ for(const r of incomingRequests){
+  const item=document.createElement('div');item.className='request-item'+(r.status==='played'?' is-played':'');
+  const summary=document.createElement('div');summary.className='request-summary';
+  const title=document.createElement('div');title.className='request-title';title.textContent=r.song+(r.status==='played'?' · PLAYED':'');
+  const details=document.createElement('div');details.className='request-details';details.style.whiteSpace='pre-wrap';details.style.overflowWrap='anywhere';details.textContent=[r.artist,r.requester_name?'From: '+r.requester_name:'',r.notes?'Notes: '+r.notes:''].filter(Boolean).join(' · ');summary.append(title,details);item.append(summary);
+  const match=songs.find(s=>s.id===r.song_id);
+  const open=document.createElement('button');open.type='button';open.className='request-open';open.textContent=showMode==='playing'?'Locked':match?'Open':'No chart';open.disabled=showMode!=='between'||!match;open.onclick=()=>{if(showMode!=='between'||!match)return;showSong(match);$('request-panel').hidden=true};item.append(open);
+  if(isPending(r)){const mark=document.createElement('button');mark.type='button';mark.className='request-mark';mark.textContent='✓ Played';mark.disabled=!requestShowId||markingRequest||!navigator.onLine;mark.onclick=()=>markLiveRequestPlayed(r);item.append(mark)}
+  list.append(item);
+ }
+}
+async function refreshRequests(){
+ if(requestLoading||markingRequest)return;
+ requestLoading=true;const epoch=++requestEpoch;
+ try{
+  const owner=await liveOwner();const show=await activeRequestShow(owner);
+  let rows=[];
+  if(show){const result=await delayLimit(db.from('requests').select('id,song_id,requester_name,notes,status,created_at').eq('musician_id',owner).eq('show_id',show.id).order('created_at',{ascending:false}).order('id').limit(100));if(result.error)throw result.error;rows=result.data||[];}
+  if(epoch!==requestEpoch)return;
+  requestsError='';requestOwner=owner;requestShowId=show?.id||null;
+  incomingRequests=rows.map(r=>({...r,show_id:show.id,song:songs.find(s=>s.id===r.song_id)?.title||'Song unavailable',artist:songs.find(s=>s.id===r.song_id)?.artist||''}));
+ }catch(e){if(epoch===requestEpoch){incomingRequests=[];requestShowId=null;requestOwner=null;requestsError=e?.message||String(e);if(e instanceof TypeError||/network|failed to fetch|connection timed out|load failed/i.test(requestsError))useOffline()}}
+ finally{if(epoch===requestEpoch){requestLoading=false;drawRequests();refreshOwnerVolume()}}
+}
+async function markRequestWithoutHistory(r){
+ if(markingRequest||r.show_id!==requestShowId)return;
+ cancelRequestPoll();markingRequest=true;drawRequests();
+ try{
+  const owner=await liveOwner();const show=await activeRequestShow(owner);
+  if(!show||show.id!==r.show_id)throw new Error('The show changed. Refresh requests before marking played.');
+  const {data,error}=await delayLimit(db.from('requests').update({status:'played'}).eq('id',r.id).eq('musician_id',owner).eq('show_id',r.show_id).eq('status',r.status).select('id,status'));
+  if(error)throw error;if(data?.length!==1||data[0].status!=='played')throw new Error('Request changed or was not saved. Refresh and try again.');
+ }catch(e){alert(e?.message||String(e))}
+ finally{markingRequest=false;await refreshRequests()}
+}
+
+async function markLiveRequestPlayed(r){
+ if(markingRequest||r.show_id!==requestShowId)return;
+ if(historyTracking)await recordSongPerformance(r.song_id,r.show_id);else await markRequestWithoutHistory(r);
+}
+function diceRoll(){const ready=songs.filter(s=>statusOf(s)==='Ready to Play'&&s.id!==currentId);let choices=ready.filter(s=>!recentDiceIds.includes(s.id));if(!choices.length){recentDiceIds=[];choices=ready}if(!choices.length){$('dice-choice').textContent='No other Ready to Play songs';$('dice-artist').textContent='';diceSuggestion=null;$('play-dice').disabled=true;return}diceSuggestion=choices[Math.floor(Math.random()*choices.length)];recentDiceIds.push(diceSuggestion.id);if(recentDiceIds.length>15)recentDiceIds.shift();$('dice-choice').textContent=diceSuggestion.title||'Untitled';$('dice-artist').textContent=diceSuggestion.artist||'';$('play-dice').disabled=false}
+// Setlist menu belongs to Between Songs; selection never forces a setlist on free-playing musicians.
+function showSavedSetlists(){
+ if(showMode==='playing')setMode('between');
+ const target=$('setlists-choices');target.replaceChildren();
+ let saved=[];
+ try{saved=JSON.parse(localStorage.getItem('musician-setlists-v1:'+musician.id)||'[]')}catch(e){}
+ if(!Array.isArray(saved))saved=[];
+ for(const sl of saved){
+  if(!sl||!sl.id||!Array.isArray(sl.songIds))continue;
+  const b=document.createElement('button');b.type='button';b.className='setlist-choice';
+  const name=document.createElement('span');name.className='setlist-choice-name';name.textContent=sl.name||'Unnamed Setlist';
+  const count=document.createElement('span');count.className='setlist-choice-count';count.textContent=sl.songIds.length+' songs →';
+  b.append(name,count);
+  b.onclick=()=>{location.href='subscriber-performance-test.html?setlist='+encodeURIComponent(sl.id)};
+  target.append(b);
+ }
+ if(!target.childElementCount){const msg=document.createElement('div');msg.className='setlist-empty';msg.textContent='No locally saved setlists yet. Create one in Setlist Studio.';target.append(msg)}
+ $('setlists-panel').hidden=false;$('setlists-btn').classList.add('panel-open');
+}
+$('setlists-btn').onclick=showSavedSetlists;
+$('close-setlists').onclick=()=>{$('setlists-panel').hidden=true;$('setlists-btn').classList.remove('panel-open')};
+$('open-setlist-studio').onclick=()=>{location.href='subscriber-library-test.html'};
+$('playing-btn').onclick=()=>setMode('playing');$('between-btn').onclick=()=>setMode('between');
+function toggleRequestPanel(){$('dice-panel').hidden=true;$('request-panel').hidden=!$('request-panel').hidden;if(!$('request-panel').hidden)refreshRequests()}
+$('requests-btn').onclick=toggleRequestPanel;$('float-requests').onclick=toggleRequestPanel;
+$('refresh-requests').onclick=refreshRequests;$('close-requests').onclick=()=>{$('request-panel').hidden=true};
+let rollingDice=false;
+function rollAnimated(){
+ if(rollingDice)return;
+ rollingDice=true;
+ const die=$('dice-btn');die.classList.remove('is-rolling');void die.offsetWidth;die.classList.add('is-rolling');
+ $('dice-choice').textContent='Rolling…';$('dice-artist').textContent='';$('play-dice').disabled=true;
+ window.setTimeout(()=>{diceRoll();rollingDice=false;die.classList.remove('is-rolling')},550);
+}
+$('dice-btn').onclick=()=>{$('request-panel').hidden=true;$('setlists-panel').hidden=true;$('appearance-panel').hidden=true;$('dice-panel').hidden=false;rollAnimated()};
+$('close-dice').onclick=()=>{$('dice-panel').hidden=true};$('reroll').onclick=rollAnimated;
+$('play-dice').onclick=()=>{if(diceSuggestion){showSong(diceSuggestion);$('dice-panel').hidden=true}};
+
+// Full-screen controls and opt-in per-song auto-scroll. Never starts automatically.
+let autoScrolling=false,scrollFrame=0,lastFrameTime=null,scrollPosition=0,scrollLoad=0,scrollLoading=false;
+let scrollSpeed=10;
+function updateScrollButtons(){
+ $('scroll-toggle').textContent=autoScrolling?'⏸ Pause':'▶ Scroll';
+ $('scroll-toggle').setAttribute('aria-label',autoScrolling?'Pause auto-scroll':'Start auto-scroll');
+ $('speed-down').title='Slower auto-scroll ('+scrollSpeed+' px/s)';
+ $('speed-up').title='Faster auto-scroll ('+scrollSpeed+' px/s)';$('stage-scroll-speed').value=String(Math.round(scrollSpeed*2));$('stage-scroll-label').textContent=String(Math.round(scrollSpeed*2));$('scroll-toggle').disabled=scrollLoading||!currentId;$('save-stage-speed').disabled=scrollLoading||!currentId||!onlineConnected||!!timingRead();$('stage-scroll-speed').disabled=!!timingRead();if(timingRead()){$('speed-down').title='Slower saved timing';$('speed-up').title='Faster saved timing';}
+}
+function pauseAutoScroll(){autoScrolling=false;if(scrollFrame)cancelAnimationFrame(scrollFrame);scrollFrame=0;lastFrameTime=null;updateScrollButtons()}
+function autoScrollStep(timestamp){
+ if(!autoScrolling||showMode!=='playing'||document.hidden){pauseAutoScroll();return;}
+ if(timingPlayback){if(lastFrameTime!==null&&!timingPlaybackStep(Math.max(0,Math.min((timestamp-lastFrameTime)/1000,.1))))return;lastFrameTime=timestamp;scrollFrame=requestAnimationFrame(autoScrollStep);return;}
+ if(lastFrameTime!==null){const elapsed=Math.max(0,Math.min((timestamp-lastFrameTime)/1000,.1));scrollPosition=Math.min(Math.max(0,$('stage').scrollHeight-$('stage').clientHeight),scrollPosition+scrollSpeed*elapsed);$('stage').scrollTop=scrollPosition;}
+ lastFrameTime=timestamp;
+ const stage=$('stage');
+ if(stage.scrollTop+stage.clientHeight>=stage.scrollHeight-2){pauseAutoScroll();return;}
+ scrollFrame=requestAnimationFrame(autoScrollStep);
+}
+function toggleAutoScroll(){
+ if(autoScrolling){pauseAutoScroll();return;}
+ if(showMode!=='playing'||!currentId||scrollLoading)return;
+ if(timingRecording){performanceToast('Finish or cancel your timing recording before starting Auto-Scroll.');return}if(beginTimingPlayback()){autoScrolling=true;lastFrameTime=null;updateScrollButtons();scrollFrame=requestAnimationFrame(autoScrollStep);return}
+ const stage=$('stage');if(stage.scrollHeight<=stage.clientHeight+1){performanceToast('The whole chart fits on screen.');return;}if(stage.scrollTop>=stage.scrollHeight-stage.clientHeight-1){performanceToast('End of chart. Use Back to top in Settings.');return;}
+ scrollPosition=stage.scrollTop;autoScrolling=true;lastFrameTime=null;updateScrollButtons();scrollFrame=requestAnimationFrame(autoScrollStep);
+}
+function adjustSpeed(delta){if(timingRead()&&!timingRecording){changeTimingRate(delta>0?.1:-.1);return}scrollSpeed=Math.max(.5,Math.min(50,scrollSpeed+delta));updateScrollButtons();$('stage-scroll-status').textContent='Speed changed. Tap Save speed to keep it.';}
+function setToolbarHidden(hidden){document.body.classList.toggle('toolbar-hidden',Boolean(hidden)&&showMode==='playing');syncHeaderHeight()}
+function syncHeaderHeight(){const h=document.querySelector('header').getBoundingClientRect().height;document.documentElement.style.setProperty('--header-height',h+'px')}
+$('hide-controls').onclick=()=>setToolbarHidden(true);
+$('restore-controls').onclick=()=>setToolbarHidden(false);
+$('float-smaller').onclick=()=>changeFont(-2);
+$('float-larger').onclick=()=>changeFont(2);
+$('scroll-toggle').onclick=toggleAutoScroll;
+$('speed-down').onclick=()=>adjustSpeed(-.5);
+$('speed-up').onclick=()=>adjustSpeed(.5);
+$('float-between').onclick=()=>setMode('between');
+$('float-library').onclick=()=>{setMode('between');if(!selectedPerformanceSetlist)$('filter').value='ready';drawList();$('library').hidden=false;};
+$('float-setlist-prev').onclick=setlistPrevious;
+$('float-setlist-next').onclick=setlistNext;
+
+// Optional song timer and toolbar preferences. Stored per browser and per song.
+const SCROLL_VIS_KEY='subscriber-performance-show-scroll-controls-v2';
+const LEARNING_ENABLED_KEY='subscriber-performance-learning-enabled-v2';
+const DURATIONS_KEY='subscriber-performance-learned-durations-v2';
 const TOOLBAR_SIZE_KEY='subscriber-performance-toolbar-scale-v2';
-function pauseAutoScroll(){pause()}
-function readPref(key,fallback){try{return localStorage.getItem(key)||fallback}catch{return fallback}}
-function syncHeaderHeight(){const height=document.querySelector('header').getBoundingClientRect().height;document.documentElement.style.setProperty('--header-height',height+'px')}
-function setToolbarHidden(){syncHeaderHeight()}
-function setMode(mode){showMode=mode==='playing'?'playing':'between';pause();document.body.classList.toggle('mode-playing',showMode==='playing');document.body.classList.remove('library-open');$('playing-btn').classList.toggle('chosen',showMode==='playing');$('between-btn').classList.toggle('chosen',showMode==='between');$('playing-btn').setAttribute('aria-pressed',String(showMode==='playing'));$('between-btn').setAttribute('aria-pressed',String(showMode==='between'));$('library').hidden=showMode==='playing';if(showMode==='between'&&innerWidth<=780)document.body.classList.add('library-open');$('appearance-panel').hidden=true;$('settings-btn').setAttribute('aria-expanded','false');try{localStorage.setItem('subscriber-performance-start-mode',showMode)}catch{}scheduleTransportPlacement();requestAnimationFrame(syncHeaderHeight)}
-function openLibrary(){pause();$('library').hidden=false;document.body.classList.add('library-open');$('search').focus()}
-function info(){pause();returnFocus=document.activeElement;$('return-online').hidden=!navigator.onLine;$('offline-info').hidden=false;$('close-offline-info').focus()}
-function closeInfo(){$('offline-info').hidden=true;returnFocus?.focus()}
-function changeSize(delta){pause();size=Math.max(14,Math.min(48,size+delta));document.documentElement.style.setProperty('--offline-chart-size',size+'px');try{localStorage.setItem('subscriber-performance-font-size',String(size))}catch{}}
-function syncSpeed(){const speed=Math.max(1,Math.min(100,Number($('speed').value)||20));$('speed').value=speed;$('speed-label').textContent=speed;$('scroll-toggle').setAttribute('aria-label',(scrollFrame?'Pause':'Start')+' auto-scroll at speed '+speed)}
-function useUiFont(value){const choice=['hand','modern','classic'].includes(value)?value:'hand';document.body.dataset.font=choice;$('ui-font-choice').value=choice;try{localStorage.setItem('subscriber-app-font-v1',choice)}catch{}}
-function syncConnection(){$('connection-status').textContent=navigator.onLine?'● Downloaded copy · internet available':'● Offline · downloaded copy';$('request-button-label').textContent='Requests · '+(navigator.onLine?'online view needed':'offline');$('playing-offline').textContent=navigator.onLine?'Downloaded copy · live tools unavailable':'Offline · downloaded songs';$('return-online').hidden=!navigator.onLine}
-$('playing-btn').onclick=()=>{if(snapshot?.songs.length&&!activeId)openSong(snapshot.songs.find(s=>s.song_status==='ready')?.id||snapshot.songs[0].id);setMode('playing')};
-$('between-btn').onclick=()=>setMode('between');$('float-between').onclick=()=>setMode('between');$('float-library').onclick=openLibrary;$('songs-btn').onclick=openLibrary;
-$('library-close').onclick=()=>{$('library').hidden=true;document.body.classList.remove('library-open');if(activeId)$('chart').focus()};
-$('settings-btn').onclick=()=>{pause();const visible=$('appearance-panel').hidden;$('appearance-panel').hidden=!visible;$('settings-btn').setAttribute('aria-expanded',String(visible));if(visible)$('close-appearance').focus()};
-$('close-appearance').onclick=()=>{$('appearance-panel').hidden=true;$('settings-btn').setAttribute('aria-expanded','false');$('settings-btn').focus()};
-for(const id of ['requests-btn','schedule-btn','volume-btn','show-controls-open','history-open','editor-launch','float-requests'])$(id).onclick=info;
-$('close-offline-info').onclick=closeInfo;
-$('settings-smaller').onclick=()=>changeSize(-2);$('settings-larger').onclick=()=>changeSize(2);
-$('speed').oninput=syncSpeed;$('speed-down').onclick=()=>{$('speed').value=Math.max(1,Number($('speed').value)-1);syncSpeed()};$('speed-up').onclick=()=>{$('speed').value=Math.min(100,Number($('speed').value)+1);syncSpeed()};
-$('stage-top').onclick=()=>{pause();$('stage').scrollTop=0};$('ui-font-choice').onchange=e=>useUiFont(e.target.value);
-$('setting-show-scroll').onchange=()=>{document.body.classList.toggle('show-scroll-controls',$('setting-show-scroll').checked);try{localStorage.setItem('subscriber-performance-show-scroll-controls-v2',String($('setting-show-scroll').checked))}catch{}scheduleTransportPlacement()};
-$('reset-toolbar').onclick=()=>{toolbarScale=1;applyToolbarScale();persistToolbarSize();setTransportPlacement('bottom',0)};
-$('dice-btn').onclick=()=>{if(!snapshot||snapshot.userId!==identity()){lock();return}const ready=snapshot.songs.filter(s=>s.song_status==='ready'&&s.id!==activeId),pool=ready.length?ready:snapshot.songs.filter(s=>s.song_status==='ready');if(!pool.length){$('message').textContent='No Ready to Play songs in this downloaded library.';return}openSong(pool[Math.floor(Math.random()*pool.length)].id)};
-document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('offline-info').hidden)closeInfo();else if(!$('appearance-panel').hidden)$('close-appearance').onclick();else if(document.body.classList.contains('library-open'))$('library-close').onclick();else if(showMode==='playing')setMode('between')});
-for(const event of ['touchstart','wheel','pointerdown','keydown'])$('stage').addEventListener(event,pause,{passive:true});
-let pinchStart=null;
-$('stage').addEventListener('touchstart',e=>{if(e.touches.length!==2||!e.target.closest('#chart'))return;const [a,b]=e.touches;pinchStart={distance:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),size}},{passive:true});
-$('stage').addEventListener('touchmove',e=>{if(!pinchStart||e.touches.length!==2)return;e.preventDefault();const [a,b]=e.touches;size=Math.max(14,Math.min(48,pinchStart.size*Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)/Math.max(1,pinchStart.distance)));document.documentElement.style.setProperty('--offline-chart-size',size+'px')},{passive:false});
-$('stage').addEventListener('touchend',e=>{if(pinchStart&&e.touches.length<2){pinchStart=null;try{localStorage.setItem('subscriber-performance-font-size',String(size))}catch{}}},{passive:true});
-let libraryDrag=null,libraryWidth=Number(readPref('subscriber-performance-library-width-v1','340'))||340;
-function librarySize(){libraryWidth=Math.max(220,Math.min(Math.max(220,innerWidth-278),libraryWidth));document.documentElement.style.setProperty('--library-pane-width',libraryWidth+'px')}
-$('library-resizer').addEventListener('pointerdown',e=>{if(innerWidth<=780)return;e.preventDefault();pause();libraryDrag={id:e.pointerId,x:e.clientX,width:libraryWidth};try{$('library-resizer').setPointerCapture(e.pointerId)}catch{}document.body.classList.add('resizing-library')});
-window.addEventListener('pointermove',e=>{if(!libraryDrag||e.pointerId!==libraryDrag.id)return;libraryWidth=libraryDrag.width+e.clientX-libraryDrag.x;librarySize()});
-function endLibraryResize(e){if(!libraryDrag||e.pointerId!==libraryDrag.id)return;libraryDrag=null;document.body.classList.remove('resizing-library');try{localStorage.setItem('subscriber-performance-library-width-v1',String(libraryWidth))}catch{}}
-window.addEventListener('pointerup',endLibraryResize);window.addEventListener('pointercancel',endLibraryResize);
-$('library-resizer').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();libraryWidth+=e.key==='ArrowRight'?30:-30;librarySize();try{localStorage.setItem('subscriber-performance-library-width-v1',String(libraryWidth))}catch{}});
-for(const letter of ['#',...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']){const b=document.createElement('button');b.type='button';b.textContent=letter;b.setAttribute('aria-label','Jump to '+letter);b.onclick=()=>{const h=[...$('song-list').querySelectorAll('.az-heading')].find(h=>h.dataset.letter===letter);if(h)$('song-list').scrollTop=h.offsetTop-$('song-list').offsetTop};$('az-rail').append(b)}
-window.addEventListener('resize',()=>{pause();syncHeaderHeight();librarySize()});window.addEventListener('online',syncConnection);window.addEventListener('offline',syncConnection);
-function initializePerformance(){useUiFont(readPref('subscriber-app-font-v1','hand'));changeSize(0);syncSpeed();syncConnection();librarySize();$('setting-show-scroll').checked=readPref('subscriber-performance-show-scroll-controls-v2','true')!=='false';document.body.classList.toggle('show-scroll-controls',$('setting-show-scroll').checked);applyToolbarScale();requestAnimationFrame(syncHeaderHeight);loadSaved()}
+let learnedAt=null;
+// Record manual scroll position over time; replay only on an explicit Scroll press.
+let timingRecording=null,timingPlayback=null,timingClock=0,timingRate=1;
+const TIMING_KEY='subscriber-scroll-timing-v1';
+function timingKey(){return signedInUserId+':'+musician?.id+':'+currentId}
+function timingHash(){let hash=2166136261;const value=$('chart').textContent;for(let i=0;i<value.length;i++)hash=Math.imul(hash^value.charCodeAt(i),16777619);return(hash>>>0).toString(16)}
+function timingRead(){try{const all=JSON.parse(localStorage.getItem(TIMING_KEY)||'{}'),v=all[timingKey()];if(v?.version!==1||v.hash!==timingHash()||!Array.isArray(v.points)||v.points.length<2||!Number.isFinite(v.duration)||v.duration<1000)return null;let last=-1;for(const p of v.points){if(!Array.isArray(p)||!Number.isFinite(p[0])||p[0]<last||!Number.isFinite(p[1])||p[1]<0||p[1]>1)return null;last=p[0]}return v}catch{return null}}
+function timingStore(value){const all=JSON.parse(localStorage.getItem(TIMING_KEY)||'{}');if(value)all[timingKey()]=value;else delete all[timingKey()];localStorage.setItem(TIMING_KEY,JSON.stringify(all))}
+function timingPoint(){const stage=$('stage'),end=Math.max(0,stage.scrollHeight-stage.clientHeight);return end?Math.min(1,Math.max(0,stage.scrollTop/end)):0}
+function recordTimingPoint(force=false){if(!timingRecording)return;const elapsed=performance.now()-timingRecording.started,points=timingRecording.points,prev=points[points.length-1];if(elapsed>7200000||points.length>15000){cancelTiming('Recording limit reached. Your previous timing is kept.');return}if(force||elapsed-prev[0]>=120){const position=timingPoint();if(elapsed-prev[0]>250&&position!==prev[1])points.push([Math.round(elapsed-80),prev[1]]);points.push([Math.round(elapsed),position])}}
+function timingStatus(message){const saved=timingRead();$('learning-feedback').textContent=message||(timingRecording?'Recording: play the song and scroll manually. Finish & save when done.':saved?'Saved scroll timing: '+Math.round(saved.duration/1000)+' seconds · on this device. Press Scroll in Playing to replay.':'No scroll timing saved for this song.');$('timing-rate').textContent=Math.round(timingRate*100)+'%';$('timing-clear').disabled=!saved||!!timingRecording;$('timing-restart').disabled=!currentId;$('learning-start').textContent=saved?'↻ Record timing again':'▶ Learn scroll timing';$('learning-stop').textContent='■ Finish & save';updateScrollButtons();}
+function startTiming(){if(!currentId)return;if(timingRecording&&!confirm('Restart this recording from the beginning? Your previous saved timing stays until you finish.'))return;pauseAutoScroll();setMode('playing');$('appearance-panel').hidden=true;$('stage').scrollTop=0;timingPlayback=null;timingRecording={key:timingKey(),hash:timingHash(),started:performance.now(),points:[[0,0]]};learnedAt={id:String(currentId)};$('setting-learning').checked=true;try{localStorage.setItem(LEARNING_ENABLED_KEY,'true')}catch{}syncLearningControls();performanceToast('Recording scroll timing. Scroll manually as you play; tap Finish & save when done.');}
+function finishTiming(){if(!timingRecording)return;recordTimingPoint(true);const r=timingRecording;if(!r)return;const duration=performance.now()-r.started;if(r.key!==timingKey()||r.hash!==timingHash()){cancelTiming('Song changed. Previous timing kept.');return}if(duration<1000||!r.points.some(p=>p[1]>.005)){performanceToast('Scroll through the chart before saving its timing.');return}try{timingStore({version:1,hash:r.hash,duration:Math.round(duration),points:r.points,rate:1});timingRate=1;timingRecording=null;learnedAt=null;timingPlayback=null;syncLearningControls();performanceToast('Scroll timing saved on this device. Next time, tap Scroll to replay it.')}catch{performanceToast('Could not save timing on this device. Your previous timing is kept.')}}
+function cancelTiming(message){timingRecording=null;learnedAt=null;timingPlayback=null;syncLearningControls();if(message)timingStatus(message)}
+function savedTimingPosition(v,ms){const points=v.points;let i=1;while(i<points.length&&points[i][0]<ms)i++;if(i>=points.length)return points[points.length-1][1];const a=points[i-1],b=points[i],f=b[0]===a[0]?1:Math.max(0,Math.min(1,(ms-a[0])/(b[0]-a[0])));return a[1]+(b[1]-a[1])*f}
+function beginTimingPlayback(){if(timingRecording)return false;const v=timingRead();if(!v)return false;if(!timingPlayback||timingPlayback.key!==timingKey()){timingPlayback={key:timingKey(),value:v};timingClock=0;timingRate=Number(v.rate)||1;$('stage').scrollTop=0}return true}
+function timingPlaybackStep(elapsed){timingClock+=elapsed*1000*timingRate;const stage=$('stage'),end=Math.max(0,stage.scrollHeight-stage.clientHeight);stage.scrollTop=savedTimingPosition(timingPlayback.value,timingClock)*end;scrollPosition=stage.scrollTop;if(timingClock>=timingPlayback.value.duration){pauseAutoScroll();timingPlayback=null;performanceToast('Saved scroll timing finished.');return false}return true}
+$('stage').addEventListener('scroll',()=>recordTimingPoint(),{passive:true});
+$('learning-start').onclick=startTiming;$('learning-stop').onclick=finishTiming;$('timing-restart').onclick=startTiming;
+$('timing-clear').onclick=()=>{if(!timingRead()||!confirm('Clear this song’s saved scroll timing on this device?'))return;try{pauseAutoScroll();timingStore(null);timingPlayback=null;timingRate=1;syncLearningControls()}catch{performanceToast('Could not clear saved timing.')}};
+$('timing-slower').onclick=()=>changeTimingRate(-.1);$('timing-faster').onclick=()=>changeTimingRate(.1);
+function changeTimingRate(delta){const saved=timingRead();if(!saved)return;const rate=Math.round(Math.max(.25,Math.min(3,(Number(saved.rate)||1)+delta))*100)/100;try{timingStore({...saved,rate});timingRate=rate;timingStatus()}catch{performanceToast('Could not save timing speed.')}}
+$('setting-learning').addEventListener('change',()=>{if(!$('setting-learning').checked)cancelTiming('Recording cancelled. Saved timing is kept.');});
+window.addEventListener('pagehide',()=>{if(timingRecording)cancelTiming()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&timingRecording)cancelTiming('Recording cancelled because the app was hidden. Previous timing kept.');});
+
+function readLearnedDuration(id){try{const v=JSON.parse(localStorage.getItem(DURATIONS_KEY)||'{}');return Number(v[String(id)])||0}catch{return 0}}
+function saveLearnedDuration(id,ms){try{const v=JSON.parse(localStorage.getItem(DURATIONS_KEY)||'{}');v[String(id)]=ms;localStorage.setItem(DURATIONS_KEY,JSON.stringify(v))}catch(e){console.warn('Duration not saved',e)}}
+function syncLearningControls(){
+ const enabled=$('setting-learning').checked;
+ $('learning-start').hidden=!enabled||learnedAt!==null;
+ $('learning-stop').hidden=!enabled||learnedAt===null;
+ timingStatus();
+}
+$('setting-show-scroll').checked=localStorage.getItem(SCROLL_VIS_KEY)!=='false';
+$('setting-learning').checked=localStorage.getItem(LEARNING_ENABLED_KEY)==='true';
+function syncTransportOptions(){document.body.classList.toggle('show-scroll-controls',$('setting-show-scroll').checked);syncLearningControls();scheduleTransportPlacement()}
+$('setting-show-scroll').onchange=()=>{localStorage.setItem(SCROLL_VIS_KEY,String($('setting-show-scroll').checked));syncTransportOptions()};
+$('setting-learning').onchange=()=>{localStorage.setItem(LEARNING_ENABLED_KEY,String($('setting-learning').checked));if(!$('setting-learning').checked)learnedAt=null;syncTransportOptions()};
+$('learning-start').onclick=startTiming;
+$('learning-stop').onclick=finishTiming;
 let toolbarScale=Math.max(.75,Math.min(1.7,Number(localStorage.getItem(TOOLBAR_SIZE_KEY))||1));
 let transportPlacementFrame=0;
 function scheduleTransportPlacement(){if(!transportPlacementFrame)transportPlacementFrame=requestAnimationFrame(()=>{transportPlacementFrame=0;placeTransport()})}
@@ -506,6 +973,53 @@ resizeGrip.addEventListener('keydown',e=>{
  const direction=['ArrowUp','ArrowRight','+','='].includes(e.key)?1:['ArrowDown','ArrowLeft','-','_'].includes(e.key)?-1:0;
  if(!direction)return;e.preventDefault();toolbarScale=Math.max(.75,Math.min(1.7,toolbarScale+direction*.05));applyToolbarScale();persistToolbarSize();
 });
+// Two-finger pinch changes chart lettering, not the entire stage or floating controls.
+let pinchStart=null;
+$('stage').addEventListener('touchstart',e=>{if(e.touches.length!==2||!e.target.closest('#chart'))return;const a=e.touches[0],b=e.touches[1];pinchStart={distance:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),font:fontSize}},{passive:true});
+$('stage').addEventListener('touchmove',e=>{if(!pinchStart||e.touches.length!==2)return;e.preventDefault();const a=e.touches[0],b=e.touches[1],dist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);fontSize=Math.max(14,Math.min(48,pinchStart.font*(dist/Math.max(1,pinchStart.distance))));$('chart').style.fontSize=fontSize+'px'},{passive:false});
+$('stage').addEventListener('touchend',e=>{if(pinchStart&&e.touches.length<2){pinchStart=null;localStorage.setItem('subscriber-performance-font-size',String(fontSize))}},{passive:true});
+const originalShowSong=showSong;
+showSong=function(s){if(timingRecording)cancelTiming();timingPlayback=null;timingClock=0;originalShowSong(s);timingRate=Number(timingRead()?.rate)||1;syncLearningControls()};
+requestAnimationFrame(()=>{syncTransportOptions();applyToolbarScale()});
+
+// The floating transport snaps to an edge: top/bottom horizontal, sides vertical.
+// Its position is saved locally; nothing about movement changes the song or scrolling state.
+// Save a separate library width for Between Songs; charts remain untouched.
+const LIBRARY_WIDTH_KEY='subscriber-performance-library-width-v1';
+let libraryWidth=Number(localStorage.getItem(LIBRARY_WIDTH_KEY))||340;
+const libraryResizer=$('library-resizer');
+function clampLibraryWidth(px){return Math.max(220,Math.min(px,Math.max(220,$('layout').clientWidth-280)));}
+function applyLibraryWidth(){
+ if(innerWidth<=780)return;
+ libraryWidth=clampLibraryWidth(libraryWidth);
+ document.documentElement.style.setProperty('--library-pane-width',libraryWidth+'px');
+}
+applyLibraryWidth();
+libraryResizer.addEventListener('pointerdown',e=>{
+ if(e.button!==0||innerWidth<=780||$('library').hidden)return;
+ e.preventDefault();document.body.classList.add('resizing-library');
+ libraryResizer.setPointerCapture(e.pointerId);
+});
+libraryResizer.addEventListener('pointermove',e=>{
+ if(!libraryResizer.hasPointerCapture(e.pointerId)||innerWidth<=780)return;
+ const bounds=$('layout').getBoundingClientRect();
+ libraryWidth=clampLibraryWidth(e.clientX-bounds.left-9);
+ document.documentElement.style.setProperty('--library-pane-width',libraryWidth+'px');
+});
+function finishLibraryResize(){
+ if(!document.body.classList.contains('resizing-library'))return;
+ document.body.classList.remove('resizing-library');
+ try{localStorage.setItem(LIBRARY_WIDTH_KEY,String(Math.round(libraryWidth)))}catch{}
+}
+libraryResizer.addEventListener('pointerup',finishLibraryResize);
+libraryResizer.addEventListener('pointercancel',finishLibraryResize);
+libraryResizer.addEventListener('keydown',e=>{
+ if(!['ArrowLeft','ArrowRight'].includes(e.key)||innerWidth<=780)return;
+ e.preventDefault();libraryWidth=clampLibraryWidth(libraryWidth+(e.key==='ArrowRight'?30:-30));
+ applyLibraryWidth();try{localStorage.setItem(LIBRARY_WIDTH_KEY,String(libraryWidth))}catch{}
+});
+window.addEventListener('resize',applyLibraryWidth);
+
 const transport=$('float-transport'), transportGrip=$('transport-grip');
 const TRANSPORT_POSITION_KEY='subscriber-performance-transport-position-v1';
 let transportPlacement={edge:'bottom',fraction:0},transportDrag=null;
@@ -550,7 +1064,7 @@ function placeTransport(){
 $('toolbar-recover').onclick=()=>{
  setTransportPlacement('bottom',0);
  $('toolbar-recover').textContent='☷ SONGS · Reset controls';
- setMode('between');$('filter').value='ready';draw();$('library').hidden=false;
+ setMode('between');$('filter').value='ready';drawList();$('library').hidden=false;
 };
 function setTransportPlacement(edge,fraction){
  transportPlacement={edge,fraction:Math.max(0,Math.min(1,fraction))};
@@ -594,6 +1108,288 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleTr
 if(window.ResizeObserver){new ResizeObserver(()=>scheduleTransportPlacement()).observe(transport);}
 if(window.visualViewport){window.visualViewport.addEventListener('resize',()=>scheduleTransportPlacement());window.visualViewport.addEventListener('scroll',()=>scheduleTransportPlacement());}
 scheduleTransportPlacement();
+// A deliberate touch, wheel movement, or pointer drag pauses scrolling immediately.
+$('stage').addEventListener('touchstart',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
+$('stage').addEventListener('wheel',()=>{if(autoScrolling)pauseAutoScroll()},{passive:true});
+$('stage').addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&autoScrolling)pauseAutoScroll()});
+window.addEventListener('resize',syncHeaderHeight);
+updateScrollButtons();syncHeaderHeight();
 
-initializePerformance();
+
+let historyShows=[],historyShowOffset=0,historySongOffset=0,historyEpoch=0,historyOwner=null,historySongCount=0;
+let historyTracking=localStorage.getItem('subscriber-performance-track-history-v1')!=='off';
+$('setting-track-history').checked=historyTracking;
+$('setting-track-history').onchange=()=>{const input=$('setting-track-history');if(markingRequest){input.checked=historyTracking;return}try{localStorage.setItem('subscriber-performance-track-history-v1',input.checked?'on':'off');historyTracking=input.checked;syncRecordButtons();performanceToast(historyTracking?'Performance history tracking on':'Performance history tracking off')}catch(e){input.checked=historyTracking;alert('Could not save this setting.')}};
+const loggedThisTab=new Set();let performanceToastTimer;
+function performanceToast(message){clearTimeout(performanceToastTimer);$('performance-toast').textContent=message;$('performance-toast').hidden=false;performanceToastTimer=setTimeout(()=>{$('performance-toast').hidden=true},5000)}
+function syncRecordButtons(){
+ const disabled=!onlineConnected||!historyTracking||!currentId||!requestShowId||!requestOwner||!navigator.onLine||markingRequest||showActionBusy;
+ $('song-end-actions').hidden=!historyTracking||!currentId;
+ for(const id of ['record-played','float-played']){$(id).hidden=!historyTracking;$(id).disabled=disabled;$(id).textContent=markingRequest?'Saving…':'✓ Mark Played';}
+}
+async function recordSongPerformance(songId,expectedShow=requestShowId){
+ if(!historyTracking||markingRequest||showActionBusy||!expectedShow)return;
+ const epoch=accessEpoch;const song=songs.find(s=>s.id===songId);if(!song)return;
+ const repeatKey=expectedShow+':'+songId;
+ if(loggedThisTab.has(repeatKey)&&!confirm('Record another performance of “'+song.title+'”?'))return;
+ cancelRequestPoll();markingRequest=true;drawRequests();$('record-feedback').textContent='Saving '+song.title+'…';
+ try{
+  const owner=await liveOwner(),show=await activeRequestShow(owner);
+  if(!show||show.id!==expectedShow)throw Error('The show changed. Refresh before recording a song.');
+  const key='subscriber-performance-event-v1:'+owner+':'+show.id+':'+songId;
+  let eventId=localStorage.getItem(key);
+  if(!eventId){eventId=crypto.randomUUID();localStorage.setItem(key,eventId)}
+  const result=await delayLimit(db.rpc('beta_record_performance',{p_show_id:show.id,p_song_id:songId,p_event_id:eventId}));
+  if(epoch!==accessEpoch)return;if(result.error)throw result.error;if(result.data?.ok!==true)throw Error('The recording was not confirmed.');if(result.data.undone){localStorage.removeItem(key);throw Error('This saved entry was already undone. Press Mark Played again for a new performance.');}
+  localStorage.removeItem(key);loggedThisTab.add(repeatKey);performanceToast('Recorded: '+song.title);
+  $('record-feedback').textContent='Recorded: '+song.title+' · '+new Date(result.data.played_at).toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'});
+ }catch(e){if(epoch!==accessEpoch)return;$('record-feedback').textContent='Not confirmed: '+(e?.message||String(e))+' Retry Played for this song to check/save the same entry.';alert($('record-feedback').textContent)}
+ finally{markingRequest=false;if(epoch===accessEpoch){await refreshRequests();syncRecordButtons()}}
+}
+$('record-played').onclick=()=>recordSongPerformance(currentId);
+$('float-played').onclick=()=>recordSongPerformance(currentId);
+let historyReturnFocus=null;
+async function openHistory(){historyReturnFocus=document.activeElement;$('history-panel').hidden=false;$('history-close').focus();await loadHistoryShows(false)}
+function closeHistory(){historyEpoch++;$('history-panel').hidden=true;historyReturnFocus?.focus()}
+$('history-open').onclick=openHistory;$('history-request').onclick=openHistory;$('history-close').onclick=closeHistory;
+$('history-panel').addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory();if(e.key==='Tab'){const nodes=[...$('history-panel').querySelectorAll('button,select,input,textarea')].filter(x=>!x.hidden&&!x.disabled);if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}}});
+$('history-refresh').onclick=()=>loadHistoryShows(false);$('history-more-shows').onclick=()=>loadHistoryShows(true);$('history-more-songs').onclick=()=>loadHistorySongs(true);$('history-shows').onchange=()=>loadHistorySongs(false);
+function historyError(e){$('history-summary').textContent='History unavailable: '+(e?.message||String(e));$('history-results').replaceChildren();$('history-more-songs').hidden=true}
+function showLabel(s){return [s.show_date||new Date(s.created_at).toLocaleDateString(),s.start_time||'',cleanVenue(s.venue_name)||'Venue not entered',s.requests_open?'Active':'Ended'].filter(Boolean).join(' · ')}
+async function loadHistoryShows(more=false){
+ const epoch=++historyEpoch;$('history-summary').textContent='Loading shows…';$('history-more-shows').disabled=true;
+ if(!more){historyShows=[];historyShowOffset=0;$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-more-songs').hidden=true;}
+ try{
+  const owner=await liveOwner();historyOwner=owner;
+  const r=await delayLimit(db.from('shows').select('id,venue_name,show_date,start_time,requests_open,created_at').eq('musician_id',owner).order('created_at',{ascending:false}).order('id').range(historyShowOffset,historyShowOffset+49));
+  if(r.error)throw r.error;if(epoch!==historyEpoch)return;
+  historyShows.push(...r.data||[]);historyShowOffset+=(r.data||[]).length;
+  for(const s of r.data||[]){const o=document.createElement('option');o.value=s.id;o.textContent=showLabel(s);$('history-shows').append(o)}
+  $('history-more-shows').hidden=(r.data||[]).length<50;
+  if(!historyShows.length){$('history-summary').textContent='No shows yet.';return}
+  if(!more)await loadHistorySongs(false);else $('history-summary').textContent='Older shows added to the show selector.';
+ }catch(e){if(epoch===historyEpoch)historyError(e)}finally{$('history-more-shows').disabled=false}
+}
+async function loadHistorySongs(more=false){
+ const epoch=++historyEpoch,showId=$('history-shows').value;if(!showId)return;
+ $('history-copy-text').hidden=true;$('history-copy-text').value='';$('show-tools-feedback').textContent='';$('history-venue').value=cleanVenue(historyShows.find(s=>s.id===showId)?.venue_name);
+ if(!more){historySongOffset=0;historySongCount=0;$('history-results').replaceChildren()}
+ $('history-more-songs').disabled=true;$('history-summary').textContent='Loading performances…';
+ try{
+  const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed. Refresh shows.');
+  const r=await delayLimit(db.from('show_performances').select('id,song_title,song_artist,played_at,was_requested').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at').order('id').range(historySongOffset,historySongOffset+199));
+  if(r.error)throw r.error;if(epoch!==historyEpoch)return;
+  for(const row of r.data||[]){historySongCount++;const item=document.createElement('div');item.className='history-row';const title=document.createElement('strong');title.textContent=historySongCount+'. '+row.song_title;if(row.was_requested){const badge=document.createElement('span');badge.className='history-requested';badge.textContent='Requested';title.append(' ',badge)}const details=document.createElement('p');details.textContent=row.song_artist+' · Recorded '+new Date(row.played_at).toLocaleString();item.append(title,details);$('history-results').append(item)}
+  historySongOffset+=(r.data||[]).length;$('history-more-songs').hidden=(r.data||[]).length<200;
+  $('history-summary').textContent=historySongCount?historySongCount+' recorded performance'+(historySongCount===1?'':'s')+($('history-more-songs').hidden?'':' loaded; more available'):'No performances recorded for this show.';
+ }catch(e){if(epoch===historyEpoch)historyError(e)}finally{$('history-more-songs').disabled=false}
+}
+
+$('history-undo').onclick=async()=>{
+ if(markingRequest)return;
+ const showId=$('history-shows').value;if(!showId)return;
+ cancelRequestPoll();markingRequest=true;$('history-undo').disabled=true;syncRecordButtons();
+ try{
+  const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed. Refresh shows.');
+  const key='subscriber-performance-undo-v1:'+owner+':'+showId;
+  let eventId=localStorage.getItem(key),title='the last recording';
+  if(!eventId){
+   const r=await delayLimit(db.from('show_performances').select('id,song_title').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at',{ascending:false}).order('id',{ascending:false}).limit(1));
+   if(r.error)throw r.error;if(!r.data?.length){performanceToast('No recording to undo for this show.');return}
+   eventId=r.data[0].id;title=r.data[0].song_title;
+   if(!confirm('Undo the last recording: “'+title+'”?'))return;
+   localStorage.setItem(key,eventId);
+  }
+  const r=await delayLimit(db.rpc('beta_undo_performance',{p_event_id:eventId}));
+  if(r.error){if(/newer recording/i.test(r.error.message||''))localStorage.removeItem(key);throw r.error}if(r.data?.ok!==true)throw Error('Undo was not confirmed.');
+  localStorage.removeItem(key);performanceToast('Last recording undone.');$('record-feedback').textContent='Last recording undone.';
+  await loadHistorySongs(false);
+ }catch(e){alert('Undo not confirmed: '+(e?.message||String(e))+' Try Undo again to check the same entry.');}
+ finally{markingRequest=false;$('history-undo').disabled=false;await refreshRequests();syncRecordButtons()}
+};
+
+
+function cleanVenue(value){return value==='To be added'?'':value||''}
+$('history-save-venue').onclick=async()=>{
+ const showId=$('history-shows').value,venue=$('history-venue').value.trim();if(!showId)return;const b=$('history-save-venue');b.disabled=true;
+ try{const owner=await liveOwner();if(owner!==historyOwner)throw Error('Account changed.');const r=await delayLimit(db.rpc('beta_set_show_venue',{p_show_id:showId,p_venue:venue}));if(r.error)throw r.error;if(!r.data?.ok)throw Error('Venue not confirmed.');if(historyOwner!==owner||$('history-shows').value!==showId)return;
+ const s=historyShows.find(s=>s.id===showId);s.venue_name=venue;const o=[...$('history-shows').options].find(o=>o.value===showId);if(o)o.textContent=showLabel(s);$('show-tools-feedback').textContent='Venue saved.';
+ }catch(e){$('show-tools-feedback').textContent='Venue not saved: '+(e.message||e)}finally{b.disabled=false}
+};
+$('history-copy').onclick=async()=>{
+ const showId=$('history-shows').value,owner=historyOwner,epoch=historyEpoch,s=historyShows.find(s=>s.id===showId);if(!s)return;
+ const b=$('history-copy');b.disabled=true;$('history-copy-text').hidden=true;$('history-copy-text').value='';
+ try{if(await liveOwner()!==owner)throw Error('Account changed.');let rows=[],offset=0;while(true){const r=await delayLimit(db.from('show_performances').select('id,song_title,song_artist,played_at,was_requested').eq('musician_id',owner).eq('show_id',showId).is('voided_at',null).order('played_at').order('id').range(offset,offset+199));if(r.error)throw r.error;if(epoch!==historyEpoch||owner!==historyOwner)throw Error('Show selection changed. Copy again.');rows.push(...r.data||[]);if((r.data||[]).length<200)break;offset+=200;}
+ const value=[showLabel(s),rows.length+' recorded performances','',...rows.map((r,i)=>(i+1)+'. '+r.song_title+' — '+r.song_artist+(r.was_requested?' [Requested]':'')+' · '+new Date(r.played_at).toLocaleTimeString()),...(!rows.length?['No performances recorded for this show.']:[])].join('\n');
+ $('history-copy-text').value=value;$('history-copy-text').hidden=false;
+ try{await navigator.clipboard.writeText(value);$('show-tools-feedback').textContent='Show copied. Paste it into Notes, email, or another app.';}catch{ $('history-copy-text').focus();$('history-copy-text').select();$('show-tools-feedback').textContent='Select and copy the text below.';}
+ }catch(e){$('show-tools-feedback').textContent='Could not copy show: '+(e.message||e)}finally{b.disabled=false}
+};
+
+// Remove private history immediately when the signed-in owner is cleared.
+const originalClearLiveRequests=clearLiveRequests;
+clearLiveRequests=function(){originalClearLiveRequests();clearOwnerVolume();historyEpoch++;historyShows=[];historyOwner=null;$('history-copy-text').value='';$('history-copy-text').hidden=true;$('history-venue').value='';$('show-tools-feedback').textContent='';$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-summary').textContent='Sign in to view show history.';syncRecordButtons()};
+syncRecordButtons();
+
+function searchKey(value){return String(value||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/['’‘`]/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
+function applySubscriberChartFont(){
+ const fonts={native:'-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif',arial:'Arial,Helvetica,sans-serif',helvetica:'Helvetica,"Helvetica Neue",Arial,sans-serif',mono:'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace'};
+ let key='native';try{key=localStorage.getItem('song-library-chart-font:'+musician.id)||key}catch{}
+ document.documentElement.style.setProperty('--subscriber-chart-font',fonts[key]||fonts.native);
+}
+async function loadSubscriberScroll(){
+ const epoch=accessEpoch,step=++scrollLoad,id=currentId,owner=musician?.id;
+ scrollLoading=true;scrollSpeed=10;updateScrollButtons();$('stage-scroll-status').textContent='Loading saved speed…';
+ if(!owner||!id||!onlineConnected||!navigator.onLine){scrollLoading=false;$('stage-scroll-status').textContent='Offline: using this device’s scroll speed.';try{scrollSpeed=(Number(localStorage.getItem('subscriber-scroll:'+owner+':'+id))||20)*.5}catch{}updateScrollButtons();return;}
+ try{
+  const r=await delayLimit(db.rpc('beta_library_get_scroll',{p_expected_musician:owner,p_song_id:id}));
+  if(epoch!==accessEpoch||step!==scrollLoad||currentId!==id)return;
+  if(r.error)throw r.error;const speed=Number(r.data?.speed);
+  scrollSpeed=(Number.isInteger(speed)&&speed>=1&&speed<=100?speed:20)*.5;
+  try{localStorage.setItem('subscriber-scroll:'+owner+':'+id,String(Math.round(scrollSpeed*2)))}catch{}$('stage-scroll-status').textContent='Saved speed loaded for this song.';
+ }catch(e){if(epoch===accessEpoch&&step===scrollLoad)$('stage-scroll-status').textContent='Using default speed. Saved speed could not be loaded: '+(e.message||e)}
+ finally{if(epoch===accessEpoch&&step===scrollLoad){scrollLoading=false;updateScrollButtons()}}
+}
+$('stage-scroll-speed').oninput=()=>{pauseAutoScroll();timingPlayback=null;scrollSpeed=Number($('stage-scroll-speed').value)*.5;updateScrollButtons();$('stage-scroll-status').textContent='Speed changed. Tap Save speed to keep it.'};
+$('stage-top').onclick=()=>{pauseAutoScroll();timingPlayback=null;timingClock=0;$('stage').scrollTop=0};
+$('save-stage-speed').onclick=async()=>{
+ if(!currentId||!musician||scrollLoading)return;
+ const epoch=accessEpoch,id=currentId,owner=musician.id,speed=Math.round(scrollSpeed*2),b=$('save-stage-speed');b.disabled=true;
+ try{
+  if(await liveOwner()!==owner)throw Error('Account changed.');
+  if(epoch!==accessEpoch)return;
+  const r=await delayLimit(db.rpc('beta_library_save_scroll',{p_expected_musician:owner,p_song_id:id,p_speed:speed}));
+  if(epoch!==accessEpoch||currentId!==id)return;if(r.error)throw r.error;
+  $('stage-scroll-status').textContent='Speed saved for this song. It is also available in Song Library.';
+ }catch(e){if(epoch===accessEpoch&&currentId===id)$('stage-scroll-status').textContent='Speed not saved: '+(e.message||e)}
+ finally{if(epoch===accessEpoch&&currentId===id)updateScrollButtons()}
+};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseAutoScroll()});
+$('stage').addEventListener('keydown',()=>{if(autoScrolling)pauseAutoScroll()});
+function syncShowControls(){
+ syncRecordButtons();
+ const connected=!!musician&&!!signedInUserId&&onlineConnected&&navigator.onLine;
+ $('start-show').disabled=!connected||!!requestShowId||showActionBusy||markingRequest;
+ $('end-show').disabled=!connected||!requestShowId||showActionBusy||markingRequest;
+ $('show-venue').disabled=!!requestShowId||showActionBusy;
+}
+function localShowClock(){const d=new Date(),pad=n=>String(n).padStart(2,'0');return{date:d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),time:pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}}
+$('start-show').onclick=async()=>{
+ if(showActionBusy||markingRequest||requestShowId)return;
+ const epoch=accessEpoch;showActionBusy=true;syncShowControls();$('show-feedback').textContent='Starting show…';
+ try{
+  const owner=await liveOwner();if(epoch!==accessEpoch)return;
+  const key='subscriber-performance-pending-show:'+owner;
+  let id=localStorage.getItem(key);if(!id){id=crypto.randomUUID();localStorage.setItem(key,id)}
+  const clock=localShowClock();
+  const r=await delayLimit(db.rpc('beta_subscriber_start_show',{p_expected_musician:owner,p_show_id:id,p_venue:$('show-venue').value.trim(),p_show_date:clock.date,p_start_time:clock.time}));
+  if(epoch!==accessEpoch)return;if(r.error)throw r.error;if(!r.data?.ok)throw Error('Start was not confirmed.');
+  localStorage.removeItem(key);await refreshRequests();if(epoch===accessEpoch)$('show-feedback').textContent='Show started. Mark Played will record songs in this show.';
+ }catch(e){if(epoch===accessEpoch){const ended=/belongs to an ended show/.test(e.message||'');if(ended&&musician)localStorage.removeItem('subscriber-performance-pending-show:'+musician.id);$('show-feedback').textContent=ended?'Your previous start attempt belongs to a show that has ended. Tap Start show again to begin a new show.':'Start not confirmed: '+(e.message||e)+' Tap Start show to check the same attempt.'}}
+ finally{showActionBusy=false;if(epoch===accessEpoch)syncShowControls()}
+};
+$('end-show').onclick=async()=>{
+ if(showActionBusy||markingRequest||!requestShowId)return;
+ if(!confirm('End this show and close audience requests? Saved performances will stay in Show History.'))return;
+ const epoch=accessEpoch,id=requestShowId;showActionBusy=true;pauseAutoScroll();syncShowControls();$('show-feedback').textContent='Ending show…';
+ try{
+  const owner=await liveOwner();if(epoch!==accessEpoch)return;
+  const r=await delayLimit(db.rpc('beta_subscriber_end_show',{p_expected_musician:owner,p_show_id:id,p_end_time:localShowClock().time}));
+  if(epoch!==accessEpoch)return;if(r.error)throw r.error;if(!r.data?.ok)throw Error('End was not confirmed.');
+  await refreshRequests();if(epoch===accessEpoch){$('show-venue').value='';$('show-feedback').textContent='Show ended. Your songs played are saved in Show History.';}
+ }catch(e){if(epoch===accessEpoch)$('show-feedback').textContent='End not confirmed: '+(e.message||e)+' Tap End show to check again.'}
+ finally{showActionBusy=false;if(epoch===accessEpoch)syncShowControls()}
+};
+$('show-controls-open').onclick=()=>{$('request-panel').hidden=false;refreshRequests()};
+
+
+function volumeScope(){if(volumeTarget!==requestShowId){volumeEpoch++;volumeTarget=requestShowId;volumeSummary=null;volumeLoading=false}}
+function clearOwnerVolume(){volumeEpoch++;volumeSummary=null;volumeLoading=false;renderOwnerVolume()}
+function renderOwnerVolume(){
+ volumeScope();
+ const host=$('owner-volume-summary');
+ if(!requestShowId){host.textContent='Start a show to receive audience volume feedback.';}
+ else if(volumeSummary?.error){host.textContent='Volume feedback unavailable. Refresh to try again.';}
+ else if(!volumeSummary){host.textContent='Checking volume feedback…';}
+ else{
+  const r=volumeSummary.recent||{},all=volumeSummary.counts||{},n=Number(volumeSummary.total)||0;
+  host.textContent='Last 5 minutes: Too Quiet '+(r.quiet||0)+' · Just Right '+(r.good||0)+' · Too Loud '+(r.loud||0)+'.\n'+n+' current response'+(n===1?'':'s')+' this show: Quiet '+(all.quiet||0)+' · Right '+(all.good||0)+' · Loud '+(all.loud||0)+'.';
+ }
+ const floating=$('float-requests');let line=$('float-volume-summary');
+ if(!line){line=document.createElement('span');line.id='float-volume-summary';line.className='request-float-empty';floating.append(line)}
+ const r=volumeSummary?.recent||{};
+ line.textContent=!requestShowId?'🔊 No active show':volumeSummary?.error?'🔊 Feedback unavailable':!volumeSummary?'🔊 Checking feedback…':'🔊 Quiet '+(r.quiet||0)+' · Right '+(r.good||0)+' · Loud '+(r.loud||0);
+}
+async function refreshOwnerVolume(){
+ volumeScope();
+ if(volumeLoading)return;
+ if(!requestShowId||!requestOwner){clearOwnerVolume();return;}
+ const epoch=accessEpoch,step=++volumeEpoch,show=requestShowId,owner=requestOwner;volumeLoading=true;
+ try{
+  if(await liveOwner()!==owner)throw Error('Account changed');
+  if(epoch!==accessEpoch||show!==requestShowId)return;
+  const r=await delayLimit(db.rpc('beta_subscriber_get_volume',{p_expected_musician:owner,p_show_id:show}));
+  if(epoch!==accessEpoch||step!==volumeEpoch||show!==requestShowId)return;
+  if(r.error)throw r.error;if(r.data?.show_id!==show)throw Error('Show changed');volumeSummary=r.data;
+ }catch(e){if(epoch===accessEpoch&&step===volumeEpoch&&show===requestShowId)volumeSummary={error:true}}
+ finally{if(epoch===accessEpoch&&step===volumeEpoch){volumeLoading=false;renderOwnerVolume()}}
+}
+$('schedule-btn').onclick=()=>{if(!onlineConnected){performanceToast('Connect to the internet to manage your show schedule.');return}location.href='subscriber-shows-test.html'};
+$('volume-btn').onclick=()=>{$('request-panel').hidden=false;refreshRequests();$('owner-volume').scrollIntoView({block:'nearest'})};
+$('refresh-volume').onclick=refreshOwnerVolume;
+
+setMode(showMode);
+requestAnimationFrame(()=>{placeTransport();checkTransportReachable()});
+if(onlineConnected&&navigator.onLine)refreshRequests();
+
+// One Performance screen; connectivity changes never navigate or replace a current chart.
+const OFFLINE_BUILD='subscriber-offline-20261021-v5',O=window.MusicianOffline;
+let preparingDevice=false,downloadEpoch=0;
+function deviceUser(){return O.identity(localStorage)}
+function connectionUI(state){
+ connectionState=state;
+ const offline=state==='offline',online=state==='online';
+ const label=$('connection-status');label.className=online?'connection-ok':offline?'connection-offline':'connection-pending';
+ label.textContent=online?'● Connected · live features available':offline?'● Offline · songs available':'● Checking connection…';
+ $('connection-banner').hidden=online;
+ $('connection-copy').textContent=offline?(songs.length?'Offline — your songs are available. Live requests, show controls and online saves need internet.':'Offline — prepare this device while connected to keep your songs available here.'):'Checking your connection. Your current song stays open.';
+ $('retry-connection').hidden=!navigator.onLine||online;
+ $('stage-connection').textContent=online?'':'Offline · songs available';$('stage-connection').hidden=online;
+ syncShowControls();updateScrollButtons();
+}
+function useOffline(message){onlineConnected=false;clearLiveRequests();requestsError='Offline. Live requests, show controls, history and online saves need an internet connection.';requestRenderSignature='';drawRequests();connectionUI('offline');if(message&&!songs.length)showMessage(message)}
+async function savedLibrary(){const id=deviceUser(),epoch=accessEpoch;if(!id){clearPrivateStage();connectionUI('offline');return false}if(signedInUserId&&signedInUserId!==id){clearPrivateStage();return false}try{const saved=await O.read(indexedDB,id);if(epoch!==accessEpoch||deviceUser()!==id)return false;if(!saved)return false;offlineSnapshot=O.validate(saved,id);signedInUserId=id;musician=saved.musician;$('workspace-name').textContent=musician.display_name+' · Performance';applySubscriberChartFont();if(!songs.length)fillLibrary(saved.songs,true);await deviceReadiness();return true}catch(e){$('device-status').textContent='Could not read this device’s download. Connect and prepare it again.';return false}}
+async function deviceReadiness(){const id=deviceUser();if(!id){$('device-status').textContent='Sign in before preparing this device.';return false}try{const saved=await O.read(indexedDB,id);if(deviceUser()!==id)return false;offlineSnapshot=saved;const reg=await navigator.serviceWorker?.getRegistration(new URL('subscriber-performance-test.html',location.href));const ready=!!saved&&reg?.active?.scriptURL===new URL('subscriber-offline-sw.js',location.href).href&&reg?.scope.endsWith('/subscriber-')&&!!await (await caches.open(OFFLINE_BUILD)).match(new URL('subscriber-performance-test.html',location.href).href);$('device-status').textContent=saved?(ready?'Ready for offline use · ':'Songs downloaded; prepare again to finish offline startup · ')+saved.songs.length.toLocaleString()+' songs · Downloaded '+new Date(saved.savedAt).toLocaleString()+'.':'Not prepared on this device yet. Download while connected before your first gig.';return ready}catch(e){$('device-status').textContent='Offline readiness could not be checked. Prepare and test this device before a gig.';return false}}
+async function prepareUnifiedShell(){if(!navigator.serviceWorker||!window.isSecureContext)throw Error('Offline preparation needs Safari or Chrome over HTTPS.');const reg=await navigator.serviceWorker.register(new URL('subscriber-offline-sw.js',location.href),{scope:new URL('subscriber-',location.href).pathname,updateViaCache:'none'});await delayLimit(navigator.serviceWorker.ready,20000);const worker=reg.installing||reg.waiting||reg.active;if(!worker)throw Error('Offline startup did not install. Try again.');if(worker.state!=='activated')await delayLimit(new Promise((resolve,reject)=>{worker.addEventListener('statechange',()=>{if(worker.state==='activated')resolve();else if(worker.state==='redundant')reject(Error('Could not install offline startup.'))})}),20000);await delayLimit(new Promise((resolve,reject)=>{const channel=new MessageChannel();channel.port1.onmessage=e=>{channel.port1.close();if(e.data?.ready&&e.data.version===OFFLINE_BUILD)resolve();else reject(Error('Offline startup is not ready. Please try again.'))};reg.active.postMessage({type:'OFFLINE_READY'},[channel.port2])}),10000)}
+async function prepareDevice(){MusicianDevice.attach(db);return MusicianDevice.run()}
+$('prepare-device').onclick=prepareDevice;
+$('retry-connection').onclick=()=>connect();
+async function startUnifiedPerformance(){showMode=localStorage.getItem('subscriber-performance-start-mode')==='playing'?'playing':'between';setMode(showMode);await savedLibrary();if(navigator.onLine)await connect();else useOffline('This device has no completed download. Connect to load and prepare your songs.');if(location.hash==='#prepare-device'){$('appearance-panel').hidden=false;setMode('between');$('appearance-panel').hidden=false;$('prepare-device').scrollIntoView({block:'nearest'})}}
+window.addEventListener('offline',()=>{db?.auth.stopAutoRefresh?.();accessEpoch++;downloadEpoch++;scrollLoad++;scrollLoading=false;useOffline();deviceReadiness()});
+window.addEventListener('online',()=>{db?.auth.startAutoRefresh?.();connect()});
+window.addEventListener('storage',e=>{if(e.key===O.AUTH_KEY&&deviceUser()!==signedInUserId){downloadEpoch++;clearPrivateStage();$('device-status').textContent='Sign in to prepare or use your private download.';if(deviceUser()&&navigator.onLine)connect()}});
+window.addEventListener('pageshow',()=>{if(signedInUserId&&deviceUser()!==signedInUserId)clearPrivateStage()});
+setInterval(()=>{if(signedInUserId&&deviceUser()!==signedInUserId){downloadEpoch++;clearPrivateStage()}else if(navigator.onLine&&!onlineConnected&&!document.hidden&&deviceUser())connect()},15000);
+
+MusicianDevice.subscribe(v=>{$('device-status').textContent=v.text});
+document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a||navigator.onLine)return;const u=new URL(a.href,location.href);if(u.origin===location.origin&&/subscriber-(?:(?:library|shows|customization|song-import)-test|audience-preview)\.html$/.test(u.pathname)){e.preventDefault();performanceToast('Connect to the internet to use this tool. Your downloaded charts stay available here.')}});
+startUnifiedPerformance();
+</script>
+<script>
+(()=>{'use strict';const key='musician-help-tips-v1';let enabled=true,previousFocus=null;try{enabled=localStorage.getItem(key)!=='off'}catch(e){}const toggles=[...document.querySelectorAll('.musician-help-toggle')];function apply(){document.body.classList.toggle('musician-help-off',!enabled);toggles.forEach(t=>t.checked=enabled)}apply();toggles.forEach(t=>t.addEventListener('change',()=>{enabled=t.checked;try{localStorage.setItem(key,enabled?'on':'off')}catch(e){}apply()}));window.addEventListener('storage',e=>{if(e.key===key){enabled=e.newValue!=='off';apply()}});
+const dialog=document.createElement('dialog');dialog.id='musician-help-dialog';dialog.setAttribute('aria-labelledby','musician-help-title');const heading=document.createElement('h2');heading.id='musician-help-title';const text=document.createElement('p'),close=document.createElement('button');close.id='musician-help-close';close.type='button';close.textContent='Close';dialog.append(heading,text,close);document.body.append(dialog);function dismiss(){dialog.close();previousFocus?.focus()}close.onclick=dismiss;dialog.addEventListener('cancel',()=>{previousFocus?.focus()});dialog.addEventListener('click',e=>{if(e.target===dialog)dismiss()});
+function attach(target,title,description){if(!target||target.dataset.musicianHelp)return;target.dataset.musicianHelp='true';const button=document.createElement('button');button.type='button';button.className='musician-help-tip';button.textContent='?';button.setAttribute('aria-label','Help: '+title);button.setAttribute('aria-haspopup','dialog');button.onclick=()=>{previousFocus=button;heading.textContent=title;text.textContent=description;dialog.showModal();close.focus()};const label=target.id&&document.querySelector('label[for="'+target.id+'"]');(label||target).after(button)}
+const tips={"add":["Add song", "Creates a new song in your own library. Fill in its title, artist and private chart, then save. New songs start as Learning song."],"save":["Save song", "Saves the song title, artist, private chart, readiness and audience request setting. An internet connection is required."],"apply":["Apply selected changes", "Applies the chosen change to all selected matching songs. Check the selected count before applying."],"history-stage":["Show History", "Review songs you recorded for each live show. Upcoming advertised dates are kept separately in Show Schedule."],"float-mark-played":["Mark Played", "Records one performance of the current song when history tracking is on, and marks matching requests played. Repeated performances appear separately."],"settings-btn":["Settings", "Adjust performance appearance and chart controls, or turn help tips off and on."],"schedule-btn":["Show Schedule", "Manage upcoming advertised dates. This is separate from starting a live show or recording songs played."],"save-stage-speed":["Save chart speed", "Remembers the selected scrolling speed for this song. Opening a chart never starts auto-scroll automatically."],"download-qr-png":["PNG download", "Downloads a sharp black-on-white QR image for sharing. Keep its white border and test a print before ordering items."],"download-qr-svg":["SVG download", "Downloads a scalable QR file for printers and designers. Keep its white border; do not stretch or crop it."],"readiness": ["Readiness", "Learning song keeps a song private and off your request list. Ready to play means you can perform it. To offer it to your audience, also check Allow audience requests and save."], "requestable": ["Allow audience requests", "Check this for each Ready song you want on your public request list, then save. Ready songs can remain private with this off."], "chart-font": ["Chart font", "Choose the font that matches your original chart. A different font changes the width of letters and can shift manually spaced chords. Compare the preview before performing."], "chart-text": ["Lyrics and chords", "Your lyrics and chord charts are private. Keep each chord line immediately above its lyric line; spacing is preserved."], "bulk-action": ["Change selected songs", "Choose an action, then Apply to selected songs. Learning song turns requests off. Marking a song Ready does not enable requests automatically."], "select-all": ["Select matching songs", "Selects every song matching your current search and filter. Check the selected count before applying a change."], "scroll-toggle": ["Auto-scroll", "Starts or pauses the private chart. Touch the chart to pause; use Start auto-scroll to resume."], "scroll-speed": ["Scroll speed", "Move right for faster chart scrolling. Save speed for this song remembers its speed; opening the song does not start scrolling."], "playing-btn": ["Playing", "Gives the chart most of the screen. Incoming requests stay visible and cannot replace your current song. Volume feedback is hidden until Between Songs."], "between-btn": ["Between Songs", "Browse and open your next song, review requests, or check audience volume feedback. Opening a song does not mark it played."], "requests-btn": ["Incoming requests", "See audience requests, names and notes for the active show. Requests need an internet connection."], "volume-btn": ["Volume feedback", "Review audience feedback between songs. Each browser has one current vote per show; a changed vote replaces its earlier choice."], "dice-btn": ["Random song", "Suggests a Ready to Play song from your library. It does not mark the song played."], "start-show": ["Start show", "Opens audience requests and starts a live show. Upcoming dates in Show Schedule do not open requests automatically."], "end-show": ["End show", "Closes audience requests and ends this live show. Recorded songs remain in Show History."], "history-request": ["Show History", "View recorded songs for a show, including repeats. Show Schedule is separate and advertises upcoming dates."], "setting-learning": ["Learn scroll timing", "Record while playing a song and scrolling manually. Finish & save remembers the pauses and movements on this device. Next time, press Scroll in Playing to replay. Record again to replace it, or clear the saved timing."], "setting-track-history": ["Track songs played", "When enabled, Mark Played saves each performance in show order. Repeating a song creates another entry."], "stage-scroll-speed": ["Chart scroll speed", "Adjusts scrolling for the current private chart. Save speed for this song remembers it. Touching the chart pauses scrolling."], "published": ["Publish this show", "Published dates appear on your audience Shows tab. Drafts are visible only to you. Publishing a date does not open live requests."], "paste-open": ["Paste monthly schedule", "Paste your post, review the detected dates, venues and times, then save drafts or publish. Nothing is saved just by reviewing."], "default-period": ["Missing AM or PM", "Choose a PM start default only if it fits your shows. Review every converted start and end time, including shows that end after midnight."], "town-names": ["Town names", "Enter town names separated by commas. A matching town at the end of a venue line moves to Town / location. Check both fields in the review."], "start": ["Start time", "Time choices use half-hour steps. New shows default to three hours long. Once you change or clear the end time, it stays as you set it."], "end": ["End time", "You can shorten or extend the show, or clear the optional end time. Editing an existing show preserves its saved end time."], "page-slug": ["Page address", "Suggested from your artist name. You can edit it before creating your page. This address becomes the destination of your permanent audience QR code."], "invite-code": ["Invitation code", "Paste the full code from your invitation. It activates one musician account; you do not need it again when signing back in."], "stage-name": ["Artist name", "The musician or band name shown on your audience page. We suggest an editable page address from this name."]};Object.entries(tips).forEach(([id,[title,description]])=>attach(document.getElementById(id),title,description));const labelTips={"Logo or band photo": "Upload your own image. The whole image stays visible; use Logo size to adjust its display size.", "Button color": "Changes your public page accents. Check the preview for readability.", "Background color": "Changes the background of your public page. Check text and buttons in the preview.", "Welcome message": "The short message below your artist name on your public audience page.", "Beta invitation code": "Paste the full code from your invitation. It activates one musician account; you do not need it again when signing back in."};document.querySelectorAll('label[for]').forEach(label=>{const title=label.textContent.trim();if(labelTips[title])attach(document.getElementById(label.htmlFor),title,labelTips[title])});
+})();</script><script>(function(){'use strict';
+const current=window.MusicianOffline.VERSION;
+document.querySelectorAll('.check-app-update').forEach(button=>button.onclick=async()=>{
+ const box=button.closest('.app-update-tools'),message=box.querySelector('.app-update-status'),reload=box.querySelector('.reload-app-update');
+ if(!navigator.onLine){message.textContent='Connect to Wi-Fi or cellular data to check for updates.';return}button.disabled=true;reload.hidden=true;
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+ try{message.textContent='Checking for app updates…';const response=await fetch(new URL('subscriber-performance-test.html',location.href),{cache:'no-store',signal:controller.signal});if(!response.ok)throw Error('App update is unavailable.');const text=await response.text(),found=text.match(/subscriber-offline-\d{8}-v\d+/)?.[0];if(!found)throw Error('Update version could not be checked.');
+  if(found!==current){message.textContent='An update is available. Finish your song and save any edits, then tap Restart to update.';reload.hidden=false}else message.textContent='You have the latest published version.';
+ }catch(e){message.textContent='Could not check for updates. Please try again when connected.'}finally{clearTimeout(timer);button.disabled=false}
+ reload.onclick=()=>{if(document.body.classList.contains('mode-playing')){message.textContent='Switch to Between Songs before restarting.';return}if(!confirm('Restart the app to update? Save any edits first.'))return;location.reload()};
+});
+})();
 </script></body></html>
