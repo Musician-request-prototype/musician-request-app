@@ -38,7 +38,7 @@ function mount(account){
 return{active,mount};})();
 </script><script>/* Private offline snapshots: only complete, validated downloads replace prior copies. */
 (function(root){'use strict';
-const AUTH_KEY='musician-subscriber-beta-auth-v1',DB_NAME='musician-subscriber-offline-v1',STORE='libraries',VERSION='subscriber-offline-20261026-v12';
+const AUTH_KEY='musician-subscriber-beta-auth-v1',DB_NAME='musician-subscriber-offline-v1',STORE='libraries',VERSION='subscriber-offline-20261026-v13';
 function identity(storage){try{const s=JSON.parse(storage.getItem(AUTH_KEY)||'null');return typeof s?.user?.id==='string'&&s.access_token?s.user.id:null}catch{return null}}
 function normalize(rows){if(!Array.isArray(rows)||rows.length>20000)throw Error('Library is too large or incomplete.');const seen=new Set();return rows.map(s=>{if(!s||typeof s.id!=='string'||!s.id||seen.has(s.id)||typeof s.title!=='string'||(s.lyrics_chords!==null&&s.lyrics_chords!==undefined&&typeof s.lyrics_chords!=='string'))throw Error('Library data could not be verified.');seen.add(s.id);return{id:s.id,title:s.title,artist:typeof s.artist==='string'?s.artist:'',lyrics_chords:s.lyrics_chords||'',song_status:s.song_status==='ready'?'ready':'learning'}}).sort((a,b)=>a.id.localeCompare(b.id))}
 function validate(snapshot,user){if(!snapshot||snapshot.schema!==1||snapshot.userId!==user||!snapshot.musician?.id||!snapshot.savedAt)throw Error('No verified download for this signed-in account.');normalize(snapshot.songs);return snapshot}
