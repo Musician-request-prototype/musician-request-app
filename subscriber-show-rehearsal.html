@@ -8,14 +8,26 @@
 <style>
 *{box-sizing:border-box}body{margin:0;padding:clamp(12px,3vw,28px);font:16px/1.5 system-ui,sans-serif;background:#0b1711;color:#edf7ee}h1,h2,h3,p{margin:0 0 .65rem}h1{font-size:1.6rem}h2{font-size:1.2rem}h3{font-size:1.05rem}header{margin-bottom:1rem}.badge{display:inline-block;background:#f6d990;color:#28200e;border-radius:100px;padding:3px 10px;font-weight:700;font-size:.85rem}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}section{border:1px solid #45654f;border-radius:14px;padding:1rem;background:#11241a}.setup{margin-bottom:1rem}fieldset{border:0;padding:0;margin:0;min-width:0}label{display:block;margin-top:.6rem}.check{display:flex;gap:.55rem;align-items:center}select,input,button{font:inherit;max-width:100%}select,input:not([type=checkbox]),button{min-height:44px;border:1px solid #648675;border-radius:8px;color:inherit;background:#1c3829;padding:.45rem .65rem}select,input:not([type=checkbox]){width:100%;margin-top:.25rem}input[type=checkbox]{width:20px;height:20px;flex-shrink:0;accent-color:#6fe594}button{cursor:pointer}button.primary{background:#6fe594;color:#0c2916;font-weight:700;border-color:#6fe594}button:disabled{opacity:.55;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #f6d990;outline-offset:2px}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin:.55rem 0}.subtle{color:#bed2c3}.queue{padding-inline-start:1.6rem}.queue li{margin:.45rem 0;padding:.4rem .15rem;border-bottom:1px solid #3a5543;overflow-wrap:anywhere}.queue li strong{color:#86efaa}.pool{margin-top:1rem;border:1px solid #9c874e;background:#2d2a18;border-radius:12px;padding:.8rem}.pool progress{width:100%;accent-color:#eac970}.activity{max-height:12rem;overflow:auto;padding-inline-start:1.3rem}.activity li{margin:.3rem 0}#notice{min-height:1.5em;color:#f6d990}[hidden]{display:none!important}@media(max-width:690px){.grid{grid-template-columns:1fr}}
 .game,.game-result{margin:.8rem 0;padding:.8rem;border:1px solid #648675;border-radius:12px;background:#182e23}.game .actions{margin-bottom:0}.game-result p{margin-bottom:.3rem}.text-button{background:transparent;border:0;text-decoration:underline;color:#bed2c3;font-size:.9rem;padding:.35rem .55rem}.claim{color:#f6d990;font-size:1.2rem;letter-spacing:.12em}
+#preview-tools{margin:0 0 1rem}.phone-preview #views{display:block;max-width:390px;margin:auto}.phone-preview #audience-panel{border:2px solid #648675;border-radius:26px;padding:18px}.phone-preview #show-setup,.phone-preview #performer-panel{display:none}.phone-preview #preview-tools{max-width:390px;margin:0 auto 1rem}.phone-preview .goal-alerts{display:none}.goal-alerts{position:fixed;right:clamp(12px,3vw,28px);bottom:clamp(12px,3vw,28px);width:min(350px,calc(100% - 24px));z-index:4;max-height:50dvh;overflow:auto}.goal-alerts article{border:1px solid #d9bd71;background:#243027;padding:12px;border-radius:12px;box-shadow:0 4px 20px #0008}.goal-alerts article+article{margin-top:8px}.goal-alerts strong{color:#f6d990}.queue li.goal-selected{background:#263e30;outline:2px solid #d9bd71;border-radius:7px;scroll-margin:12px}
+
+.phone-preview #audience-panel{padding-bottom:90px}
+.phone-preview #request-pick{display:none}
+#phone-song-list{display:grid;gap:5px;max-height:220px;overflow:auto;margin-top:8px}
+#phone-song-list button{text-align:left}
+#phone-song-list button[aria-pressed="true"]{border-color:#86efaa;background:#27523a}
+#phone-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(390px,100%);z-index:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:8px 6px calc(8px + env(safe-area-inset-bottom));border:1px solid #45654f;border-radius:12px 12px 0 0;background:#11241a}
+#phone-nav button{font-size:12px;line-height:1.2;min-height:48px;padding:5px 3px}
+#phone-nav button[aria-pressed="true"]{background:#6fe594;color:#0c2916;border-color:#6fe594;font-weight:700}
 </style>
 </head>
 <body>
 <header><span class="badge">Rehearsal · no real payments</span><h1>Rehearse requests &amp; Name That Tune</h1><p class="subtle">See what guests and the performer see during the same mock show. This rehearsal is separate from your live requests.</p></header>
-<section class="setup" aria-labelledby="setup-title">
-<h2 id="setup-title">Before the show</h2>
+<section id="show-setup" class="setup" aria-labelledby="setup-title">
+<h2 id="setup-title">Show Setup</h2>
+<p class="subtle">Try these controls here before using them at a gig. They do not change live requests.</p>
 <label class="check"><input id="auto" type="checkbox" checked>Offer a $5 boost automatically when at least two different songs are waiting</label>
 <fieldset id="setup">
+<label class="check"><input id="start-requests-open" type="checkbox" checked>Open requests at the start (or at the scheduled time)</label>
 <label class="check"><input id="scheduled" type="checkbox">Set request hours</label>
 <div id="hours" hidden>
 <div class="grid">
@@ -24,18 +36,23 @@
 </div>
 <p class="subtle">Uses this device’s local time. If the close time is earlier than the open time, requests close the next day.</p>
 </div>
-<label class="check"><input id="premium" type="checkbox" checked>Add a pooled premium song</label>
+<label class="check"><input id="premium" type="checkbox" checked>Offer premium songs</label>
 <div id="premium-options">
-<label for="premium-song">Premium song</label><select id="premium-song"></select>
-<label for="goal">Pledge goal ($)</label><input id="goal" type="number" min="5" max="1000" step="1" value="50" required>
+<p class="subtle">Set a separate goal for each song. Guests can chip in together.</p>
+<div id="premium-rows"><div class="pool premium-row"><label>Premium song <select id="premium-song"></select></label>
+<label>Goal for this song ($) <input id="goal" type="number" min="5" max="1000" step="1" value="50" required></label></div></div>
+<div class="actions"><button id="add-premium" type="button">Add another premium song</button></div>
 </div></fieldset>
 <div class="actions"><button id="start" type="button" class="primary">Start rehearsal</button><button id="end" type="button" hidden>End rehearsal</button></div>
 <p id="notice" role="status"></p>
 </section>
+<div class="actions" id="preview-tools" hidden>
+<button id="toggle-phone-preview" type="button" aria-pressed="false">Preview customer phone</button>
+</div>
 <div class="grid" id="views" hidden>
-<section aria-labelledby="guest-title">
+<section id="audience-panel" aria-labelledby="guest-title">
 <h2 id="guest-title">Audience view</h2>
-<label for="guest">Try as a guest</label><select id="guest"><option value="1">My phone</option><option value="2">Guest 2</option><option value="3">Guest 3</option></select>
+<div id="guest-switch"><label for="guest">Try as a guest</label><select id="guest"><option value="1">My phone</option><option value="2">Guest 2</option><option value="3">Guest 3</option></select></div>
 <div id="guess-view" class="game" hidden aria-labelledby="guess-title">
 <h3 id="guess-title">Name That Tune</h3>
 <p>Find the song the performer is playing. You get one guess.</p>
@@ -55,23 +72,38 @@
 <p id="tip-info" class="subtle" role="status" hidden>Your regular tip links would open here. No payments are taken in this rehearsal.</p>
 </div>
 <div id="request-view">
-<label for="song">Pick a song</label><select id="song"></select>
+<div id="request-pick"><label for="song">Pick a song</label><select id="song"></select></div>
+<div id="phone-browse" hidden>
+<label for="phone-song-search">Search songs</label><input id="phone-song-search" type="search" placeholder="Title or artist" autocomplete="off">
+<div id="phone-song-list" aria-label="Available songs"></div>
+</div>
 <div class="actions"><button id="request" type="button" class="primary">Request for free</button></div>
+<div id="request-confirmation" class="game-result" hidden>
+<p id="request-position" role="status" tabindex="-1"></p>
+<div class="actions" id="request-boost-offer" hidden><button type="button" id="request-boost">Boost to front · $5</button><span class="subtle">Only charged if the song is played.</span></div>
+</div>
 <p id="guest-intake" class="subtle" role="status"></p>
-<div id="pool" class="pool" hidden>
+<div id="guest-pools"><div id="pool" class="pool" hidden>
 <h3 id="pool-name"></h3>
 <div id="pool-meter" aria-hidden="true"></div>
 <progress id="progress" aria-label="Pledged toward the song goal"></progress>
 <p id="pool-total"></p><p id="pool-status" class="subtle"></p>
 <div class="actions" id="pledges"></div>
-</div>
-<h3>Live request queue</h3>
+</div></div>
+<h3 id="guest-queue-heading">Live request queue</h3>
 <p class="subtle">See what’s waiting. A boost moves a song to the front of this list. The performer can still change what plays next.</p>
 <p id="empty"></p><ol class="queue" id="guest-queue"></ol>
 </div>
+<div id="phone-premium" hidden><p class="subtle">Chip in together to unlock a featured song.</p><p id="phone-no-premium" hidden>No premium songs are available right now.</p></div>
+<p class="subtle" id="phone-game-wait" hidden>No round is open right now.</p>
+<nav id="phone-nav" aria-label="Audience navigation" hidden>
+<button type="button" data-phone-view="songs" aria-pressed="true">Song Requests</button>
+<button type="button" data-phone-view="premium" aria-pressed="false">Premium Requests</button>
+<button type="button" data-phone-view="game" aria-pressed="false">Name That Tune</button>
+</nav>
 </section>
-<section aria-labelledby="performer-title">
-<h2 id="performer-title">Performer view</h2>
+<section id="performer-panel" aria-labelledby="performer-title">
+<h2 id="performer-title" tabindex="-1">Performer view</h2>
 <p id="request-state" role="status"></p>
 <div class="actions">
 <button id="toggle-intake" type="button" class="primary">Close requests</button>
@@ -92,11 +124,12 @@
 </div>
 <p id="performer-boost" class="subtle"></p>
 <ol class="queue" id="performer-queue"></ol>
-<div class="actions"><button id="early" type="button" hidden>Play premium song without charging</button></div>
+<div class="actions" id="early-actions"><button id="early" type="button" hidden>Play premium song without charging</button></div>
 <h3>Simulated payment activity</h3>
 <p id="payment-empty" class="subtle">No payments simulated yet.</p><ul id="payments" class="activity"></ul>
 </section>
 </div>
+<aside class="goal-alerts" id="goal-alerts" aria-label="Premium song alerts"></aside>
 <script>
 'use strict';
 const el=id=>document.getElementById(id);
@@ -110,7 +143,26 @@ function fill(select,entries){
  select.replaceChildren(...entries.map(({id,title})=>new Option(title,id)));
  if(entries.some(e=>e.id===value))select.value=value;
 }
-function setupCatalog(){fill(el('premium-song'),catalog);el('premium-options').hidden=!el('premium').checked}
+const premiumRows=()=>[...el('premium-rows').children];
+function setupCatalog(){
+ const available=catalog.map(withArtist);
+ for(const row of premiumRows())fill(row.querySelector('select'),available);
+ el('premium-options').hidden=!el('premium').checked;
+ el('add-premium').disabled=premiumRows().length>=catalog.length;
+}
+function addPremium(){
+ const used=new Set(premiumRows().map(row=>row.querySelector('select').value));
+ const available=[...catalog].sort(songOrder).map(withArtist), next=available.find(song=>!used.has(song.id));
+ if(!next)return;
+ const row=node('div','');row.className='pool premium-row';
+ const songLabel=node('label','Premium song '), select=node('select','');
+ const amountLabel=node('label','Goal for this song ($) '), amount=node('input','');
+ Object.assign(amount,{type:'number',min:'5',max:'1000',step:'1',value:'50',required:true});
+ songLabel.append(select);amountLabel.append(amount);
+ const remove=action('Remove this song',()=>{row.remove();setupCatalog();el('add-premium').focus()});
+ row.append(songLabel,amountLabel,remove);el('premium-rows').append(row);
+ fill(select,available);select.value=next.id;setupCatalog();select.focus();
+}
 function ordered(){
  return [...show.rows].sort((a,b)=>Number(b.boost?.state==='held')-Number(a.boost?.state==='held'));
 }
@@ -156,31 +208,33 @@ function renderIntake(){
 }
 function boostAvailable(){return intakeOpen()&&el('auto').checked&&show.rows.length>=2&&!show.rows.some(row=>row.boost?.state==='held')}
 function boost(row,guest){
- if(!boostAvailable()||row.premium||!show.rows.includes(row)||!row.guests.has(guest))return;
+ if(!boostAvailable()||row.premium||ordered().indexOf(row)<=0||!row.guests.has(guest))return;
  row.boost={state:'held',kind:'Boost for '+row.song.title,amount:500};
  ledger(row.boost.kind,500,'authorized');report(row.song.title+' moved to the front of the queue. Simulated charge only if marked played.');render();
 }
 function request(){
  const song=show.catalog.find(s=>s.id===el('song').value),guest=el('guest').value;
- if(!intakeOpen()||!song||song.id===show.pool?.song.id)return;
+ if(!intakeOpen()||!song||show.pools.some(pool=>pool.song.id===song.id))return;
  let row=show.rows.find(r=>r.song.id===song.id);
  if(!row){row={song,guests:new Set()};show.rows.push(row)}
- if(row.guests.has(guest)){report('You already requested '+song.title+'.');return}
+ show.latestRequests.set(guest,row);
+ if(row.guests.has(guest)){report('You already requested '+song.title+'.');render();return}
  row.guests.add(guest);report('Requested '+song.title+' for free.');render();
 }
-function pledge(amount){
- const pool=show.pool,guest=el('guest').value;
+function pledge(pool,amount){
+ const guest=el('guest').value;
+ if(!show.pools.includes(pool))return;
  if(!intakeOpen()||!pool||pool.status!=='open'||!Number.isInteger(amount)||amount<=0||amount>pool.goal-pool.total)return;
  const hold={guest,state:'held',kind:'Pledge for '+pool.song.title,amount};
  pool.holds.push(hold);pool.total+=amount;ledger(hold.kind,amount,'authorized');
  if(pool.total===pool.goal){
    pool.status='funded';
-   show.rows.push({song:pool.song,premium:true,guests:new Set(pool.holds.map(h=>h.guest))});
+   const row={song:pool.song,premium:pool,guests:new Set(pool.holds.map(h=>h.guest))};
+   show.rows.push(row);show.goalAlerts.add(row);
  }
  report(pool.status==='funded'?'Goal reached! The premium song joined the queue.':'Test pledge added.');render();
 }
-function resolvePool(played){
- const pool=show.pool;
+function resolvePool(pool,played){
  if(!pool||!['open','funded'].includes(pool.status))return;
  const charge=played&&pool.status==='funded';
  pool.holds.forEach(hold=>changeHold(hold,charge?'captured':'released'));
@@ -188,35 +242,55 @@ function resolvePool(played){
 }
 function finish(row,played){
  if(!show.active||!show.rows.includes(row))return;
- show.rows=show.rows.filter(r=>r!==row);
+ show.rows=show.rows.filter(r=>r!==row);show.goalAlerts.delete(row);
+ if(show.goalSelected===row)show.goalSelected=null;
  changeHold(row.boost,played?'captured':'released');
- if(row.premium)resolvePool(played);
+ if(row.premium)resolvePool(row.premium,played);
  report(row.song.title+(played?' marked played.':' skipped.'));render();
 }
 function end(){
  if(!show.active)return;
- show.rows.forEach(row=>changeHold(row.boost,'released'));resolvePool(false);
- show.rows=[];show.active=false;
+ show.rows.forEach(row=>changeHold(row.boost,'released'));show.pools.forEach(pool=>resolvePool(pool,false));
+ show.rows=[];show.active=false;show.goalAlerts.clear();show.goalSelected=null;setPhonePreview(false);
  if(show.round?.status==='open')show.round=null;
  report('Rehearsal ended. All outstanding authorizations were released.');render();
 }
-function renderPool(){
- const pool=show.pool;
- el('pool').hidden=!pool;
- el('early').hidden=!show.active||pool?.status!=='open';
- if(!pool)return;
+const poolTemplate=el('pool').cloneNode(true);
+function renderPools(){
+ const cards=el('guest-pools'), earlyActions=el('early-actions');
+ while(cards.children.length>Math.max(1,show.pools.length))cards.lastElementChild.remove();
+ while(cards.children.length<show.pools.length){
+   const card=poolTemplate.cloneNode(true), suffix='-'+cards.children.length;
+   card.id+=suffix;
+   for(const part of card.querySelectorAll('[id]'))part.id+=suffix;
+   cards.append(card);
+ }
+ el('pool').hidden=!show.pools.length;
+ earlyActions.replaceChildren(el('early'));
+ el('early').hidden=!show.active||show.pools[0]?.status!=='open';
+ show.pools.forEach((pool,index)=>{
+   const suffix=index?'-'+index:'';
+   renderPool(pool,suffix);
+   if(index&&show.active&&pool.status==='open')earlyActions.append(action('Play '+pool.song.title+' without charging',()=>playEarly(pool)));
+ });
+ if(show.pools.length>1&&show.pools[0])el('early').textContent='Play '+show.pools[0].song.title+' without charging';
+ else el('early').textContent='Play premium song without charging';
+}
+function renderPool(pool,suffix){
+ const part=id=>el(id+suffix);
+ part('pool').hidden=false;
  const open=intakeOpen()&&pool.status==='open',remain=pool.goal-pool.total;
- el('pool-name').textContent=pool.song.title+' Fund';
- el('pool-meter').textContent='🫙 '+ '🙌'.repeat(Math.floor(5*pool.total/pool.goal));
- el('progress').max=pool.goal;el('progress').value=pool.total;
- el('pool-total').textContent=money(pool.total)+' pledged toward '+money(pool.goal);
- el('pool-status').textContent={open:'Chip in together. You only pay if the goal is reached and the song is marked played.',funded:'Goal reached! The song is in the queue. Pledges are charged only if it’s marked played.',closed:'Goal closed. No pledges charged.',played:pool.charged?'Played! Test pledges collected.':'Played without charging.'}[pool.status];
- el('pledges').replaceChildren();
- if(pool.status==='open'&&!open&&show.active)el('pool-status').textContent='New pledges are paused while requests are closed.';
+ part('pool-name').textContent=pool.song.title+' Fund';
+ part('pool-meter').textContent='🫙 '+ '🙌'.repeat(Math.floor(5*pool.total/pool.goal));
+ part('progress').max=pool.goal;part('progress').value=pool.total;
+ part('pool-total').textContent=money(pool.total)+' pledged toward '+money(pool.goal);
+ part('pool-status').textContent={open:'Chip in together. You only pay if the goal is reached and the song is marked played.',funded:'Goal reached! The song is in the queue. Pledges are charged only if it’s marked played.',closed:'Goal closed. No pledges charged.',played:pool.charged?'Played! Test pledges collected.':'Played without charging.'}[pool.status];
+ part('pledges').replaceChildren();
+ if(pool.status==='open'&&!open&&show.active)part('pool-status').textContent='New pledges are paused while requests are closed.';
  if(open){
    const amounts=[500,1000,2000].filter(a=>a<remain);
-   for(const amount of amounts)el('pledges').append(action('Pledge '+money(amount),()=>pledge(amount)));
-   el('pledges').append(action('Finish the goal · '+money(remain),()=>pledge(remain)));
+   for(const amount of amounts)part('pledges').append(action('Pledge '+money(amount),()=>pledge(pool,amount)));
+   part('pledges').append(action('Finish the goal · '+money(remain),()=>pledge(pool,remain)));
  }
 }
 function songOrder(a,b){return a.title.localeCompare(b.title,undefined,{sensitivity:'base',numeric:true})}
@@ -237,7 +311,9 @@ function renderRound(){
  const open=!!show.active&&round?.status==='open', revealed=round?.status==='revealed';
  const guessed=round?.guesses.has(guest);
  const guessing=open&&!round.winner&&!guessed;
- const switchToGuess=guessing&&el('guess-view').hidden;
+ const phone=document.body.classList.contains('phone-preview');
+ const showGuess=guessing&&(!phone||phoneView==='game');
+ const switchToGuess=showGuess&&el('guess-view').hidden;
  el('game-tools').hidden=!show.active;
  el('game-setup').hidden=!!round;
  el('reveal-round').hidden=!open;
@@ -246,10 +322,14 @@ function renderRound(){
    ? 'Answer revealed: '+round.answer.title+(round.winner?' · Winner code: '+round.code:' · No correct guesses.')
    :round.winner?'Winner found! Claim code: '+round.code+' · Reveal when you’re ready.'
    :round.guesses.size+' '+(round.guesses.size===1?'guess':'guesses')+' received.';
- el('guess-view').hidden=!guessing;
- el('request-view').hidden=guessing;
- if(switchToGuess)updateGuessList();
+ el('guess-view').hidden=!showGuess;
+ el('request-view').hidden=phone?phoneView!=='songs':guessing;
+ el('phone-premium').hidden=!phone||phoneView!=='premium';
+ el('phone-no-premium').hidden=!!show.pools.length;
+ el('phone-game-wait').hidden=!phone||phoneView!=='game'||!!round;
  el('guess-result').hidden=!(revealed||(open&&(guessed||round.winner)));
+ if(phone&&phoneView==='premium')el('guess-result').hidden=true;
+ if(switchToGuess)updateGuessList();
  el('guess-message').textContent=revealed
    ? 'The answer was '+round.answer.title+'.'+(!round.winner?' No correct guesses this round.':'')
    :guessed?'Guess submitted. We’ll show the answer here.'
@@ -276,56 +356,133 @@ function submitGuess(event){
  if(guess===round.answer.id){
    round.winner=guest;round.code=String(1000+crypto.getRandomValues(new Uint32Array(1))[0]%9000);
  }
+ if(document.body.classList.contains('phone-preview'))selectPhoneView('songs',false);
  resetGuessForm();render();el('guess-message').focus();
+}
+function renderRequestConfirmation(queue,guest){
+ const row=show.latestRequests.get(guest), ahead=queue.indexOf(row);
+ const showPosition=ahead>=0;
+ const offer=ahead>0&&boostAvailable();
+ const boostFocused=document.activeElement===el('request-boost');
+ el('request-confirmation').hidden=!showPosition;
+ el('request-position').textContent=!showPosition?'':row.song.title+' · '+(ahead===0?'Your song is at the front of the queue.':ahead+' '+(ahead===1?'request':'requests')+' ahead of yours.');
+ el('request-boost-offer').hidden=!offer;
+ el('request-boost').disabled=!offer;
+ if(boostFocused&&!offer)(showPosition?el('request-position'):el('song')).focus();
+}
+let phoneView='songs';
+function renderPhoneBrowse(){
+ const list=el('phone-song-list'), query=el('phone-song-search').value.trim().toLocaleLowerCase();
+ const songs=show.catalog.filter(song=>!show.pools.some(pool=>pool.song.id===song.id)).filter(song=>[song.title,song.artist||''].some(text=>text.toLocaleLowerCase().includes(query))).sort(songOrder);
+ const selected=el('song').value;
+ list.replaceChildren(...songs.slice(0,80).map(song=>{
+   const button=action(withArtist(song).title,()=>{
+     el('song').value=song.id;
+     for(const choice of list.querySelectorAll('button'))choice.setAttribute('aria-pressed',String(choice===button));
+   });
+   button.setAttribute('aria-pressed',String(song.id===selected));return button;
+ }));
+ if(!songs.length)list.append(node('p','No matching songs.'));
+ if(songs.length>80)list.append(node('p','Showing the first 80 songs. Search to find more.'));
+}
+function selectPhoneView(view,refresh=true){
+ phoneView=view;
+ for(const button of el('phone-nav').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.phoneView===view));
+ el('guest-title').textContent={songs:'Song Requests',premium:'Premium Requests',game:'Name That Tune'}[view];
+ if(refresh&&show)renderRound();
+}
+function setPhonePreview(on){
+ const toggle=el('toggle-phone-preview'), guestSwitch=el('guest-switch');
+ document.body.classList.toggle('phone-preview',on);
+ toggle.setAttribute('aria-pressed',String(on));
+ toggle.textContent=on?'Back to both views':'Preview customer phone';
+ el('phone-nav').hidden=!on;
+ el('phone-browse').hidden=!on;
+ if(on){el('phone-premium').append(el('guest-pools'));selectPhoneView('songs',false);renderPhoneBrowse()}
+ else{el('guest-queue-heading').before(el('guest-pools'));el('guest-title').textContent='Audience view'}
+ if(show)renderRound();
+ (on?el('preview-tools'):el('audience-panel')).append(guestSwitch);
+ if(!on)el('guest-title').after(guestSwitch);
+}
+function openGoalSong(row){
+ if(!show.rows.includes(row))return;
+ show.goalAlerts.delete(row);show.goalSelected=row;
+ setPhonePreview(false);render();
+ const item=[...el('performer-queue').children].find(li=>li.classList.contains('goal-selected'));
+ item?.focus({preventScroll:true});item?.scrollIntoView({block:'center'});
+}
+function renderGoalAlerts(){
+ const alerts=el('goal-alerts');
+ const rows=[...show.goalAlerts];
+ if(alerts.children.length===rows.length&&rows.every((row,i)=>alerts.children[i].dataset.song===row.song.id))return;
+ alerts.replaceChildren(...rows.map(row=>{
+   const card=node('article','');card.dataset.song=row.song.id;
+   const message=node('p','');message.setAttribute('role','status');
+   message.append(node('strong','Premium goal reached'),document.createElement('br'),row.song.title+' · '+money(row.premium.goal));
+   const buttons=node('div','');buttons.className='actions';
+   const open=action('Go to song',()=>openGoalSong(row));open.className='primary';
+   const later=action('Later',()=>{show.goalAlerts.delete(row);renderGoalAlerts();el('performer-title').focus({preventScroll:true})});
+   buttons.append(open,later);card.append(message,buttons);return card;
+ }));
 }
 function render(){
  const queue=ordered(), guest=el('guest').value, hasBoost=queue.some(r=>r.boost?.state==='held');
  el('setup').disabled=show.active;el('start').hidden=show.active;el('end').hidden=!show.active;el('views').hidden=false;
+ el('preview-tools').hidden=!show.active;
  renderIntake();
  el('request').disabled=!intakeOpen()||!el('song').options.length;
  el('empty').textContent=!show.active?'This rehearsal has ended.':queue.length?'':'No songs waiting yet.';
- const guestFocus=document.activeElement?.dataset.boostSong;
  el('guest-queue').replaceChildren();el('performer-queue').replaceChildren();
  queue.forEach((row,i)=>{
    const own=row.guests.has(guest), boosted=row.boost?.state==='held';
    const audience=node('li',row.song.title);
    if(own)audience.append(node('strong',' · '+(i===0?'Your song is at the front':i+' '+(i===1?'song':'songs')+' ahead of yours')));
    if(own&&boosted)audience.append(node('span',' · Boosted'));
-   if(own&&!row.premium&&i>0&&boostAvailable()){
-     const btn=action('Boost to front · $5',()=>boost(row,guest));btn.dataset.boostSong=row.song.id;
-     const actions=node('div','');actions.className='actions';actions.append(btn);audience.append(actions);
-   }
    el('guest-queue').append(audience);
    const performer=node('li',row.song.title+(boosted?' · $5 boost':row.premium?' · Goal reached':''));
+   if(show.goalSelected===row){performer.classList.add('goal-selected');performer.tabIndex=-1}
    const controls=node('div','');controls.className='actions';controls.append(action('Mark Played',()=>finish(row,true)),action('Skip',()=>finish(row,false)));performer.append(controls);el('performer-queue').append(performer);
  });
- if(guestFocus){
-   const match=[...el('guest-queue').querySelectorAll('button')].find(b=>b.dataset.boostSong===guestFocus);
-   if(match)match.focus();else{el('notice').tabIndex=-1;el('notice').focus()}
- }
+ renderRequestConfirmation(queue,guest);
  el('performer-boost').textContent=!show.active?'Rehearsal ended.':hasBoost?'A boost is active. It stays in place until played or skipped.':!el('auto').checked?'Boosts are off.':boostAvailable()?'A waiting song can be boosted for $5.':!intakeOpen()?'New boosts are paused while requests are closed.':'Boosts appear when at least two different songs are waiting.';
  el('payments').replaceChildren(...show.payments.map(line=>node('li',line)));
  el('payment-empty').hidden=!!show.payments.length;
- renderPool();renderRound();
+ renderPools();renderRound();renderGoalAlerts();
 }
 el('start').onclick=()=>{
  if(show?.active)return;
- const usePremium=el('premium').checked, goal=Number(el('goal').value);
+ const pools=[];
  let hours=null;
  if(el('scheduled').checked){
    if(!el('opens').reportValidity()||!el('closes').reportValidity())return;
    if(el('opens').value===el('closes').value){report('Choose different opening and closing times.');el('closes').focus();return}
    hours=makeWindow(Date.now());
  }
- if(usePremium&&!el('goal').reportValidity())return;
- const song=catalog.find(s=>s.id===el('premium-song').value);
- if(usePremium&&!song)return;
- show={active:true,hours,override:null,demoTime:null,rows:[],payments:[],catalog:[...catalog],pool:usePremium?{song,goal:goal*100,total:0,holds:[],status:'open'}:null};
- fill(el('song'),show.catalog.filter(s=>s.id!==show.pool?.song.id));
+ if(el('premium').checked)for(const row of premiumRows()){
+   const select=row.querySelector('select'), amount=row.querySelector('input');
+   if(!amount.reportValidity())return;
+   const song=catalog.find(s=>s.id===select.value);
+   if(!song)return;
+   if(pools.some(pool=>pool.song.id===song.id)){report('Choose each premium song only once.');select.focus();return}
+   pools.push({song,goal:Number(amount.value)*100,total:0,holds:[],status:'open'});
+ }
+ show={active:true,hours,override:el('start-requests-open').checked?null:false,demoTime:null,rows:[],latestRequests:new Map(),goalAlerts:new Set(),goalSelected:null,payments:[],catalog:[...catalog],pools};
+ fill(el('song'),show.catalog.filter(s=>!pools.some(pool=>pool.song.id===s.id)));
  fill(el('game-answer'),[...show.catalog].sort(songOrder).map(withArtist));
  el('guest').value='1';report('Rehearsal started. Switch guests to try several requests.');render();el('guest').focus();
 };
+for(const button of el('phone-nav').querySelectorAll('button'))button.onclick=()=>{
+ selectPhoneView(button.dataset.phoneView);
+ el('audience-panel').scrollIntoView?.({block:'start'});
+};
+el('phone-song-search').oninput=renderPhoneBrowse;
+el('toggle-phone-preview').onclick=()=>setPhonePreview(!document.body.classList.contains('phone-preview'));
+el('request-boost').onclick=()=>{
+ const guest=el('guest').value,row=show?.latestRequests.get(guest);
+ if(row)boost(row,guest);
+};
 el('premium').onchange=setupCatalog;
+el('add-premium').onclick=addPremium;
 el('scheduled').onchange=()=>{el('hours').hidden=!el('scheduled').checked};
 el('toggle-intake').onclick=()=>{
  if(!show?.active)return;
@@ -368,13 +525,28 @@ el('cancel-round').onclick=()=>{
 };
 el('tip-preview').onclick=()=>{show.round.tipOpened.add(el('guest').value);renderRound()};
 el('dismiss-tip').onclick=()=>{show.round.tipDismissed.add(el('guest').value);renderRound();el('guess-message').focus()};
-el('early').onclick=()=>{if(show.active&&show.pool?.status==='open'){resolvePool(true);report('Premium song marked played without charging.');render()}};
+function playEarly(pool){
+ if(show.active&&pool?.status==='open'){
+   resolvePool(pool,true);report(pool.song.title+' marked played without charging.');render();
+ }
+}
+el('early').onclick=()=>playEarly(show.pools[0]);
 addEventListener('message',e=>{
  if(e.origin!==location.origin||e.source!==parent||parent===window||e.data?.type!=='show-rehearsal-songs'||!Array.isArray(e.data.songs)||show?.active)return;
  const list=e.data.songs.filter(s=>typeof s?.id==='string'&&typeof s?.title==='string'&&s.title.trim());
  if(list.length>=3){catalog=list.map(({id,title,artist})=>({id,title,artist:typeof artist==='string'?artist:''}));setupCatalog()}
 });
 setupCatalog();
+if(window===window.parent&&new URLSearchParams(location.search).get('view')==='phone'){
+ el('scheduled').checked=false;el('hours').hidden=true;
+ el('premium').checked=true;el('premium-song').value='sample0';el('goal').value='50';
+ el('start').click();
+ if(show?.active){
+   el('guest').value='3';el('song').value='sample1';request();el('guest').value='1';
+   el('song').value='sample4';el('game-answer').value='sample3';startRound();
+   setPhonePreview(true);render();el('toggle-phone-preview').blur();
+ }
+}
 </script>
 </body>
 </html>
