@@ -3,6 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <title>Majestic Fuzz · Guest Rehearsal</title>
+<!-- Audience naming: Specials is the current label; Song Pot is the alternate. -->
 <style>
 :root{--bg:#000;--fg:#fff;--muted:#bdbdbd;--line:#333;--panel:#111;--accent:#fff;--disabled:#555}
 *{box-sizing:border-box}body{margin:0;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
@@ -116,12 +117,21 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 #guestBoost{margin-top:12px}
 #guestBoost p{margin:6px 0}
 #success .tipbox{margin-top:10px}
+
+.brand-art{position:relative;display:table;margin:12px auto 6px;max-width:calc(100% - 24px)}
+.brand-art .logo{margin:0 auto}
+.social-badge{position:absolute;top:-5px;width:44px;height:44px;display:grid;place-items:center;color:#fff;background:#080b09;border:1px solid #93a9ad;border-radius:50%;box-shadow:0 2px 8px #0009;z-index:1}
+.social-badge svg{width:21px;height:21px;display:block}
+.social-badge[data-network="facebook"]{left:-10px}
+.social-badge[data-network="instagram"]{right:-10px}
+.brand-art.no-logo{width:100%;min-height:44px}
+.brand-art.no-logo:empty,.social-links:empty{display:none}
 </style></head><body>
 <div class="wrap">
-<header class="hero"><img id="brandLogo" class="logo" alt="Musician logo" hidden><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
+<header class="hero"><div id="brandArt" class="brand-art"><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
 <div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><div id="filters" class="filters"></div></div>
-<div id="guestExtras" aria-label="More ways to join in"><button class="btn secondary" id="showGoal">Song Goals</button><button class="btn secondary" id="showGame">Name That Tune</button></div><div class="sortbar"><div class="sorttabs" role="group" aria-label="Sort songs"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">♨ Popular</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
+<div id="guestExtras" aria-label="More ways to join in"><button class="btn secondary" id="showGoal">Specials</button><button class="btn secondary" id="showGame">Name That Tune</button></div><div class="sortbar"><div class="sorttabs" role="group" aria-label="Sort songs"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">♨ Popular</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestHeading"><div class="sheet">
 <div id="formView"><h2 id="requestHeading">Request this song</h2><div id="selected" class="selected"></div>
@@ -129,7 +139,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 <label for="notes">Dedication or notes (optional)</label><textarea maxlength="1000" id="notes" placeholder="Dedication, special request, etc."></textarea>
 <p id="request-error" role="alert"></p><div class="actions"><button class="btn secondary" id="cancel">Cancel</button><button class="btn primary" id="send">Send Request</button></div></div>
 <div id="success" class="success"><div style="font-size:42px">🎵</div><h2 id="successHeading">Request sent!</h2><div id="successSong"></div><div id="historyMsg" class="notice" style="margin-top:14px"></div>
-<section id="guestBoost" class="tipbox" hidden><strong id="guestQueue" role="status"></strong><p id="boostTerms" class="small">A boost moves your song to the front. You’d only be charged if it’s played.</p><button class="btn secondary" id="boostGuest">Boost for $5</button></section>
+<section id="guestBoost" class="tipbox" hidden><strong id="guestQueue" role="status"></strong><p id="boostTerms" class="small">Move your request to the front of the list. You’d only be charged if it’s played.</p><button class="btn secondary" id="boostGuest">Move to Front · $5</button></section>
 <div class="tipbox"><strong>❤️ Want to support the music?</strong><div class="small">Tips are optional. Your request is free.</div><div class="tip-links" id="successTipLinks"></div></div>
 <div class="actions"><button class="btn primary" id="done">Done</button></div></div>
 </div></div>
@@ -158,8 +168,22 @@ async function loadConfig(){
  const logo=document.getElementById('brandLogo'),brand=document.getElementById('customBrand');
  brand.textContent=config.musicianName;brand.style.fontFamily=fonts[s.font]||fonts.system;brand.hidden=false;
  logo.hidden=!config.logo;if(config.logo){logo.src=config.logo;logo.alt=config.musicianName+' logo';logo.style.maxHeight=Math.max(80,Math.min(320,Number(s.logo_size)||190))+'px'}
- const host=document.getElementById('socialLinks');host.replaceChildren();
- for(const key of ['website','facebook','instagram'])if(safeLink(s[key])){const link=document.createElement('a');link.href=s[key];link.target='_blank';link.rel='noopener noreferrer';link.textContent={website:'Website',facebook:'Facebook',instagram:'Instagram'}[key];host.append(link)}
+ const host=document.getElementById('socialLinks'), art=document.getElementById('brandArt');host.replaceChildren();
+ const marks={
+  facebook:'<path fill="currentColor" d="M14 22v-9h3l.5-3.5H14V7.3c0-1 .3-1.7 1.8-1.7h1.9V2.5c-.3-.1-1.5-.2-2.8-.2-2.8 0-4.7 1.7-4.7 4.8v2.4H7v3.5h3.2v9z"/>',
+  instagram:'<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.7" r="1.2" fill="currentColor"/>'
+ };
+ art.replaceChildren(logo);
+ art.classList.toggle('no-logo',!config.logo);
+ for(const key of ['website','facebook','instagram'])if(safeLink(s[key])){
+  const link=document.createElement('a'), name={website:'Website',facebook:'Facebook',instagram:'Instagram'}[key];
+  link.href=s[key];link.target='_blank';link.rel='noopener noreferrer';
+  if(marks[key]){
+   link.className='social-badge';link.dataset.network=key;link.setAttribute('aria-label',name);
+   link.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+marks[key]+'</svg>';art.append(link);
+  }else{link.textContent=name;host.append(link)}
+ }
+ art.hidden=!config.logo&&!art.querySelector('a');
  buildTipLinks();
 }
 document.querySelectorAll('[data-sort]').forEach(button=>button.onclick=()=>{sortBy=button.dataset.sort;document.querySelectorAll('[data-sort]').forEach(b=>b.classList.toggle('active',b===button));render()});
@@ -374,12 +398,12 @@ function showGuestBoost(id){
   if(boostedSong||demoQueue.indexOf(id)<1)return;
   boostedSong=id;demoQueue.splice(demoQueue.indexOf(id),1);demoQueue.unshift(id);
   showGuestBoost(id);
-  el('guestQueue').textContent='Boosted! Your song is at the front of the queue.';
+  el('guestQueue').textContent='Your request moved to the front of the list.';
   el('boostTerms').hidden=false;
-  el('boostTerms').textContent='Simulated $5 boost. No money was charged.';
+  el('boostTerms').textContent='Simulated $5 payment. No money was charged.';
   el('done').focus();
  };
- if(!button.hidden)el('boostTerms').textContent='A boost moves your song to the front. You’d only be charged if it’s played.';
+ if(!button.hidden)el('boostTerms').textContent='Move your request to the front of the list. You’d only be charged if it’s played.';
 }
 function closeGuestFeature(){el('guestFeature').classList.remove('open');previousFeatureFocus?.focus()}
 function openGuestFeature(title){
@@ -393,12 +417,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el('guestFeature').
 const dollars=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
 function renderGoal(){
  const remaining=5000-pledgeCents;
- el('featureBody').innerHTML=`<h3>Sweet Caroline</h3><progress value="${pledgeCents}" max="5000" aria-label="Sweet Caroline pledge progress"></progress>
+ el('featureBody').innerHTML=`<h3>Tonight’s Special: Sweet Caroline</h3><progress value="${pledgeCents}" max="5000" aria-label="Sweet Caroline pledge progress"></progress>
  <p role="status">${dollars(pledgeCents)} pledged toward $50.00</p>
- ${remaining>0?`<p>Chip in to unlock this song. You’d only be charged if it’s played.</p>
+ ${remaining>0?`<p>Can this room make it happen? Pitch in any amount toward $50. You’d only be charged if it’s played.</p>
  <div id="goalPresets"></div><label for="guestAmount">Choose your own amount ($)</label>
  <input id="guestAmount" type="number" inputmode="decimal" min="0.01" max="${remaining/100}" step="0.01">
- <button class="btn primary" id="pledgeGuest">Pledge</button><p id="pledgeError" role="alert"></p>`:'<p>Goal reached! Sweet Caroline joined the rehearsal queue.</p>'}`;
+ <button class="btn primary" id="pledgeGuest">Add to the pot</button><p id="pledgeError" role="alert"></p>`:'<p>Goal reached! Sweet Caroline joined the rehearsal queue.</p>'}`;
  if(remaining<=0)return;
  const pledge=amount=>{
   const raw=String(amount);
@@ -416,7 +440,7 @@ function renderGoal(){
  }
  el('pledgeGuest').onclick=()=>pledge(el('guestAmount').value);
 }
-el('showGoal').onclick=()=>{openGuestFeature('Song Goals');renderGoal()};
+el('showGoal').onclick=()=>{openGuestFeature('Specials');renderGoal()};
 el('showGame').onclick=()=>{
  openGuestFeature('Name That Tune');
  if(guessed){el('featureBody').textContent='You already guessed in this round.';return}
