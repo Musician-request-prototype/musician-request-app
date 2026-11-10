@@ -114,6 +114,16 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 #showGame{width:100%;min-height:44px;border:1px solid var(--accent)}
 #rehearsalHost{margin:6px auto 12px;text-align:center}
 #rehearsalHost button{min-height:44px}
+#performanceSpecials{max-width:560px;margin:12px auto 16px;padding:14px;border:1px solid var(--accent);border-radius:14px;text-align:left;background:var(--bg)}
+#performanceSpecials h2,#performanceSpecials h3{margin:.25em 0 .5em}
+#performanceSpecials label{display:block;margin:.6em 0 .3em}
+#performanceSpecials input,#performanceSpecials select{min-height:44px;width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid #777;border-radius:8px;padding:8px}
+#performanceSpecials .actions{flex-wrap:wrap;margin:10px 0}
+#performanceSpecials progress{width:100%;accent-color:var(--accent)}
+#specialRecap{margin-top:15px}
+#specialRecap li{margin-bottom:10px}
+#specialNotice:empty{display:none}
+#performanceSpecials summary{cursor:pointer;padding:8px 0;font-weight:700}
 .modal .sheet{max-height:calc(100dvh - 12px);overflow:auto;overscroll-behavior:contain}
 #guestFeature button{margin-top:8px}
 #guestFeature p{line-height:1.4}
@@ -138,7 +148,12 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 </style></head><body>
 <div class="wrap">
 <header class="hero"><div id="cornerSocial"></div><div id="brandArt" class="brand-art" hidden><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
-<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="rehearsalHost" hidden><button type="button" id="rehearsalRound" class="btn secondary">Start rehearsal round</button></div><div id="notice"></div>
+<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="rehearsalHost" hidden><button type="button" id="rehearsalRound" class="btn secondary">Start rehearsal round</button> <button type="button" class="btn secondary" id="specialsHostToggle" aria-controls="performanceSpecials" aria-expanded="false">Performance · Specials</button>
+<section id="performanceSpecials" aria-labelledby="specialsHostTitle" hidden>
+<h2 id="specialsHostTitle" tabindex="-1">Specials in Performance</h2><p class="small">Rehearsal only · No real money moves.</p>
+<div id="specialHostBody"></div><p id="specialNotice" role="status"></p>
+<details id="specialRecap"><summary>Show Recap · Specials</summary><div id="specialRecapBody"></div></details>
+</section></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><div id="filters" class="filters"></div></div>
 <div class="sortbar"><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab">Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
@@ -154,7 +169,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 </div></div>
 
 <div id="guestFeature" class="modal" role="dialog" aria-modal="true" aria-labelledby="featureTitle"><div class="sheet">
-<h2 id="featureTitle"></h2><div id="featureBody"></div><div class="actions"><button id="closeFeature" class="btn secondary">Back to songs</button></div>
+<h2 id="featureTitle" tabindex="-1"></h2><div id="featureBody"></div><div class="actions"><button id="closeFeature" class="btn secondary">Back to songs</button></div>
 </div></div>
 <script>
 'use strict';
@@ -395,7 +410,8 @@ async function loadPublicSchedule(){
 document.getElementById('refresh-shows').onclick=loadPublicSchedule;
 
 const el=id=>document.getElementById(id);
-let boostedSong='', pledgeCents=2500, guessed=false, roundActive=false, previousFeatureFocus=null;
+const hostMode=new URLSearchParams(location.search).get('host')==='1';
+let boostedSong='', guessed=false, roundActive=false, previousFeatureFocus=null;
 function renderRehearsalRound(){
  const invite=roundActive&&!guessed;
  el('showGame').hidden=!invite;
@@ -403,7 +419,7 @@ function renderRehearsalRound(){
  if(invite)el('dicePanel').hidden=true;
  el('rehearsalRound').textContent=roundActive?'End rehearsal round':'Start rehearsal round';
 }
-if(new URLSearchParams(location.search).get('host')==='1'){
+if(hostMode){
  el('rehearsalHost').hidden=false;
  el('rehearsalRound').onclick=()=>{
   roundActive=!roundActive;
@@ -433,33 +449,80 @@ function showGuestBoost(id){
  if(!button.hidden)el('boostTerms').textContent='Move your request to the front of the list. You’d only be charged if it’s played.';
 }
 function closeGuestFeature(){el('guestFeature').classList.remove('open');if(previousFeatureFocus?.hidden)el('search').focus();else previousFeatureFocus?.focus()}
+function focusGuestFeatureTop(){
+ const title=el('featureTitle');
+ title.focus({preventScroll:true});
+ title.closest('.sheet').scrollTop=0;
+}
 function openGuestFeature(title){
  previousFeatureFocus=document.activeElement;
  el('featureTitle').textContent=title;
  el('guestFeature').classList.add('open');
- el('closeFeature').focus();
+ focusGuestFeatureTop();
 }
 el('closeFeature').onclick=closeGuestFeature;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el('guestFeature').classList.contains('open'))closeGuestFeature()});
 const dollars=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
+const rehearsalSpecialKey='majestic-fuzz-rehearsal-specials-v1';
+let special=hostMode?null:{songId:'7',target:5000,online:2500,cash:[],status:'open'}, specialRecap=[], queuedSpecial='';
+const songName=id=>demoSongs.find(song=>song.id===id)?.title||'Song';
+const cashTotal=g=>g.cash.reduce((sum,amount)=>sum+amount,0);
+const goalTotal=g=>cashTotal(g)+g.online;
+const goalRemaining=g=>g.target-goalTotal(g);
+function validSpecial(g){
+ return g&&demoSongs.some(song=>song.id===g.songId)&&['open','played','closed'].includes(g.status)&&Number.isSafeInteger(g.target)&&g.target>0&&g.target<=100000&&Number.isSafeInteger(g.online)&&g.online>=0&&Array.isArray(g.cash)&&g.cash.every(x=>Number.isSafeInteger(x)&&x>0)&&goalTotal(g)<=g.target&&(g.status!=='played'||goalRemaining(g)===0);
+}
+if(hostMode){
+ try{
+  const saved=JSON.parse(localStorage.getItem(rehearsalSpecialKey)||'null');
+  if(validSpecial(saved?.current))special=saved.current;
+  if(Array.isArray(saved?.recap))specialRecap=saved.recap.filter(g=>validSpecial(g)&&g.status!=='open').slice(-50);
+ }catch{}
+}
+function saveSpecial(){
+ if(!hostMode)return;
+ try{localStorage.setItem(rehearsalSpecialKey,JSON.stringify({current:special,recap:specialRecap}))}catch{}
+}
+function syncSpecialQueue(){
+ const waiting=special?.status==='open'&&goalRemaining(special)===0?special.songId:'';
+ if(queuedSpecial&&queuedSpecial!==waiting&&!demoCounts[queuedSpecial]){
+  const i=demoQueue.indexOf(queuedSpecial);
+  if(i>=0)demoQueue.splice(i,1);
+ }
+ if(waiting&&!demoQueue.includes(waiting))demoQueue.push(waiting);
+ queuedSpecial=waiting;
+}
+function moneyCents(raw){
+ const value=String(raw).trim();
+ if(!/^\d+(?:\.\d{1,2})?$|^\.\d{1,2}$/.test(value))return 0;
+ const cents=Math.round(Number(value)*100);
+ return Number.isSafeInteger(cents)?cents:0;
+}
+function limitMessage(max){return 'Enter an amount between $0.01 and '+dollars(max)+'.'}
+function specialChanged(message=''){
+ syncSpecialQueue();saveSpecial();
+ if(hostMode){renderSpecialHost();el('specialNotice').textContent=message}
+}
+syncSpecialQueue();
 function renderGoal(){
- const remaining=5000-pledgeCents;
- el('featureBody').innerHTML=`<h3>Tonight’s Special: Sweet Caroline</h3><progress value="${pledgeCents}" max="5000" aria-label="Sweet Caroline pledge progress"></progress>
- <p role="status">${dollars(pledgeCents)} pledged toward $50.00</p>
- ${remaining>0?`<p>Can this room make it happen? Pitch in any amount toward $50. You’d only be charged if it’s played.</p>
+ const body=el('featureBody'), g=special;
+ if(!g){body.innerHTML='<p>No special is open right now.</p>';return}
+ const remaining=goalRemaining(g), name=esc(songName(g.songId));
+ const summary=g.status==='closed'?'Closed without playing. No online pledges were charged.':g.status==='played'?'Played! Thanks for making it happen.':'Goal reached! '+name+' joined the rehearsal queue.';
+ body.innerHTML=`<h3>Tonight’s Special: ${name}</h3><progress value="${goalTotal(g)}" max="${g.target}" aria-label="${name} pledge progress"></progress>
+ <p role="status">${dollars(goalTotal(g))}${cashTotal(g)?'':' pledged'} toward ${dollars(g.target)}</p>
+ ${g.status==='open'&&remaining>0?`<p>Can this room make it happen? Pitch in any amount toward ${dollars(g.target)}. You’d only be charged if it’s played.</p>
  <div id="goalPresets"></div><label for="guestAmount">Choose your own amount ($)</label>
  <input id="guestAmount" type="number" inputmode="decimal" min="0.01" max="${remaining/100}" step="0.01">
- <button class="btn primary" id="pledgeGuest">Add to the pot</button><p id="pledgeError" role="alert"></p>`:'<p>Goal reached! Sweet Caroline joined the rehearsal queue.</p>'}`;
- if(remaining<=0)return;
+ <button class="btn primary" id="pledgeGuest">Add to the pot</button><p id="pledgeError" role="alert"></p>`:`<p>${summary}</p>`}`;
+ if(g.status!=='open'||remaining<=0)return;
  const pledge=amount=>{
-  const raw=String(amount);
-  const cents=Math.round(Number(raw)*100);
-  if(!/^\d+(?:\.\d{1,2})?$|^\.\d{1,2}$/.test(raw)||cents<=0||cents>remaining){
-   el('pledgeError').textContent='Enter an amount between $0.01 and '+dollars(remaining)+'.';return;
-  }
-  pledgeCents+=cents;
-  if(pledgeCents===5000&&!demoQueue.includes('7'))demoQueue.push('7');
-  renderGoal();el('closeFeature').focus();
+  if(g!==special||g.status!=='open')return;
+  const cents=moneyCents(amount), max=goalRemaining(g);
+  if(cents<1||cents>max){el('pledgeError').textContent=limitMessage(max);return}
+  g.online+=cents;
+  specialChanged('Test online pledge added.');
+  renderGoal();focusGuestFeatureTop();
  };
  for(const cents of [500,1000].filter(n=>n<remaining).concat(remaining)){
   const b=document.createElement('button');b.className='btn secondary';
@@ -467,7 +530,77 @@ function renderGoal(){
  }
  el('pledgeGuest').onclick=()=>pledge(el('guestAmount').value);
 }
-el('showGoal').onclick=()=>{openGuestFeature('Specials');renderGoal()};
+el('showGoal').onclick=()=>{renderGoal();openGuestFeature('Specials')};
+function renderSpecialHost(){
+ const body=el('specialHostBody'), g=special;
+ if(!g||g.status!=='open'){
+  body.innerHTML=`<form id="openSpecialForm" novalidate>
+  <label for="specialSong">Song</label><select id="specialSong">${demoSongs.map(song=>`<option value="${song.id}"${song.id==='7'?' selected':''}>${esc(song.title)} — ${esc(song.artist)}</option>`).join('')}</select>
+  <label for="specialTarget">Goal amount ($)</label><input id="specialTarget" type="number" value="50" min="0.01" max="1000" step="0.01" inputmode="decimal">
+  <div class="actions"><button class="btn primary" type="submit">Open goal</button></div></form>`;
+  el('openSpecialForm').onsubmit=e=>{
+   e.preventDefault();if(special?.status==='open')return;
+   const target=moneyCents(el('specialTarget').value), songId=el('specialSong').value;
+   if(target<1||target>100000){el('specialNotice').textContent=limitMessage(100000);return}
+   special={songId,target,online:0,cash:[],status:'open'};
+   specialChanged('Goal open. Guests can now pitch in.');el('specialActiveTitle').focus();
+  };
+ }else{
+  const total=goalTotal(g), remaining=goalRemaining(g);
+  body.innerHTML=`<h3 id="specialActiveTitle" tabindex="-1">${esc(songName(g.songId))}</h3>
+  <progress aria-label="Special progress" value="${total}" max="${g.target}"></progress>
+  <p><strong>${dollars(total)} of ${dollars(g.target)}</strong>${remaining===0?' · Goal reached':''}<br>${dollars(cashTotal(g))} cash received · ${dollars(g.online)} pledged online</p>
+  ${remaining>0?`<details id="addSpecialCash"><summary>Add cash</summary>
+  <div id="cashPresets" class="actions"></div><form id="cashForm" novalidate>
+  <label for="customCash">Other amount ($)</label><input id="customCash" type="number" min="0.01" max="${remaining/100}" step="0.01" inputmode="decimal">
+  <button class="btn secondary" type="submit">Record cash</button></form></details>`:''}
+  <div class="actions">
+   ${g.cash.length?'<button type="button" class="btn secondary" id="undoCash">Undo last cash</button>':''}
+   ${remaining===0?'<button type="button" class="btn primary" id="specialPlayed">Mark played</button>':''}
+   <button type="button" class="btn secondary" id="specialClose">Close without playing</button>
+  </div>
+  <button type="button" class="btn secondary" id="viewSpecialGuest">Preview guest goal</button>`;
+  function addCash(amount){
+   if(g!==special||g.status!=='open')return;
+   const max=goalRemaining(g), cents=moneyCents(amount);
+   if(cents<1||cents>max){el('specialNotice').textContent=limitMessage(max);return}
+   g.cash.push(cents);specialChanged(dollars(cents)+' cash added.');el('specialActiveTitle').focus();
+  }
+  if(remaining>0){
+   for(const cents of [500,1000,2000].filter(n=>n<=remaining)){
+    const button=document.createElement('button');button.type='button';button.className='btn secondary';button.textContent=dollars(cents);button.onclick=()=>addCash(cents/100);el('cashPresets').append(button);
+   }
+   el('cashForm').onsubmit=e=>{e.preventDefault();addCash(el('customCash').value)};
+  }
+  if(g.cash.length)el('undoCash').onclick=()=>{
+   if(g!==special||g.status!=='open'||!g.cash.length)return;
+   const amount=g.cash.pop();specialChanged('Removed the last '+dollars(amount)+' cash entry.');el('specialActiveTitle').focus();
+  };
+  function finish(status){
+   if(g!==special||g.status!=='open'||(status==='played'&&goalRemaining(g)!==0))return;
+   g.status=status;specialRecap.push({...g,cash:[...g.cash]});specialRecap=specialRecap.slice(-50);
+   specialChanged(status==='played'?'Marked played and saved to Show Recap.':'Closed and saved to Show Recap. No online pledges were charged.');
+   el('specialRecap').open=true;el('specialRecap').querySelector('summary').focus();
+  }
+  if(remaining===0)el('specialPlayed').onclick=()=>finish('played');
+  el('specialClose').onclick=()=>finish('closed');
+  el('viewSpecialGuest').onclick=()=>el('showGoal').click();
+ }
+ const recap=el('specialRecapBody');
+ if(!specialRecap.length){recap.innerHTML='<p>No completed Specials yet.</p>';return}
+ recap.innerHTML='<ul>'+specialRecap.map(row=>{
+  const cash=cashTotal(row),played=row.status==='played';
+  return `<li><strong>${esc(songName(row.songId))}</strong> · ${played?'Played':'Closed without playing'}<br>${dollars(goalTotal(row))} of ${dollars(row.target)} · ${goalRemaining(row)===0?'Goal reached':'Goal not reached'}<br>${dollars(cash)} cash received · ${dollars(row.online)} pledged online<br>${dollars(played?row.online:0)} online collected (simulated)${!played&&cash?' · '+dollars(cash)+' cash to return':''}</li>`;
+ }).join('')+'</ul>';
+}
+if(hostMode){
+ renderSpecialHost();
+ el('specialsHostToggle').onclick=()=>{
+  const panel=el('performanceSpecials');
+  panel.hidden=!panel.hidden;el('specialsHostToggle').setAttribute('aria-expanded',String(!panel.hidden));
+  if(!panel.hidden)el('specialsHostTitle').focus();
+ };
+}
 el('showGame').onclick=()=>{
  if(!roundActive||guessed)return;
  openGuestFeature('Name That Tune');
