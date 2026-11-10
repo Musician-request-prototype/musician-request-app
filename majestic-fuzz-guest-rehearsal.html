@@ -145,10 +145,72 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .social-badge[data-network="facebook"]{left:0;background:#0866ff}
 .social-badge[data-network="instagram"]{right:0;background:linear-gradient(35deg,#b93c00,#a9145c 52%,#5d28b7)}
 .social-links:empty{display:none}
+#stageRehearsal[hidden],#stageControls[hidden],#stageRequests[hidden]{display:none!important}
+body.stage-view>.wrap,body.stage-view>.bottom-nav{display:none!important}
+#stageRehearsal{min-height:100dvh;background:#0b100d;color:#eff8ef;padding:12px 12px 114px}
+#stageRehearsal button{min-height:44px}
+.stage-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 auto 14px;max-width:1000px}
+.stage-bar .small{flex-basis:100%;margin:0}
+.stage-bar [aria-pressed="true"]{background:#245b34;color:#fff;border-color:#79b987}
+.stage-layout{max-width:1000px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.stage-layout.with-controls{grid-template-columns:minmax(0,1fr) minmax(0,360px)}
+.stage-chart,#stageControls,#stageRequests{border:1px solid #395343;background:#121b15;border-radius:14px;padding:14px}
+.stage-chart h2,#stageControls h2,#stageControls h3,#stageRequests h2{margin:0 0 8px}
+.stage-chart pre{font-size:clamp(20px,4.5vw,32px);white-space:pre-wrap;line-height:1.6}
+#stageControls label{display:block;margin-top:9px}
+#stageControls input:not([type="checkbox"]){display:block;width:100%;min-height:44px;padding:8px;background:#0b100d;color:#fff;border:1px solid #668471;border-radius:8px;font:inherit;margin-top:4px}
+#stageControls .actions{flex-wrap:wrap;margin:8px 0}
+#stageControls #performanceSpecials{margin:10px 0}
+#stageRequestBox{position:fixed;z-index:13;right:max(12px,env(safe-area-inset-right));bottom:calc(12px + env(safe-area-inset-bottom));width:min(260px,calc(100vw - 24px));text-align:left;background:#1c3122;color:#fff;border-color:#5a8767;overflow-wrap:anywhere}
+#stageRequestBox[data-signal="special"]{background:#51401b;border-color:#f6cf72}
+#stageRequestBox[data-signal="front"]{background:#123b50;border-color:#69d7ff}
+#stageRequestBox.new-signal{animation:stage-pulse .42s ease-in-out 4 alternate}
+@keyframes stage-pulse{to{box-shadow:0 0 0 4px #fff8}}
+@media(prefers-reduced-motion:reduce){#stageRequestBox.new-signal{animation:none}}
+#stageRequests{position:fixed;z-index:14;right:12px;bottom:calc(82px + env(safe-area-inset-bottom));width:min(350px,calc(100vw - 24px));max-height:50dvh;overflow:auto}
+#stageRequests li{margin:8px 0}
+@media(max-width:650px){.stage-layout.with-controls{grid-template-columns:1fr}#stageControls{grid-row:1}}
 </style></head><body>
+<main id="stageRehearsal" hidden>
+<div class="stage-bar"><p class="small">Majestic Fuzz · Performance rehearsal</p>
+<button class="btn secondary" id="stagePlay" aria-pressed="true">Playing</button>
+<button class="btn secondary" id="stageBetween" aria-pressed="false">Between Songs</button>
+<button class="btn secondary" id="stageShowTools" hidden aria-expanded="false" aria-controls="stageControls">Show Controls</button>
+<button class="btn secondary" id="stageBack">Guest view</button></div>
+<div id="stageLayout" class="stage-layout">
+<section class="stage-chart" aria-label="Sample song chart"><p class="small">Sample chart · Set 1</p><h2>Soundcheck Groove</h2><p>Key: G · 96 BPM</p><pre>Intro · 2x
+| G    | C    | Em   | D    |
+
+Verse · 4x
+| G    | D    | Em   | C    |
+
+Chorus · 2x
+| C    | G    | D    | Em   |</pre></section>
+<section id="stageControls" hidden aria-labelledby="stageControlsTitle">
+<h2 id="stageControlsTitle" tabindex="-1">Show Controls</h2>
+<p id="stageRequestStatus" role="status"></p>
+<button class="btn secondary" id="stageRequestToggle">Close requests</button>
+<form id="stageScheduleForm">
+<label><input id="stageScheduleEnabled" type="checkbox"> Use a request schedule</label>
+<div id="stageScheduleFields" hidden><label for="stageStart">Open at (optional)</label><input id="stageStart" type="datetime-local">
+<label for="stageEnd">Close at (optional)</label><input id="stageEnd" type="datetime-local"></div>
+<div class="actions"><button class="btn secondary" type="submit">Apply request schedule</button></div>
+<p id="stageScheduleNote" class="small" role="status"></p>
+</form>
+<h3>Name That Tune</h3>
+<label for="stagePrize">Prize (optional)</label><input id="stagePrize" type="text" maxlength="120" placeholder="Example: Dessert from the venue">
+<div class="actions"><button class="btn secondary" id="stageRound">Start round</button></div>
+<details><summary>Preview request alerts</summary><div class="actions">
+<button type="button" class="btn secondary" id="stageSampleSpecial">Special goal reached</button>
+<button type="button" class="btn secondary" id="stageSampleFront">Moved to front</button></div></details>
+<div id="stageSpecialSlot"></div></section></div>
+<button class="btn secondary" id="stageRequestBox" aria-controls="stageRequests" aria-expanded="false">Requests</button>
+<section id="stageRequests" aria-labelledby="stageRequestsTitle" hidden><h2 id="stageRequestsTitle" tabindex="-1">Requests</h2>
+<div id="stageAlerts" role="status"></div><ol id="stageRequestList"></ol><button class="btn secondary" id="stageDismiss">Dismiss alerts</button> <button class="btn secondary" id="stageRequestsClose">Back to chart</button></section>
+<div id="stageAnnouncement" role="status" class="small" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"></div></main>
 <div class="wrap">
 <header class="hero"><div id="cornerSocial"></div><div id="brandArt" class="brand-art" hidden><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
-<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="rehearsalHost" hidden><button type="button" id="rehearsalRound" class="btn secondary">Start rehearsal round</button> <button type="button" class="btn secondary" id="specialsHostToggle" aria-controls="performanceSpecials" aria-expanded="false">Performance · Specials</button>
+<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="rehearsalHost" hidden><button type="button" id="rehearsalRound" class="btn secondary">Start rehearsal round</button> <button type="button" class="btn primary" id="stageLaunch">Performance screen</button> <button type="button" class="btn secondary" id="specialsHostToggle" aria-controls="performanceSpecials" aria-expanded="false">Performance · Specials</button>
 <section id="performanceSpecials" aria-labelledby="specialsHostTitle" hidden>
 <h2 id="specialsHostTitle" tabindex="-1">Specials in Performance</h2><p class="small">Rehearsal only · No real money moves.</p>
 <div id="specialHostBody"></div><p id="specialNotice" role="status"></p>
@@ -224,11 +286,12 @@ async function betaRpc(name,payload){
  switch(name){
   case 'beta_subscriber_public_profile': return demoProfile;
   case 'beta_subscriber_public_songs': return demoSongs;
-  case 'beta_subscriber_public_status': return {open:true,show_id:'guest-rehearsal',counts:demoCounts};
+  case 'beta_subscriber_public_status': return {open:requestsAreOpen(),show_id:'guest-rehearsal',counts:demoCounts};
   case 'beta_subscriber_submit_request': {
+   if(!requestsAreOpen())return {ok:false};
    const id=payload.p_song_id,already=demoQueue.includes(id);
    if(!already)demoQueue.push(id);
-   demoCounts[id]=(demoCounts[id]||0)+1;
+   demoCounts[id]=(demoCounts[id]||0)+1;renderStageRequests();
    return {ok:true,already};
   }
   case 'beta_schedule_public':return [];
@@ -411,6 +474,10 @@ document.getElementById('refresh-shows').onclick=loadPublicSchedule;
 
 const el=id=>document.getElementById(id);
 const hostMode=new URLSearchParams(location.search).get('host')==='1';
+let requestOverride=true,requestStart=null,requestEnd=null,stageMode='playing',showToolsOpen=false,roundPrize='',stageAlerts=[];
+function requestsAreOpen(now=Date.now()){
+ return requestOverride===null?(requestStart===null||now>=requestStart)&&(requestEnd===null||now<requestEnd):requestOverride;
+}
 let boostedSong='', guessed=false, roundActive=false, previousFeatureFocus=null;
 function renderRehearsalRound(){
  const invite=roundActive&&!guessed;
@@ -418,12 +485,13 @@ function renderRehearsalRound(){
  el('guestBrowseTools').hidden=invite;
  if(invite)el('dicePanel').hidden=true;
  el('rehearsalRound').textContent=roundActive?'End rehearsal round':'Start rehearsal round';
+ el('stageRound').textContent=roundActive?'End round':'Start round';
 }
 if(hostMode){
  el('rehearsalHost').hidden=false;
  el('rehearsalRound').onclick=()=>{
   roundActive=!roundActive;
-  if(roundActive)guessed=false;
+  if(roundActive){guessed=false;roundPrize=el('stagePrize').value.trim().slice(0,120)}
   if(!roundActive&&el('featureTitle').textContent==='Name That Tune'&&el('guestFeature').classList.contains('open')){
    closeGuestFeature();
    el('rehearsalRound').focus();
@@ -440,6 +508,7 @@ function showGuestBoost(id){
  button.onclick=()=>{
   if(boostedSong||demoQueue.indexOf(id)<1)return;
   boostedSong=id;demoQueue.splice(demoQueue.indexOf(id),1);demoQueue.unshift(id);
+  stageSignal('front',id);
   showGuestBoost(id);
   el('guestQueue').textContent='Your request moved to the front of the list.';
   el('boostTerms').hidden=false;
@@ -500,7 +569,10 @@ function moneyCents(raw){
 }
 function limitMessage(max){return 'Enter an amount between $0.01 and '+dollars(max)+'.'}
 function specialChanged(message=''){
+ const before=queuedSpecial;
  syncSpecialQueue();saveSpecial();
+ if(before!==queuedSpecial&&queuedSpecial)stageSignal('special',queuedSpecial);
+ else renderStageRequests();
  if(hostMode){renderSpecialHost();el('specialNotice').textContent=message}
 }
 syncSpecialQueue();
@@ -605,6 +677,10 @@ el('showGame').onclick=()=>{
  if(!roundActive||guessed)return;
  openGuestFeature('Name That Tune');
  el('featureBody').innerHTML='<p>Pick the song you think is playing. For this rehearsal, try <strong>3am</strong>.</p><label for="guestGuessSearch">Search songs</label><input id="guestGuessSearch" type="search" placeholder="Song or artist"><label for="guestGuess">Your guess</label><select id="guestGuess"></select><button class="btn primary" id="sendGuestGuess">Submit guess</button><p id="guestGuessResult" role="status"></p>';
+ if(roundPrize){
+  const prize=document.createElement('p');prize.textContent='Prize: '+roundPrize;
+  el('featureBody').prepend(prize);
+ }
  function renderGuesses(){
   const term=searchKey(el('guestGuessSearch').value);
   const list=demoSongs.filter(s=>searchKey(s.title+' '+s.artist).includes(term));
@@ -622,5 +698,97 @@ el('showGame').onclick=()=>{
  };
  renderGuesses();
 };
+function stageSignal(type,id,preview=false){
+ if(!hostMode)return;
+ const label=(preview?'Preview · ':'')+(type==='special'?'Special goal reached: ':'Moved to front: ')+songName(id);
+ stageAlerts.push({type,label});stageAlerts=stageAlerts.slice(-12);
+ renderStageRequests();
+ el('stageAnnouncement').textContent=label;
+ const box=el('stageRequestBox');
+ box.classList.remove('new-signal');void box.offsetWidth;box.classList.add('new-signal');
+}
+function renderStageRequests(){
+ if(!hostMode)return;
+ const box=el('stageRequestBox'),latest=stageAlerts.at(-1);
+ box.dataset.signal=latest?.type||'';
+ box.textContent=latest?latest.label+(stageAlerts.length>1?' · '+stageAlerts.length+' alerts':''):'Requests · '+demoQueue.length+' in queue';
+ el('stageAlerts').replaceChildren(...stageAlerts.map(alert=>{
+  const item=document.createElement('p');item.textContent=alert.label;return item;
+ }));
+ el('stageDismiss').hidden=!stageAlerts.length;
+ el('stageRequestList').replaceChildren(...demoQueue.map(id=>{
+  const item=document.createElement('li');
+  item.textContent=songName(id)+(queuedSpecial===id?' · Special funded':'')+(boostedSong===id?' · Moved to front':'');
+  return item;
+ }));
+}
+function stageRequestPanel(open){
+ el('stageRequests').hidden=!open;
+ el('stageRequestBox').setAttribute('aria-expanded',String(open));
+ (open?el('stageRequestsTitle'):el('stageRequestBox')).focus({preventScroll:true});
+}
+function renderStageMode(){
+ const between=stageMode==='between', controls=between&&showToolsOpen;
+ el('stageBetween').setAttribute('aria-pressed',String(between));
+ el('stagePlay').setAttribute('aria-pressed',String(!between));
+ el('stageShowTools').hidden=!between;
+ el('stageShowTools').setAttribute('aria-expanded',String(controls));
+ el('stageControls').hidden=!controls;
+ el('stageLayout').classList.toggle('with-controls',controls);
+}
+function refreshStageStatus(){
+ const open=requestsAreOpen();
+ el('stageRequestStatus').textContent=(open?'Requests are open':'Requests are closed')+(requestOverride===null?' · Scheduled':' · Manual');
+ el('stageRequestToggle').textContent=open?'Close requests':'Open requests';
+ if(v4LiveSongs&&state.open!==open){setStatus(open);render()}
+}
+if(hostMode){
+ const panel=el('performanceSpecials'), home=panel.parentElement;
+ el('stageLaunch').onclick=()=>{
+  el('stageSpecialSlot').append(panel);panel.hidden=false;
+  el('stageRehearsal').hidden=false;document.body.classList.add('stage-view');
+  renderStageMode();refreshStageStatus();renderStageRequests();
+  window.scrollTo(0,0);el(stageMode==='between'?'stageBetween':'stagePlay').focus();
+ };
+ el('stageBack').onclick=()=>{
+  home.append(panel);panel.hidden=el('specialsHostToggle').getAttribute('aria-expanded')!=='true';
+  document.body.classList.remove('stage-view');el('stageRehearsal').hidden=true;
+  el('stageLaunch').focus();
+ };
+ el('stagePlay').onclick=()=>{stageMode='playing';renderStageMode()};
+ el('stageBetween').onclick=()=>{stageMode='between';renderStageMode()};
+ el('stageShowTools').onclick=()=>{showToolsOpen=!showToolsOpen;renderStageMode();if(showToolsOpen)el('stageControlsTitle').focus()};
+ el('stageRound').onclick=()=>el('rehearsalRound').click();
+ for(const [button,type,song] of [['stageSampleSpecial','special','7'],['stageSampleFront','front','4']]){
+  el(button).onclick=()=>{
+   stageAlerts=stageAlerts.filter(alert=>!alert.label.startsWith('Preview · '));
+   stageMode='playing';renderStageMode();stageSignal(type,song,true);
+   el('stageRequestBox').focus({preventScroll:true});
+  };
+ }
+ el('stageRequestBox').onclick=()=>stageRequestPanel(el('stageRequests').hidden);
+ el('stageRequestsClose').onclick=()=>stageRequestPanel(false);
+ el('stageDismiss').onclick=()=>{stageAlerts=[];renderStageRequests();el('stageRequestsClose').focus()};
+ el('stageRequestToggle').onclick=()=>{
+  requestOverride=!requestsAreOpen();
+  el('stageScheduleNote').textContent='Manual setting stays in effect until you apply the schedule again.';
+  refreshStageStatus();
+ };
+ el('stageScheduleEnabled').onchange=()=>{el('stageScheduleFields').hidden=!el('stageScheduleEnabled').checked};
+ el('stageScheduleForm').onsubmit=e=>{
+  e.preventDefault();const note=el('stageScheduleNote');
+  if(!el('stageScheduleEnabled').checked){
+   requestOverride=requestsAreOpen();requestStart=requestEnd=null;
+   note.textContent='Schedule off. Use the Open or Close button to change requests.';refreshStageStatus();return;
+  }
+  const start=el('stageStart').value,end=el('stageEnd').value;
+  const from=start?new Date(start).getTime():null,to=end?new Date(end).getTime():null;
+  if((from===null&&to===null)||(from!==null&&!Number.isFinite(from))||(to!==null&&!Number.isFinite(to))||(from!==null&&to!==null&&to<=from)){
+   note.textContent='Enter at least one time. If you enter both, close time must be after open time.';return;
+  }
+  requestStart=from;requestEnd=to;requestOverride=null;note.textContent='Schedule applied using this device’s local time.';refreshStageStatus();
+ };
+ setInterval(refreshStageStatus,1000);
+}
 init();
 </script></body></html>
