@@ -106,9 +106,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .public-show{border:1px solid color-mix(in srgb,var(--fg) 25%,transparent);background:color-mix(in srgb,var(--fg) 5%,var(--bg));padding:18px;border-radius:14px;margin:12px 0}.public-show h3{font-size:17px;color:var(--accent);margin:0 0 10px}.public-show strong{font-size:20px}.public-show p{margin:8px 0;color:var(--fg)}#public-shows>h3{margin-top:26px}
 
 #previewNotice{margin:0 auto 5px;text-align:center;font-size:12px;color:#c8d6d6}
-#guestExtras{display:flex;gap:8px;margin:2px 0 12px}
-#guestExtras[hidden],#guestBoost[hidden]{display:none}
-#guestExtras button{flex:1;min-height:44px;background:color-mix(in srgb,var(--accent) 12%,var(--bg));color:var(--fg);border-color:var(--accent)}
+#guestBoost[hidden],#showGame[hidden],#rehearsalHost[hidden],#guestBrowseTools[hidden]{display:none}
+#guestBrowseTools{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;width:100%}
+#guestBrowseTools .sorttabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:min(100%,340px);gap:2px;flex-shrink:0}
+#guestBrowseTools .sorttab{padding:6px 2px;min-height:40px;font-size:clamp(11px,3.4vw,14px);white-space:nowrap}
+#showGoal{color:var(--fg);background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
+#showGame{width:100%;min-height:44px;border:1px solid var(--accent)}
+#rehearsalHost{margin:6px auto 12px;text-align:center}
+#rehearsalHost button{min-height:44px}
 .modal .sheet{max-height:calc(100dvh - 12px);overflow:auto;overscroll-behavior:contain}
 #guestFeature button{margin-top:8px}
 #guestFeature p{line-height:1.4}
@@ -118,20 +123,24 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 #guestBoost p{margin:6px 0}
 #success .tipbox{margin-top:10px}
 
-.brand-art{position:relative;display:table;margin:12px auto 6px;max-width:calc(100% - 24px)}
+.brand-art{display:table;margin:0 auto 6px;max-width:100%}
+.brand-art[hidden]{display:none}
+.hero{padding-top:calc(5px + env(safe-area-inset-top, 0px))}
+.hero.social-without-logo{padding-top:calc(53px + env(safe-area-inset-top, 0px))}
+#cornerSocial{position:absolute;inset:0;pointer-events:none;z-index:1}
+@media(max-width:700px){.wrap{padding-left:max(9px, calc(env(safe-area-inset-left, 0px) + 8px));padding-right:max(9px, calc(env(safe-area-inset-right, 0px) + 8px))}}
 .brand-art .logo{margin:0 auto}
-.social-badge{position:absolute;top:-5px;width:44px;height:44px;display:grid;place-items:center;color:#fff;background:#080b09;border:1px solid #93a9ad;border-radius:50%;box-shadow:0 2px 8px #0009;z-index:1}
+.social-badge{position:absolute;top:calc(5px + env(safe-area-inset-top, 0px));width:44px;pointer-events:auto;height:44px;display:grid;place-items:center;color:#fff;border:1px solid #fff9;border-radius:50%;box-shadow:0 2px 8px #0009;z-index:1}
 .social-badge svg{width:21px;height:21px;display:block}
-.social-badge[data-network="facebook"]{left:-10px}
-.social-badge[data-network="instagram"]{right:-10px}
-.brand-art.no-logo{width:100%;min-height:44px}
-.brand-art.no-logo:empty,.social-links:empty{display:none}
+.social-badge[data-network="facebook"]{left:0;background:#0866ff}
+.social-badge[data-network="instagram"]{right:0;background:linear-gradient(35deg,#b93c00,#a9145c 52%,#5d28b7)}
+.social-links:empty{display:none}
 </style></head><body>
 <div class="wrap">
-<header class="hero"><div id="brandArt" class="brand-art"><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
-<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="notice"></div>
+<header class="hero"><div id="cornerSocial"></div><div id="brandArt" class="brand-art" hidden><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
+<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="rehearsalHost" hidden><button type="button" id="rehearsalRound" class="btn secondary">Start rehearsal round</button></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><div id="filters" class="filters"></div></div>
-<div id="guestExtras" aria-label="More ways to join in"><button class="btn secondary" id="showGoal">Specials</button><button class="btn secondary" id="showGame">Name That Tune</button></div><div class="sortbar"><div class="sorttabs" role="group" aria-label="Sort songs"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">♨ Popular</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
+<div class="sortbar"><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab">Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestHeading"><div class="sheet">
 <div id="formView"><h2 id="requestHeading">Request this song</h2><div id="selected" class="selected"></div>
@@ -168,22 +177,21 @@ async function loadConfig(){
  const logo=document.getElementById('brandLogo'),brand=document.getElementById('customBrand');
  brand.textContent=config.musicianName;brand.style.fontFamily=fonts[s.font]||fonts.system;brand.hidden=false;
  logo.hidden=!config.logo;if(config.logo){logo.src=config.logo;logo.alt=config.musicianName+' logo';logo.style.maxHeight=Math.max(80,Math.min(320,Number(s.logo_size)||190))+'px'}
- const host=document.getElementById('socialLinks'), art=document.getElementById('brandArt');host.replaceChildren();
+ const host=document.getElementById('socialLinks'), art=document.getElementById('brandArt'), corners=document.getElementById('cornerSocial');host.replaceChildren();corners.replaceChildren();
  const marks={
   facebook:'<path fill="currentColor" d="M14 22v-9h3l.5-3.5H14V7.3c0-1 .3-1.7 1.8-1.7h1.9V2.5c-.3-.1-1.5-.2-2.8-.2-2.8 0-4.7 1.7-4.7 4.8v2.4H7v3.5h3.2v9z"/>',
   instagram:'<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.7" r="1.2" fill="currentColor"/>'
  };
- art.replaceChildren(logo);
- art.classList.toggle('no-logo',!config.logo);
  for(const key of ['website','facebook','instagram'])if(safeLink(s[key])){
   const link=document.createElement('a'), name={website:'Website',facebook:'Facebook',instagram:'Instagram'}[key];
   link.href=s[key];link.target='_blank';link.rel='noopener noreferrer';
   if(marks[key]){
    link.className='social-badge';link.dataset.network=key;link.setAttribute('aria-label',name);
-   link.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+marks[key]+'</svg>';art.append(link);
+   link.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+marks[key]+'</svg>';corners.append(link);
   }else{link.textContent=name;host.append(link)}
  }
- art.hidden=!config.logo&&!art.querySelector('a');
+ art.hidden=!config.logo;
+ corners.closest('.hero').classList.toggle('social-without-logo',!config.logo&&corners.childElementCount>0);
  buildTipLinks();
 }
 document.querySelectorAll('[data-sort]').forEach(button=>button.onclick=()=>{sortBy=button.dataset.sort;document.querySelectorAll('[data-sort]').forEach(b=>b.classList.toggle('active',b===button));render()});
@@ -296,7 +304,7 @@ function setTab(tab){
  activeTab=tab;if(tab==='shows')loadPublicSchedule();
  for(const name of ['shows','volume','tips'])document.getElementById(name+'Page').hidden=tab!==name;
  for(const id of ['notice'])document.getElementById(id).hidden=tab!=='songs';
- for(const el of document.querySelectorAll('.controls,.sortbar,#songBrowser,#dicePanel,#guestExtras')){
+ for(const el of document.querySelectorAll('.controls,.sortbar,#songBrowser,#dicePanel')){
   if(el.id==='dicePanel'){if(tab!=='songs')el.hidden=true;continue}
   el.hidden=tab!=='songs';
  }
@@ -387,7 +395,26 @@ async function loadPublicSchedule(){
 document.getElementById('refresh-shows').onclick=loadPublicSchedule;
 
 const el=id=>document.getElementById(id);
-let boostedSong='', pledgeCents=2500, guessed=false, previousFeatureFocus=null;
+let boostedSong='', pledgeCents=2500, guessed=false, roundActive=false, previousFeatureFocus=null;
+function renderRehearsalRound(){
+ const invite=roundActive&&!guessed;
+ el('showGame').hidden=!invite;
+ el('guestBrowseTools').hidden=invite;
+ if(invite)el('dicePanel').hidden=true;
+ el('rehearsalRound').textContent=roundActive?'End rehearsal round':'Start rehearsal round';
+}
+if(new URLSearchParams(location.search).get('host')==='1'){
+ el('rehearsalHost').hidden=false;
+ el('rehearsalRound').onclick=()=>{
+  roundActive=!roundActive;
+  if(roundActive)guessed=false;
+  if(!roundActive&&el('featureTitle').textContent==='Name That Tune'&&el('guestFeature').classList.contains('open')){
+   closeGuestFeature();
+   el('rehearsalRound').focus();
+  }
+  renderRehearsalRound();
+ };
+}
 function showGuestBoost(id){
  const ahead=demoQueue.indexOf(id), button=el('boostGuest');
  el('guestBoost').hidden=false;
@@ -405,7 +432,7 @@ function showGuestBoost(id){
  };
  if(!button.hidden)el('boostTerms').textContent='Move your request to the front of the list. You’d only be charged if it’s played.';
 }
-function closeGuestFeature(){el('guestFeature').classList.remove('open');previousFeatureFocus?.focus()}
+function closeGuestFeature(){el('guestFeature').classList.remove('open');if(previousFeatureFocus?.hidden)el('search').focus();else previousFeatureFocus?.focus()}
 function openGuestFeature(title){
  previousFeatureFocus=document.activeElement;
  el('featureTitle').textContent=title;
@@ -442,8 +469,8 @@ function renderGoal(){
 }
 el('showGoal').onclick=()=>{openGuestFeature('Specials');renderGoal()};
 el('showGame').onclick=()=>{
+ if(!roundActive||guessed)return;
  openGuestFeature('Name That Tune');
- if(guessed){el('featureBody').textContent='You already guessed in this round.';return}
  el('featureBody').innerHTML='<p>Pick the song you think is playing. For this rehearsal, try <strong>3am</strong>.</p><label for="guestGuessSearch">Search songs</label><input id="guestGuessSearch" type="search" placeholder="Song or artist"><label for="guestGuess">Your guess</label><select id="guestGuess"></select><button class="btn primary" id="sendGuestGuess">Submit guess</button><p id="guestGuessResult" role="status"></p>';
  function renderGuesses(){
   const term=searchKey(el('guestGuessSearch').value);
@@ -454,7 +481,8 @@ el('showGame').onclick=()=>{
  el('guestGuessSearch').oninput=renderGuesses;
  el('guestGuess').onchange=()=>el('sendGuestGuess').disabled=!el('guestGuess').value;
  el('sendGuestGuess').onclick=()=>{
-  guessed=true;
+  if(!roundActive||guessed)return;
+  guessed=true;renderRehearsalRound();
   const correct=el('guestGuess').value==='1';
   el('featureBody').innerHTML='<p role="status">'+(correct?'You got it! The song was 3am.':'Guess submitted. Thanks for playing!')+'</p><p class="small">Enjoying the show? You can leave an optional tip anytime.</p>';
   el('closeFeature').focus();
