@@ -102,9 +102,24 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 
 #volumePage .volume-votes button.chosen{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .public-show{border:1px solid color-mix(in srgb,var(--fg) 25%,transparent);background:color-mix(in srgb,var(--fg) 5%,var(--bg));padding:18px;border-radius:14px;margin:12px 0}.public-show h3{font-size:17px;color:var(--accent);margin:0 0 10px}.public-show strong{font-size:20px}.public-show p{margin:8px 0;color:var(--fg)}#public-shows>h3{margin-top:26px}
+
+.social-art{position:relative;display:table;margin:12px auto 6px;max-width:calc(100% - 24px)}
+.social-art[hidden]{display:none}
+.social-art img{display:block;margin:0 auto;max-width:100%;object-fit:contain}
+.social-art img[hidden]{display:none}
+.social-art.no-image{width:100%;min-height:44px}
+.social-art .social-icon{position:absolute;top:-5px;width:44px;height:44px;display:grid;place-items:center;color:#fff;background:#080b09;border:2px solid var(--accent);border-radius:50%;box-shadow:0 2px 8px #0009;z-index:1;padding:0}
+.social-icon svg{width:21px;height:21px;display:block}
+.social-art .social-icon:focus-visible{outline:2px solid white;outline-offset:2px}
+.social-icon[data-network="facebook"]{left:-10px}
+.social-icon[data-network="instagram"]{right:-10px}
+.social-art[data-style="brand"] .social-icon[data-network="facebook"]{background:#0866ff;border-color:#0866ff}
+.social-art[data-style="brand"] .social-icon[data-network="instagram"]{background:linear-gradient(35deg,#b93c00,#a9145c 52%,#5d28b7);border-color:transparent}
+
+.social-links:empty{display:none}
 </style></head><body>
 <div class="wrap">
-<header class="hero"><img id="brandLogo" class="logo" alt="Musician logo" hidden><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
+<header class="hero"><div id="brandArt" class="social-art" hidden><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
 <div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice" hidden></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><div id="filters" class="filters"></div></div>
 <div class="sortbar"><div class="sorttabs" role="group" aria-label="Sort songs"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">♨ Popular</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. Choose your preferred payment app and enter any amount there.</p><div class="tip-links" id="pageTipLinks"></div></section>
@@ -127,6 +142,28 @@ const V4_KEY='sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8';
 let config={musicianName:'Song Requests',logo:'',accent:'#69e38e',tagline:'Request a song for today’s show.',demoMode:false,paymentLinks:{venmo:'',cashApp:''}};
 let sortBy='az',v4LiveSongs=false,requestDraft=null,refreshPromise=null;
 function searchKey(v){return String(v||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/['’‘`]/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
+
+function socialIconStyle(value){return value==='accent'?'accent':'brand'}
+function renderSocialIcons(host,logo,settings,isValid){
+ const marks={
+  facebook:'<path fill="currentColor" d="M14 22v-9h3l.5-3.5H14V7.3c0-1 .3-1.7 1.8-1.7h1.9V2.5c-.3-.1-1.5-.2-2.8-.2-2.8 0-4.7 1.7-4.7 4.8v2.4H7v3.5h3.2v9z"/>',
+  instagram:'<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.7" r="1.2" fill="currentColor"/>'
+ };
+ host.dataset.style=socialIconStyle(settings.social_icon_style);
+ host.classList.toggle('no-image',logo.hidden);
+ host.querySelectorAll('.social-icon').forEach(link=>link.remove());
+ let count=0;
+ for(const network of ['facebook','instagram']){
+  if(!settings[network]||!isValid(settings[network]))continue;
+  const link=document.createElement('a');
+  link.className='social-icon';link.dataset.network=network;link.href=settings[network];link.target='_blank';link.rel='noopener noreferrer';
+  link.setAttribute('aria-label',network==='facebook'?'Facebook':'Instagram');
+  link.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+marks[network]+'</svg>';
+  host.append(link);count++;
+ }
+ host.hidden=logo.hidden&&!count;
+}
+
 function safeLink(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password&&!/[\s@]/.test(v)}catch{return false}}
 function textColor(hex){const n=parseInt(hex.slice(1),16);return ((n>>16)*.299+((n>>8)&255)*.587+(n&255)*.114)>160?'#111511':'#f5fff6'}
 async function loadConfig(){
@@ -143,7 +180,8 @@ async function loadConfig(){
  brand.textContent=config.musicianName;brand.style.fontFamily=fonts[s.font]||fonts.system;brand.hidden=false;
  logo.hidden=!config.logo;if(config.logo){logo.src=config.logo;logo.alt=config.musicianName+' logo';logo.style.maxHeight=Math.max(80,Math.min(320,Number(s.logo_size)||190))+'px'}
  const host=document.getElementById('socialLinks');host.replaceChildren();
- for(const key of ['website','facebook','instagram'])if(safeLink(s[key])){const link=document.createElement('a');link.href=s[key];link.target='_blank';link.rel='noopener noreferrer';link.textContent={website:'Website',facebook:'Facebook',instagram:'Instagram'}[key];host.append(link)}
+ renderSocialIcons(document.getElementById('brandArt'),logo,s,safeLink);
+ for(const key of ['website'])if(safeLink(s[key])){const link=document.createElement('a');link.href=s[key];link.target='_blank';link.rel='noopener noreferrer';link.textContent={website:'Website',facebook:'Facebook',instagram:'Instagram'}[key];host.append(link)}
  buildTipLinks();
 }
 document.querySelectorAll('[data-sort]').forEach(button=>button.onclick=()=>{sortBy=button.dataset.sort;document.querySelectorAll('[data-sort]').forEach(b=>b.classList.toggle('active',b===button));render()});
