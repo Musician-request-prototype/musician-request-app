@@ -18,6 +18,20 @@
 #phone-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(390px,100%);z-index:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:8px 6px calc(8px + env(safe-area-inset-bottom));border:1px solid #45654f;border-radius:12px 12px 0 0;background:#11241a}
 #phone-nav button{font-size:12px;line-height:1.2;min-height:48px;padding:5px 3px}
 #phone-nav button[aria-pressed="true"]{background:#6fe594;color:#0c2916;border-color:#6fe594;font-weight:700}
+
+.phone-preview>header{display:none}
+.phone-preview #audience-panel{padding:14px 14px 92px;border:0;border-radius:0;background:transparent}
+.phone-preview #guest-title{margin:.8rem 0 .4rem}
+#guest-welcome{border-bottom:1px solid #385747;padding-bottom:10px}
+#guest-welcome strong{display:block;font-size:1.55rem;line-height:1.2}
+#guest-welcome .subtle{margin:3px 0 0}
+#guest-welcome .badge{font-size:.72rem;margin:0 0 7px}
+.phone-preview #preview-tools{display:block;margin:0 auto;padding-bottom:92px}
+.phone-preview #audience-panel{padding-bottom:18px}
+#preview-tools summary{cursor:pointer;color:#bed2c3}
+#phone-song-list{max-height:240px}
+.custom-pledge{margin:.5rem 0}
+.custom-pledge label{display:block}
 </style>
 </head>
 <body>
@@ -47,10 +61,16 @@
 <p id="notice" role="status"></p>
 </section>
 <div class="actions" id="preview-tools" hidden>
+<details id="preview-controls"><summary>Rehearsal controls</summary><div id="preview-control-slot" class="actions"></div></details>
 <button id="toggle-phone-preview" type="button" aria-pressed="false">Preview customer phone</button>
 </div>
 <div class="grid" id="views" hidden>
 <section id="audience-panel" aria-labelledby="guest-title">
+<div id="guest-welcome" hidden>
+<span class="badge">Rehearsal · no real payments</span>
+<strong>Majestic Fuzz</strong>
+<p class="subtle">Request a song for today’s show.</p>
+</div>
 <h2 id="guest-title">Audience view</h2>
 <div id="guest-switch"><label for="guest">Try as a guest</label><select id="guest"><option value="1">My phone</option><option value="2">Guest 2</option><option value="3">Guest 3</option></select></div>
 <div id="guess-view" class="game" hidden aria-labelledby="guess-title">
@@ -129,6 +149,7 @@
 <p id="payment-empty" class="subtle">No payments simulated yet.</p><ul id="payments" class="activity"></ul>
 </section>
 </div>
+<div id="preview-tools-end"></div>
 <aside class="goal-alerts" id="goal-alerts" aria-label="Premium song alerts"></aside>
 <script>
 'use strict';
@@ -290,7 +311,31 @@ function renderPool(pool,suffix){
  if(open){
    const amounts=[500,1000,2000].filter(a=>a<remain);
    for(const amount of amounts)part('pledges').append(action('Pledge '+money(amount),()=>pledge(pool,amount)));
-   part('pledges').append(action('Finish the goal · '+money(remain),()=>pledge(pool,remain)));
+   const choices=part('pledges');
+   const other=action('Other amount',()=>{
+     if(choices.querySelector('.custom-pledge'))return;
+     const form=node('form','');form.className='custom-pledge';form.noValidate=true;
+     const label=node('label','Pledge amount ($)'), input=document.createElement('input');
+     input.type='text';input.inputMode='decimal';input.placeholder='0.00';input.required=true;
+     label.append(input);
+     const info=node('p','Up to '+money(pool.goal-pool.total)+'. You’ll only be charged if the goal is reached and the song is played.');
+     info.className='subtle';
+     const feedback=node('p','');feedback.setAttribute('role','status');
+     const submit=node('button','Confirm pledge');submit.type='submit';
+     form.append(label,info,submit,feedback);other.after(form);other.hidden=true;input.focus();
+     form.onsubmit=event=>{
+       event.preventDefault();
+       const value=input.value.trim();
+       const match=/^(\d+)(?:[.,](\d{1,2}))?$/.exec(value);
+       const cents=match?Number(match[1])*100+Number((match[2]||'').padEnd(2,'0')):0;
+       if(!Number.isSafeInteger(cents)||cents<1||cents>pool.goal-pool.total){
+         feedback.textContent='Enter an amount from '+money(1)+' to '+money(pool.goal-pool.total)+'.';
+         input.setAttribute('aria-invalid','true');return;
+       }
+       pledge(pool,cents);
+     };
+   });
+   choices.append(other,action('Finish the goal · '+money(remain),()=>pledge(pool,remain)));
  }
 }
 function songOrder(a,b){return a.title.localeCompare(b.title,undefined,{sensitivity:'base',numeric:true})}
@@ -398,10 +443,15 @@ function setPhonePreview(on){
  toggle.textContent=on?'Back to both views':'Preview customer phone';
  el('phone-nav').hidden=!on;
  el('phone-browse').hidden=!on;
+ el('guest-welcome').hidden=!on;
+ const tools=el('preview-tools'), controls=el('preview-controls'), slot=el('preview-control-slot');
+ controls.hidden=!on;
+ if(on){el('preview-tools-end').append(tools);slot.append(toggle,guestSwitch)}
+ else{el('views').before(tools);tools.append(toggle)}
+
  if(on){el('phone-premium').append(el('guest-pools'));selectPhoneView('songs',false);renderPhoneBrowse()}
  else{el('guest-queue-heading').before(el('guest-pools'));el('guest-title').textContent='Audience view'}
  if(show)renderRound();
- (on?el('preview-tools'):el('audience-panel')).append(guestSwitch);
  if(!on)el('guest-title').after(guestSwitch);
 }
 function openGoalSong(row){
@@ -544,7 +594,7 @@ if(window===window.parent&&new URLSearchParams(location.search).get('view')==='p
  if(show?.active){
    el('guest').value='3';el('song').value='sample1';request();el('guest').value='1';
    el('song').value='sample4';el('game-answer').value='sample3';startRound();
-   setPhonePreview(true);render();el('toggle-phone-preview').blur();
+   setPhonePreview(true);render();document.activeElement?.blur();
  }
 }
 </script>
