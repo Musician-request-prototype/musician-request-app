@@ -169,6 +169,7 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav{display:none!important}
 @media(prefers-reduced-motion:reduce){#stageRequestBox.new-signal{animation:none}}
 #stageRequests{position:fixed;z-index:14;right:12px;bottom:calc(82px + env(safe-area-inset-bottom));width:min(350px,calc(100vw - 24px));max-height:50dvh;overflow:auto}
 #stageRequests li{margin:8px 0}
+.stage-alert-entry{margin:8px 0 12px}.stage-alert-entry p{margin:0 0 6px}
 @media(max-width:650px){.stage-layout.with-controls{grid-template-columns:1fr}#stageControls{grid-row:1}}
 </style></head><body>
 <main id="stageRehearsal" hidden>
@@ -178,7 +179,7 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav{display:none!important}
 <button class="btn secondary" id="stageShowTools" hidden aria-expanded="false" aria-controls="stageControls">Show Controls</button>
 <button class="btn secondary" id="stageBack">Guest view</button></div>
 <div id="stageLayout" class="stage-layout">
-<section class="stage-chart" aria-label="Sample song chart"><p class="small">Sample chart · Set 1</p><h2>Soundcheck Groove</h2><p>Key: G · 96 BPM</p><pre>Intro · 2x
+<section class="stage-chart" aria-label="Sample song chart"><p class="small" id="stageChartLabel">Sample chart · Set 1</p><h2 id="stageSongTitle" tabindex="-1">Soundcheck Groove</h2><p id="stageSongMeta">Key: G · 96 BPM</p><pre id="stageChartBody">Intro · 2x
 | G    | C    | Em   | D    |
 
 Verse · 4x
@@ -203,10 +204,10 @@ Chorus · 2x
 <details><summary>Preview request alerts</summary><div class="actions">
 <button type="button" class="btn secondary" id="stageSampleSpecial">Special goal reached</button>
 <button type="button" class="btn secondary" id="stageSampleFront">Moved to front</button></div></details>
-<div id="stageSpecialSlot"></div></section></div>
+<div id="stageSpecialSlot"></div><details id="stageSetRecap"><summary>Show Recap · Songs</summary><p class="small">Rehearsal only.</p><p id="stageSetEmpty">No interrupted songs yet.</p><ol id="stageSetLog"></ol></details></section></div>
 <button class="btn secondary" id="stageRequestBox" aria-controls="stageRequests" aria-expanded="false">Requests</button>
 <section id="stageRequests" aria-labelledby="stageRequestsTitle" hidden><h2 id="stageRequestsTitle" tabindex="-1">Requests</h2>
-<div id="stageAlerts" role="status"></div><ol id="stageRequestList"></ol><button class="btn secondary" id="stageDismiss">Dismiss alerts</button> <button class="btn secondary" id="stageRequestsClose">Back to chart</button></section>
+<div id="stageAlerts"></div><p id="stageJumpHint" class="small" hidden></p><ol id="stageRequestList"></ol><button class="btn secondary" id="stageDismiss">Dismiss alerts</button> <button class="btn secondary" id="stageRequestsClose">Back to chart</button></section>
 <div id="stageAnnouncement" role="status" class="small" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"></div></main>
 <div class="wrap">
 <header class="hero"><div id="cornerSocial"></div><div id="brandArt" class="brand-art" hidden><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
@@ -475,6 +476,7 @@ document.getElementById('refresh-shows').onclick=loadPublicSchedule;
 const el=id=>document.getElementById(id);
 const hostMode=new URLSearchParams(location.search).get('host')==='1';
 let requestOverride=true,requestStart=null,requestEnd=null,stageMode='playing',showToolsOpen=false,roundPrize='',stageAlerts=[];
+let stageSongId='';
 function requestsAreOpen(now=Date.now()){
  return requestOverride===null?(requestStart===null||now>=requestStart)&&(requestEnd===null||now<requestEnd):requestOverride;
 }
@@ -701,7 +703,7 @@ el('showGame').onclick=()=>{
 function stageSignal(type,id,preview=false){
  if(!hostMode)return;
  const label=(preview?'Preview · ':'')+(type==='special'?'Special goal reached: ':'Moved to front: ')+songName(id);
- stageAlerts.push({type,label});stageAlerts=stageAlerts.slice(-12);
+ stageAlerts.push({type,label,id,preview});stageAlerts=stageAlerts.slice(-12);
  renderStageRequests();
  el('stageAnnouncement').textContent=label;
  const box=el('stageRequestBox');
@@ -712,15 +714,45 @@ function renderStageRequests(){
  const box=el('stageRequestBox'),latest=stageAlerts.at(-1);
  box.dataset.signal=latest?.type||'';
  box.textContent=latest?latest.label+(stageAlerts.length>1?' · '+stageAlerts.length+' alerts':''):'Requests · '+demoQueue.length+' in queue';
+ const canJump=alert=>alert.id!==stageSongId&&(alert.preview||
+  (alert.type==='special'?queuedSpecial===alert.id:boostedSong===alert.id&&demoQueue.includes(alert.id)));
  el('stageAlerts').replaceChildren(...stageAlerts.map(alert=>{
-  const item=document.createElement('p');item.textContent=alert.label;return item;
+  const item=document.createElement('div'), label=document.createElement('p');
+  item.className='stage-alert-entry';label.textContent=alert.label;item.append(label);
+  if(canJump(alert)){
+   const button=document.createElement('button');button.type='button';button.className='btn primary';
+   button.textContent='Go to song';button.setAttribute('aria-label','Go to song: '+songName(alert.id));
+   button.onclick=()=>{if(canJump(alert)&&stageAlerts.includes(alert))goToStageSong(alert)};item.append(button);
+  }
+  return item;
  }));
+ const hint=el('stageJumpHint');
+ hint.hidden=!stageAlerts.some(canJump);
+ hint.textContent=stageMode==='playing'?'Switching now logs the current song as Partially played.':'The requested song opens in Playing.';
  el('stageDismiss').hidden=!stageAlerts.length;
  el('stageRequestList').replaceChildren(...demoQueue.map(id=>{
   const item=document.createElement('li');
   item.textContent=songName(id)+(queuedSpecial===id?' · Special funded':'')+(boostedSong===id?' · Moved to front':'');
   return item;
  }));
+}
+function goToStageSong(alert){
+ const outgoing=stageSongId?songName(stageSongId):'Soundcheck Groove';
+ const interrupted=stageMode==='playing';
+ if(interrupted){
+  const row=document.createElement('li');row.textContent=outgoing+' · Partially played';
+  el('stageSetLog').append(row);el('stageSetEmpty').hidden=true;
+ }
+ stageSongId=alert.id;
+ const song=demoSongs.find(entry=>entry.id===alert.id);
+ el('stageSongTitle').textContent=song.title;
+ el('stageChartLabel').textContent='Requested song · Rehearsal';
+ el('stageSongMeta').textContent=song.artist;
+ el('stageChartBody').textContent='Your saved chart for this song would open here in live Performance.';
+ stageAlerts=stageAlerts.filter(entry=>entry!==alert);
+ stageMode='playing';renderStageMode();stageRequestPanel(false);
+ el('stageAnnouncement').textContent='Opened '+song.title+(interrupted?'. '+outgoing+' logged as Partially played.':'.');
+ window.scrollTo(0,0);el('stageSongTitle').focus({preventScroll:true});
 }
 function stageRequestPanel(open){
  el('stageRequests').hidden=!open;
@@ -735,6 +767,7 @@ function renderStageMode(){
  el('stageShowTools').setAttribute('aria-expanded',String(controls));
  el('stageControls').hidden=!controls;
  el('stageLayout').classList.toggle('with-controls',controls);
+ renderStageRequests();
 }
 function refreshStageStatus(){
  const open=requestsAreOpen();
