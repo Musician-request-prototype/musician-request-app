@@ -180,6 +180,63 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav,body.recap-view>.wrap,body.rec
 #stageRequests li{margin:8px 0}
 .stage-alert-entry{margin:8px 0 12px}.stage-alert-entry p{margin:0 0 6px}
 @media(max-width:650px){.stage-layout.with-controls{grid-template-columns:1fr}#stageControls{grid-row:1}}
+
+#guestWinnerCard{position:relative;isolation:isolate;box-sizing:border-box;width:min(100%,365px);padding:20px 19px 18px;overflow:hidden;border:1px solid var(--ma-border);border-radius:21px;background:var(--ma-bg);color:#fff4dc;font:15px/1.45 system-ui,sans-serif;text-align:center;box-shadow:0 13px 28px #0004}
+#guestWinnerCard .ma-brand,#guestWinnerCard .ma-prize small{color:#f6c988;text-transform:uppercase;letter-spacing:.13em;font-size:.72rem;font-weight:650}
+#guestWinnerCard .ma-brand{margin:0}
+#guestWinnerCard .ma-art{height:227px;position:relative;width:min(100%,250px);margin:3px auto 0;isolation:isolate}
+#guestWinnerCard .ma-halo{position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:205px;height:165px;border-radius:50%;background:radial-gradient(ellipse,#ffa84f96,transparent 71%);opacity:.76}
+#guestWinnerCard .ma-spark{position:absolute;color:#ffdc9f;text-shadow:0 0 12px #ffb456a8}
+#guestWinnerCard .ma-spark.one{top:46px;left:15%;font-size:21px}
+#guestWinnerCard .ma-spark.two{top:67px;right:14%;font-size:25px}
+#guestWinnerCard .ma-spark.three{top:24px;right:22%;font-size:13px}
+#guestWinnerCard .ma-shade{position:absolute;z-index:3;top:18px;left:50%;width:112px;height:79px;transform:translateX(-50%);filter:drop-shadow(0 0 13px #ffae567d)}
+#guestWinnerCard .ma-shade::before{content:"";position:absolute;inset:0;
+ clip-path:path("M 25 7 Q 56 -2 87 7 C 84 28 92 47 110 62 L 111 70 Q 56 81 1 70 L 2 62 C 20 47 28 28 25 7 Z");
+ background:radial-gradient(ellipse at 51% 27%,#fff1b8 1%,#ffd88c 25%,#fca24a 54%,#bb5826 82%);}
+#guestWinnerCard .ma-piping{position:absolute;z-index:2;left:26px;top:3px;width:61px;height:8px;border-top:2px solid #ffe7af;border-radius:50%}
+#guestWinnerCard .ma-seams{position:absolute;top:7px;left:34px;width:45px;height:61px;border-left:1px solid #9f4c3270;border-right:1px solid #9f4c3270;border-radius:15% 15% 27% 27%;transform:perspective(70px) rotateX(20deg)}
+#guestWinnerCard .ma-fringe{position:absolute;z-index:3;left:0;right:0;top:65px;height:18px;border-top:3px solid #48261c;
+ background:repeating-linear-gradient(90deg,#21191a 0 1px,#78543c 1px 2px,#33221f 2px 3px,#b8895b 3px 4px);
+ border-radius:48% 48% 33% 33% / 22% 22% 25% 25%;box-shadow:0 1px 0 #d29e6455}
+#guestWinnerCard .ma-leg{position:absolute;z-index:2;left:calc(50% - 22px);top:88px;width:53px;height:124px;transform:rotate(0);transform-origin:47% 4%}
+#guestWinnerCard .ma-stocking{position:absolute;inset:0;
+ clip-path:path("M 3 0 L 43 0 C 41 16 35 35 31 48 C 29 54 35 60 37 69 C 40 80 32 98 33 109 C 34 114 39 116 37 121 L 18 124 L 10 119 C 20 115 24 111 24 105 C 24 88 19 74 20 66 C 18 60 13 51 11 43 C 6 28 3 13 3 0 Z");
+ background:repeating-linear-gradient(45deg,transparent 0 5px,#42232991 5.4px 6.5px),repeating-linear-gradient(-45deg,transparent 0 5px,#42232991 5.4px 6.5px),linear-gradient(95deg,#9f6047 4%,#ffc58d 52%,#ac6349 84%);}
+#guestWinnerCard .ma-heel{position:absolute;z-index:2;bottom:-5px;left:1px;width:43px;height:28px;
+ clip-path:path("M 0 23 C 0 20 8 20 13 18 C 19 15 24 10 30 3 C 33 0 38 0 39 5 C 41 9 39 12 39 17 L 40 27 L 36 27 L 34 17 C 29 16 26 22 21 25 C 16 28 3 27 1 26 Z");
+ background:linear-gradient(168deg,#20191d 23%,#62515a 40%,#191319 52%);}
+#guestWinnerCard .ma-base{position:absolute;z-index:1;top:206px;left:calc(50% + 3px);width:73px;height:16px;transform:translateX(-50%);border-radius:50%;background:linear-gradient(#d49a56 4%,#f1c786 32%,#754222 50%,#4d2d20 89%,#a26b36 97%);box-shadow:0 5px 11px #160e19}
+#guestWinnerCard h3{margin:0;color:#ffdc9b;font:750 clamp(32px,8vw,42px)/1.04 Georgia,serif;letter-spacing:-.02em}
+#guestWinnerCard .ma-line{margin:5px 0 3px;font:italic 1.13rem Georgia,serif;color:#ffedc8}
+#guestWinnerCard .ma-song{margin:5px 0 9px}
+#guestWinnerCard .ma-prize{display:grid;gap:1px;margin:9px 0;padding:9px;border:1px solid var(--ma-border);border-radius:10px;background:var(--ma-inset)}
+#guestWinnerCard .ma-prize strong{font-size:1.1rem}
+#guestWinnerCard time,#guestWinnerCard .ma-claim{font-size:.81rem}
+#guestWinnerCard .ma-claim{margin:4px 0;color:#e9d0b3}
+#guestWinnerCard .ma-replay{min-height:44px;margin-top:10px;padding:8px 13px;border:1px solid var(--ma-border);border-radius:9px;background:var(--ma-button);color:#ffedc8;font:inherit}
+#guestWinnerCard.ma-animate .ma-leg{animation:ma-kick .95s ease-in-out both}
+#guestWinnerCard.ma-animate .ma-shade{animation:ma-wobble .95s ease-out both}
+#guestWinnerCard.ma-animate .ma-halo{animation:ma-light .94s ease-out both}
+#guestWinnerCard.ma-animate .ma-spark{animation:ma-sparkle .75s .19s ease-out both}
+@keyframes ma-kick{0%,100%{transform:rotate(0)}24%{transform:rotate(-8deg)}47%{transform:rotate(38deg)}69%{transform:rotate(-6deg)}84%{transform:rotate(8deg)}}
+@keyframes ma-wobble{0%,100%{transform:translateX(-50%) rotate(0)}42%{transform:translateX(-50%) rotate(5deg)}65%{transform:translateX(-50%) rotate(-3deg)}}
+@keyframes ma-light{0%{opacity:.24}38%{opacity:1;transform:translateX(-50%) scale(1.19)}100%{opacity:.75}}
+@keyframes ma-sparkle{0%{opacity:0;transform:scale(.4)}45%{opacity:1;transform:scale(1.34) rotate(15deg)}100%{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#guestWinnerCard.ma-animate *{animation:none!important}}
+
+#guestWinnerCard.ma-evergreen{--ma-border:#527755;--ma-bg:radial-gradient(ellipse at 50% 31%,#315a37,#17372c 60%,#102820);--ma-inset:#142c24;--ma-button:#254638}
+#guestWinnerCard .ma-confetti{position:absolute;inset:-13px -24px 0;z-index:4;overflow:hidden;pointer-events:none}
+#guestWinnerCard .ma-confetti i{position:absolute;top:-14px;left:var(--x);width:var(--w);height:var(--h);background:var(--color);border-radius:var(--radius);opacity:0}
+#guestWinnerCard.ma-animate .ma-confetti i{animation:ma-fall-steady var(--duration) linear var(--delay) forwards}
+@keyframes ma-fall-steady{
+  0%{transform:translate3d(0,-6px,0) rotateZ(var(--angle)) rotateY(0deg);opacity:.95}
+  30%{transform:translate3d(var(--drift),71px,0) rotateZ(var(--turn)) rotateY(115deg)}
+  64%{transform:translate3d(var(--sway),153px,0) rotateZ(var(--bend)) rotateY(215deg)}
+  92%{opacity:.93}
+  100%{transform:translate3d(var(--tail),240px,0) rotateZ(var(--spin)) rotateY(295deg);opacity:0}
+}
+#guestWinnerCard{width:100%;margin:0 auto;max-width:365px}
 </style></head><body>
 <main id="stageRehearsal" hidden>
 <div class="stage-bar"><p class="small">Majestic Fuzz · Performance rehearsal</p>
@@ -237,7 +294,7 @@ Chorus · 2x
 <details id="specialRecap"><summary>Show Recap · Specials</summary><div id="specialRecapBody"></div></details>
 </section></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><div id="filters" class="filters"></div></div>
-<div class="sortbar"><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab">Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
+<div class="sortbar"><button type="button" class="btn secondary" id="showGuestWin" hidden>View winner card</button><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab">Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestHeading"><div class="sheet">
 <div id="formView"><h2 id="requestHeading">Request this song</h2><div id="selected" class="selected"></div>
@@ -499,10 +556,11 @@ let stageSongId='';
 function requestsAreOpen(now=Date.now()){
  return requestOverride===null?(requestStart===null||now>=requestStart)&&(requestEnd===null||now<requestEnd):requestOverride;
 }
-let boostedSong='', guessed=false, roundActive=false, previousFeatureFocus=null;
+let boostedSong='', guessed=false, roundActive=false, previousFeatureFocus=null, roundWin=null;
 function renderRehearsalRound(){
  const invite=roundActive&&!guessed;
  el('showGame').hidden=!invite;
+ el('showGuestWin').hidden=!roundWin;
  el('guestBrowseTools').hidden=invite;
  if(invite)el('dicePanel').hidden=true;
  el('rehearsalRound').textContent=roundActive?'End rehearsal round':'Start rehearsal round';
@@ -512,7 +570,7 @@ if(hostMode){
  el('rehearsalHost').hidden=false;
  el('rehearsalRound').onclick=()=>{
   roundActive=!roundActive;
-  if(roundActive){guessed=false;roundPrize=el('stagePrize').value.trim().slice(0,120)}
+  if(roundActive){guessed=false;roundWin=null;roundPrize=el('stagePrize').value.trim().slice(0,120)}
   if(!roundActive&&el('featureTitle').textContent==='Name That Tune'&&el('guestFeature').classList.contains('open')){
    closeGuestFeature();
    el('rehearsalRound').focus();
@@ -694,6 +752,126 @@ if(hostMode){
   if(!panel.hidden)el('specialsHostTitle').focus();
  };
 }
+function showGuestWinner(playOnOpen=false){
+ if(!roundWin)return;
+ if(el('guestFeature').classList.contains('open'))focusGuestFeatureTop();
+ else openGuestFeature('Name That Tune');
+ const body=el('featureBody');
+ body.innerHTML=`<article id="guestWinnerCard" class="ma-evergreen" aria-labelledby="guestWinnerTitle">
+  <p class="ma-brand"><span id="guestWinBrand"></span> · Name That Tune</p>
+  <div class="ma-art" aria-hidden="true">
+   <div class="ma-confetti">
+    <i style="--x:4.2%;--w:7px;--h:6px;--color:#f8ce83;--radius:5px;--duration:2.14s;--delay:-0.68s;--drift:-15px;--sway:-7px;--tail:-18px;--angle:-66deg;--turn:32deg;--bend:143deg;--spin:261deg"></i>
+    <i style="--x:40.3%;--w:5px;--h:7px;--color:#ffedb2;--radius:1px;--duration:1.94s;--delay:-0.595s;--drift:-1px;--sway:0px;--tail:-1px;--angle:-5deg;--turn:38deg;--bend:87deg;--spin:139deg"></i>
+    <i style="--x:80.0%;--w:4px;--h:10px;--color:#f492b0;--radius:1px;--duration:1.95s;--delay:-0.51s;--drift:1px;--sway:0px;--tail:1px;--angle:-11deg;--turn:35deg;--bend:87deg;--spin:142deg"></i>
+    <i style="--x:18.0%;--w:4px;--h:10px;--color:#adf0cb;--radius:1px;--duration:2.1s;--delay:-0.425s;--drift:10px;--sway:4px;--tail:12px;--angle:33deg;--turn:79deg;--bend:131deg;--spin:186deg"></i>
+    <i style="--x:56.7%;--w:7px;--h:8px;--color:#92c7ff;--radius:5px;--duration:2.09s;--delay:-0.34s;--drift:14px;--sway:6px;--tail:17px;--angle:-74deg;--turn:18deg;--bend:121deg;--spin:231deg"></i>
+    <i style="--x:95.2%;--w:4px;--h:7px;--color:#ffc191;--radius:1px;--duration:2.09s;--delay:-0.255s;--drift:10px;--sway:4px;--tail:12px;--angle:-39deg;--turn:-108deg;--bend:-187deg;--spin:-270deg"></i>
+    <i style="--x:32.5%;--w:4px;--h:6px;--color:#f8ce83;--radius:1px;--duration:2.03s;--delay:-0.17s;--drift:2px;--sway:1px;--tail:2px;--angle:-38deg;--turn:-73deg;--bend:-112deg;--spin:-154deg"></i>
+    <i style="--x:73.6%;--w:4px;--h:7px;--color:#ffedb2;--radius:1px;--duration:2.07s;--delay:-0.085s;--drift:-17px;--sway:-8px;--tail:-20px;--angle:19deg;--turn:62deg;--bend:112deg;--spin:164deg"></i>
+    <i style="--x:9.7%;--w:5px;--h:8px;--color:#f492b0;--radius:5px;--duration:1.97s;--delay:0.0s;--drift:-2px;--sway:-1px;--tail:-2px;--angle:79deg;--turn:-23deg;--bend:-138deg;--spin:-260deg"></i>
+    <i style="--x:50.5%;--w:5px;--h:10px;--color:#adf0cb;--radius:1px;--duration:2.08s;--delay:0.085s;--drift:4px;--sway:2px;--tail:5px;--angle:-10deg;--turn:67deg;--bend:154deg;--spin:246deg"></i>
+    <i style="--x:89.7%;--w:5px;--h:7px;--color:#92c7ff;--radius:1px;--duration:1.94s;--delay:0.17s;--drift:-10px;--sway:-4px;--tail:-12px;--angle:-16deg;--turn:-77deg;--bend:-146deg;--spin:-219deg"></i>
+    <i style="--x:24.8%;--w:5px;--h:8px;--color:#ffc191;--radius:1px;--duration:2.02s;--delay:0.255s;--drift:16px;--sway:7px;--tail:19px;--angle:-1deg;--turn:-80deg;--bend:-170deg;--spin:-265deg"></i>
+    <i style="--x:66.1%;--w:6px;--h:6px;--color:#f8ce83;--radius:5px;--duration:1.94s;--delay:0.34s;--drift:1px;--sway:0px;--tail:1px;--angle:67deg;--turn:139deg;--bend:220deg;--spin:306deg"></i>
+    <i style="--x:2.2%;--w:6px;--h:9px;--color:#ffedb2;--radius:1px;--duration:1.98s;--delay:0.425s;--drift:-8px;--sway:-4px;--tail:-9px;--angle:13deg;--turn:-56deg;--bend:-134deg;--spin:-216deg"></i>
+    <i style="--x:41.8%;--w:4px;--h:8px;--color:#f492b0;--radius:1px;--duration:2.02s;--delay:0.51s;--drift:1px;--sway:0px;--tail:1px;--angle:-26deg;--turn:35deg;--bend:103deg;--spin:176deg"></i>
+    <i style="--x:79.3%;--w:4px;--h:7px;--color:#adf0cb;--radius:1px;--duration:2.14s;--delay:0.595s;--drift:-7px;--sway:-3px;--tail:-8px;--angle:71deg;--turn:-8deg;--bend:-97deg;--spin:-192deg"></i>
+    <i style="--x:18.2%;--w:6px;--h:6px;--color:#92c7ff;--radius:5px;--duration:2.08s;--delay:0.68s;--drift:7px;--sway:3px;--tail:8px;--angle:-52deg;--turn:44deg;--bend:152deg;--spin:267deg"></i>
+    <i style="--x:56.3%;--w:5px;--h:9px;--color:#ffc191;--radius:1px;--duration:2.17s;--delay:0.765s;--drift:17px;--sway:8px;--tail:20px;--angle:62deg;--turn:113deg;--bend:171deg;--spin:232deg"></i>
+    <i style="--x:94.8%;--w:7px;--h:10px;--color:#f8ce83;--radius:1px;--duration:2.19s;--delay:0.85s;--drift:0px;--sway:0px;--tail:0px;--angle:20deg;--turn:-63deg;--bend:-157deg;--spin:-257deg"></i>
+    <i style="--x:33.6%;--w:4px;--h:7px;--color:#ffedb2;--radius:1px;--duration:1.92s;--delay:0.935s;--drift:16px;--sway:7px;--tail:19px;--angle:10deg;--turn:68deg;--bend:134deg;--spin:204deg"></i>
+    <i style="--x:72.3%;--w:5px;--h:6px;--color:#f492b0;--radius:5px;--duration:1.94s;--delay:1.02s;--drift:-9px;--sway:-4px;--tail:-11px;--angle:62deg;--turn:137deg;--bend:223deg;--spin:313deg"></i>
+    <i style="--x:11.3%;--w:4px;--h:8px;--color:#adf0cb;--radius:1px;--duration:2.0s;--delay:1.105s;--drift:-17px;--sway:-8px;--tail:-20px;--angle:-43deg;--turn:-124deg;--bend:-215deg;--spin:-312deg"></i>
+    <i style="--x:48.5%;--w:5px;--h:6px;--color:#92c7ff;--radius:1px;--duration:2.14s;--delay:1.19s;--drift:15px;--sway:7px;--tail:18px;--angle:-23deg;--turn:44deg;--bend:119deg;--spin:199deg"></i>
+    <i style="--x:88.0%;--w:7px;--h:8px;--color:#ffc191;--radius:1px;--duration:2.15s;--delay:1.275s;--drift:-17px;--sway:-8px;--tail:-20px;--angle:-74deg;--turn:-132deg;--bend:-198deg;--spin:-267deg"></i>
+    <i style="--x:25.7%;--w:6px;--h:8px;--color:#f8ce83;--radius:5px;--duration:2.16s;--delay:1.36s;--drift:-12px;--sway:-5px;--tail:-14px;--angle:-58deg;--turn:-119deg;--bend:-189deg;--spin:-262deg"></i>
+    <i style="--x:64.5%;--w:7px;--h:8px;--color:#ffedb2;--radius:1px;--duration:1.97s;--delay:1.445s;--drift:5px;--sway:2px;--tail:6px;--angle:59deg;--turn:-26deg;--bend:-123deg;--spin:-226deg"></i>
+    <i style="--x:1.5%;--w:5px;--h:10px;--color:#f492b0;--radius:1px;--duration:2.17s;--delay:1.53s;--drift:13px;--sway:6px;--tail:15px;--angle:-39deg;--turn:63deg;--bend:179deg;--spin:301deg"></i>
+    <i style="--x:40.6%;--w:4px;--h:6px;--color:#adf0cb;--radius:1px;--duration:1.98s;--delay:1.615s;--drift:0px;--sway:0px;--tail:0px;--angle:-32deg;--turn:-114deg;--bend:-207deg;--spin:-305deg"></i>
+    <i style="--x:79.1%;--w:4px;--h:10px;--color:#92c7ff;--radius:5px;--duration:2.06s;--delay:1.7s;--drift:12px;--sway:5px;--tail:14px;--angle:8deg;--turn:60deg;--bend:119deg;--spin:182deg"></i>
+    <i style="--x:18.4%;--w:5px;--h:6px;--color:#ffc191;--radius:1px;--duration:2.0s;--delay:1.785s;--drift:6px;--sway:3px;--tail:7px;--angle:72deg;--turn:-37deg;--bend:-161deg;--spin:-292deg"></i>
+    <i style="--x:56.7%;--w:4px;--h:8px;--color:#f8ce83;--radius:1px;--duration:2.15s;--delay:1.87s;--drift:-13px;--sway:-6px;--tail:-15px;--angle:-78deg;--turn:10deg;--bend:110deg;--spin:216deg"></i>
+    <i style="--x:97.2%;--w:4px;--h:10px;--color:#ffedb2;--radius:1px;--duration:2.16s;--delay:1.955s;--drift:-15px;--sway:-7px;--tail:-18px;--angle:-73deg;--turn:24deg;--bend:134deg;--spin:250deg"></i>
+    <i style="--x:35.5%;--w:7px;--h:9px;--color:#f492b0;--radius:5px;--duration:2.01s;--delay:2.04s;--drift:-4px;--sway:-2px;--tail:-5px;--angle:6deg;--turn:-87deg;--bend:-192deg;--spin:-303deg"></i>
+    <i style="--x:73.1%;--w:4px;--h:6px;--color:#adf0cb;--radius:1px;--duration:1.94s;--delay:2.125s;--drift:-13px;--sway:-6px;--tail:-15px;--angle:-55deg;--turn:-105deg;--bend:-162deg;--spin:-222deg"></i>
+    <i style="--x:12.0%;--w:6px;--h:6px;--color:#92c7ff;--radius:1px;--duration:2.14s;--delay:2.21s;--drift:-6px;--sway:-3px;--tail:-7px;--angle:72deg;--turn:-38deg;--bend:-162deg;--spin:-293deg"></i>
+    <i style="--x:49.6%;--w:7px;--h:10px;--color:#ffc191;--radius:1px;--duration:2.16s;--delay:2.295s;--drift:6px;--sway:3px;--tail:7px;--angle:69deg;--turn:116deg;--bend:170deg;--spin:227deg"></i>
+    <i style="--x:87.2%;--w:6px;--h:9px;--color:#f8ce83;--radius:5px;--duration:2.07s;--delay:2.38s;--drift:9px;--sway:4px;--tail:11px;--angle:-36deg;--turn:-101deg;--bend:-175deg;--spin:-253deg"></i>
+    <i style="--x:25.5%;--w:5px;--h:6px;--color:#ffedb2;--radius:1px;--duration:1.97s;--delay:2.465s;--drift:6px;--sway:3px;--tail:7px;--angle:35deg;--turn:111deg;--bend:196deg;--spin:287deg"></i>
+    <i style="--x:64.9%;--w:7px;--h:6px;--color:#f492b0;--radius:1px;--duration:1.95s;--delay:2.55s;--drift:-13px;--sway:-6px;--tail:-15px;--angle:44deg;--turn:-31deg;--bend:-115deg;--spin:-205deg"></i>
+    <i style="--x:1.6%;--w:5px;--h:6px;--color:#adf0cb;--radius:1px;--duration:2.08s;--delay:2.635s;--drift:8px;--sway:4px;--tail:9px;--angle:29deg;--turn:96deg;--bend:171deg;--spin:251deg"></i>
+    <i style="--x:42.5%;--w:7px;--h:10px;--color:#92c7ff;--radius:5px;--duration:2.11s;--delay:2.72s;--drift:-14px;--sway:-6px;--tail:-17px;--angle:49deg;--turn:-49deg;--bend:-160deg;--spin:-278deg"></i>
+    <i style="--x:81.2%;--w:4px;--h:6px;--color:#ffc191;--radius:1px;--duration:2.17s;--delay:2.805s;--drift:2px;--sway:1px;--tail:2px;--angle:-26deg;--turn:76deg;--bend:191deg;--spin:313deg"></i>
+    <i style="--x:17.6%;--w:7px;--h:8px;--color:#f8ce83;--radius:1px;--duration:1.93s;--delay:2.89s;--drift:2px;--sway:1px;--tail:2px;--angle:59deg;--turn:121deg;--bend:192deg;--spin:267deg"></i>
+    <i style="--x:56.9%;--w:6px;--h:9px;--color:#ffedb2;--radius:1px;--duration:2.03s;--delay:2.975s;--drift:14px;--sway:6px;--tail:17px;--angle:-78deg;--turn:3deg;--bend:94deg;--spin:191deg"></i>
+    <i style="--x:96.2%;--w:6px;--h:9px;--color:#f492b0;--radius:5px;--duration:2.16s;--delay:3.06s;--drift:-6px;--sway:-3px;--tail:-7px;--angle:-77deg;--turn:-94deg;--bend:-114deg;--spin:-135deg"></i>
+    <i style="--x:34.2%;--w:5px;--h:8px;--color:#adf0cb;--radius:1px;--duration:1.99s;--delay:3.145s;--drift:-7px;--sway:-3px;--tail:-8px;--angle:-41deg;--turn:40deg;--bend:132deg;--spin:230deg"></i>
+    <i style="--x:74.0%;--w:4px;--h:7px;--color:#92c7ff;--radius:1px;--duration:2.1s;--delay:3.23s;--drift:-16px;--sway:-7px;--tail:-19px;--angle:-48deg;--turn:-128deg;--bend:-219deg;--spin:-315deg"></i>
+    <i style="--x:10.0%;--w:7px;--h:7px;--color:#ffc191;--radius:1px;--duration:2.14s;--delay:3.315s;--drift:9px;--sway:4px;--tail:11px;--angle:45deg;--turn:124deg;--bend:214deg;--spin:309deg"></i>
+    <i style="--x:49.3%;--w:6px;--h:8px;--color:#f8ce83;--radius:5px;--duration:1.97s;--delay:3.4s;--drift:0px;--sway:0px;--tail:0px;--angle:-32deg;--turn:-91deg;--bend:-157deg;--spin:-228deg"></i>
+    <i style="--x:88.0%;--w:7px;--h:9px;--color:#ffedb2;--radius:1px;--duration:2.13s;--delay:3.485s;--drift:-2px;--sway:-1px;--tail:-2px;--angle:-28deg;--turn:-115deg;--bend:-213deg;--spin:-317deg"></i>
+    <i style="--x:24.9%;--w:4px;--h:6px;--color:#f492b0;--radius:1px;--duration:2.17s;--delay:3.57s;--drift:14px;--sway:6px;--tail:17px;--angle:-42deg;--turn:26deg;--bend:104deg;--spin:186deg"></i>
+    <i style="--x:65.8%;--w:5px;--h:8px;--color:#adf0cb;--radius:1px;--duration:1.99s;--delay:3.655s;--drift:-5px;--sway:-2px;--tail:-6px;--angle:-24deg;--turn:36deg;--bend:104deg;--spin:176deg"></i>
+    <i style="--x:2.5%;--w:7px;--h:6px;--color:#92c7ff;--radius:5px;--duration:2.1s;--delay:3.74s;--drift:17px;--sway:8px;--tail:20px;--angle:-19deg;--turn:72deg;--bend:174deg;--spin:283deg"></i>
+    <i style="--x:43.2%;--w:6px;--h:6px;--color:#ffc191;--radius:1px;--duration:2.01s;--delay:3.825s;--drift:-11px;--sway:-5px;--tail:-13px;--angle:-24deg;--turn:73deg;--bend:183deg;--spin:300deg"></i>
+    <i style="--x:81.3%;--w:6px;--h:10px;--color:#f8ce83;--radius:1px;--duration:2.07s;--delay:3.91s;--drift:3px;--sway:1px;--tail:4px;--angle:57deg;--turn:114deg;--bend:178deg;--spin:246deg"></i>
+    <i style="--x:19.8%;--w:5px;--h:6px;--color:#ffedb2;--radius:1px;--duration:2.08s;--delay:3.995s;--drift:10px;--sway:4px;--tail:12px;--angle:-27deg;--turn:-66deg;--bend:-110deg;--spin:-157deg"></i>
+    <i style="--x:58.6%;--w:6px;--h:6px;--color:#f492b0;--radius:5px;--duration:1.95s;--delay:4.08s;--drift:4px;--sway:2px;--tail:5px;--angle:77deg;--turn:123deg;--bend:174deg;--spin:229deg"></i>
+    <i style="--x:96.3%;--w:7px;--h:10px;--color:#adf0cb;--radius:1px;--duration:2.06s;--delay:4.165s;--drift:17px;--sway:8px;--tail:20px;--angle:-32deg;--turn:-117deg;--bend:-213deg;--spin:-315deg"></i>
+    <i style="--x:35.0%;--w:4px;--h:8px;--color:#92c7ff;--radius:1px;--duration:2.08s;--delay:4.25s;--drift:-12px;--sway:-5px;--tail:-14px;--angle:-6deg;--turn:44deg;--bend:100deg;--spin:160deg"></i>
+    <i style="--x:73.4%;--w:5px;--h:6px;--color:#ffc191;--radius:1px;--duration:2.12s;--delay:4.335s;--drift:12px;--sway:5px;--tail:14px;--angle:-79deg;--turn:-2deg;--bend:86deg;--spin:179deg"></i>
+    <i style="--x:9.6%;--w:4px;--h:7px;--color:#f8ce83;--radius:5px;--duration:1.94s;--delay:4.42s;--drift:-10px;--sway:-4px;--tail:-12px;--angle:76deg;--turn:-27deg;--bend:-144deg;--spin:-267deg"></i>
+    <i style="--x:50.6%;--w:4px;--h:10px;--color:#ffedb2;--radius:1px;--duration:1.98s;--delay:4.505s;--drift:-10px;--sway:-4px;--tail:-12px;--angle:67deg;--turn:-48deg;--bend:-179deg;--spin:-317deg"></i>
+    <i style="--x:86.8%;--w:4px;--h:8px;--color:#f492b0;--radius:1px;--duration:2.17s;--delay:4.59s;--drift:2px;--sway:1px;--tail:2px;--angle:55deg;--turn:103deg;--bend:157deg;--spin:214deg"></i>
+    <i style="--x:26.3%;--w:4px;--h:7px;--color:#adf0cb;--radius:1px;--duration:2.17s;--delay:4.675s;--drift:-6px;--sway:-3px;--tail:-7px;--angle:49deg;--turn:-40deg;--bend:-142deg;--spin:-249deg"></i>
+    <i style="--x:64.5%;--w:7px;--h:10px;--color:#92c7ff;--radius:5px;--duration:2.19s;--delay:4.76s;--drift:-17px;--sway:-8px;--tail:-20px;--angle:-5deg;--turn:-55deg;--bend:-113deg;--spin:-173deg"></i>
+    <i style="--x:1.6%;--w:6px;--h:6px;--color:#ffc191;--radius:1px;--duration:2.14s;--delay:4.845s;--drift:12px;--sway:5px;--tail:14px;--angle:37deg;--turn:89deg;--bend:147deg;--spin:209deg"></i>
+    <i style="--x:42.1%;--w:7px;--h:8px;--color:#f8ce83;--radius:1px;--duration:2.01s;--delay:4.93s;--drift:8px;--sway:4px;--tail:9px;--angle:1deg;--turn:92deg;--bend:195deg;--spin:304deg"></i>
+    <i style="--x:81.7%;--w:5px;--h:8px;--color:#ffedb2;--radius:1px;--duration:2.11s;--delay:5.015s;--drift:-17px;--sway:-8px;--tail:-20px;--angle:-60deg;--turn:41deg;--bend:156deg;--spin:278deg"></i>
+    <i style="--x:19.6%;--w:5px;--h:10px;--color:#f492b0;--radius:5px;--duration:2.01s;--delay:5.1s;--drift:-7px;--sway:-3px;--tail:-8px;--angle:-47deg;--turn:-122deg;--bend:-206deg;--spin:-296deg"></i>
+    <i style="--x:56.9%;--w:5px;--h:8px;--color:#adf0cb;--radius:1px;--duration:2.11s;--delay:5.185s;--drift:0px;--sway:0px;--tail:0px;--angle:-3deg;--turn:40deg;--bend:89deg;--spin:141deg"></i>
+    <i style="--x:95.0%;--w:5px;--h:7px;--color:#92c7ff;--radius:1px;--duration:2.19s;--delay:5.27s;--drift:15px;--sway:7px;--tail:18px;--angle:-43deg;--turn:59deg;--bend:174deg;--spin:296deg"></i>
+    <i style="--x:34.0%;--w:7px;--h:6px;--color:#ffc191;--radius:1px;--duration:2.15s;--delay:5.355s;--drift:-16px;--sway:-7px;--tail:-19px;--angle:41deg;--turn:-44deg;--bend:-139deg;--spin:-241deg"></i>
+    <i style="--x:71.6%;--w:7px;--h:6px;--color:#f8ce83;--radius:5px;--duration:2.07s;--delay:5.44s;--drift:13px;--sway:6px;--tail:15px;--angle:-58deg;--turn:34deg;--bend:137deg;--spin:247deg"></i>
+    <i style="--x:9.3%;--w:5px;--h:9px;--color:#ffedb2;--radius:1px;--duration:1.94s;--delay:5.525s;--drift:-6px;--sway:-3px;--tail:-7px;--angle:-41deg;--turn:-109deg;--bend:-187deg;--spin:-269deg"></i>
+    <i style="--x:50.5%;--w:6px;--h:6px;--color:#f492b0;--radius:1px;--duration:2.15s;--delay:5.61s;--drift:15px;--sway:7px;--tail:18px;--angle:58deg;--turn:-36deg;--bend:-142deg;--spin:-255deg"></i>
+    <i style="--x:88.9%;--w:5px;--h:9px;--color:#adf0cb;--radius:1px;--duration:2.06s;--delay:5.695s;--drift:-9px;--sway:-4px;--tail:-11px;--angle:-53deg;--turn:16deg;--bend:94deg;--spin:177deg"></i>
+    <i style="--x:25.7%;--w:4px;--h:10px;--color:#92c7ff;--radius:5px;--duration:2.08s;--delay:5.78s;--drift:11px;--sway:5px;--tail:13px;--angle:-58deg;--turn:41deg;--bend:153deg;--spin:271deg"></i>
+    <i style="--x:66.1%;--w:4px;--h:7px;--color:#ffc191;--radius:1px;--duration:2.07s;--delay:5.865s;--drift:0px;--sway:0px;--tail:0px;--angle:-32deg;--turn:21deg;--bend:81deg;--spin:145deg"></i>
+    <i style="--x:1.8%;--w:6px;--h:10px;--color:#f8ce83;--radius:1px;--duration:2.08s;--delay:5.95s;--drift:10px;--sway:4px;--tail:12px;--angle:-12deg;--turn:50deg;--bend:119deg;--spin:193deg"></i>
+    <i style="--x:42.1%;--w:5px;--h:8px;--color:#ffedb2;--radius:1px;--duration:2.12s;--delay:6.035s;--drift:-8px;--sway:-4px;--tail:-9px;--angle:57deg;--turn:116deg;--bend:182deg;--spin:253deg"></i>
+    <i style="--x:81.5%;--w:5px;--h:9px;--color:#f492b0;--radius:5px;--duration:2.03s;--delay:6.12s;--drift:-7px;--sway:-3px;--tail:-8px;--angle:42deg;--turn:107deg;--bend:182deg;--spin:260deg"></i>
+    <i style="--x:18.0%;--w:4px;--h:6px;--color:#adf0cb;--radius:1px;--duration:2.2s;--delay:6.205s;--drift:-15px;--sway:-7px;--tail:-18px;--angle:-62deg;--turn:-101deg;--bend:-145deg;--spin:-192deg"></i>
+    <i style="--x:57.0%;--w:6px;--h:6px;--color:#92c7ff;--radius:1px;--duration:1.98s;--delay:6.29s;--drift:17px;--sway:8px;--tail:20px;--angle:43deg;--turn:115deg;--bend:197deg;--spin:284deg"></i>
+   </div>
+   <div class="ma-halo"></div><span class="ma-spark one">✧</span><span class="ma-spark two">✦</span><span class="ma-spark three">✧</span>
+   <div class="ma-base"></div><div class="ma-leg"><div class="ma-stocking"></div><div class="ma-heel"></div></div>
+   <div class="ma-shade"><div class="ma-piping"></div><div class="ma-seams"></div><div class="ma-fringe"></div></div>
+  </div>
+  <h3 id="guestWinnerTitle" tabindex="-1">You Won!</h3>
+  <p class="ma-line">It’s a major award!</p>
+  <p class="ma-song">The song was <strong>3am</strong>.</p>
+  <div class="ma-prize"><small>Your prize</small><strong id="guestWinPrize"></strong></div>
+  <time id="guestWinTime"></time>
+  <p class="ma-claim">Rehearsal · No real prize. At a live show, show this screen to staff during the show.</p>
+  <button id="guestWinReplay" class="ma-replay" type="button">Replay kick &amp; confetti</button>
+ </article>`;
+ el('guestWinBrand').textContent=roundWin.performer;
+ el('guestWinPrize').textContent=roundWin.prize||'No prize announced';
+ const stamp=el('guestWinTime');stamp.dateTime=roundWin.time.toISOString();
+ stamp.textContent=new Intl.DateTimeFormat(undefined,{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(roundWin.time);
+ const card=el('guestWinnerCard');
+ function celebrate(){
+  card.classList.remove('ma-animate');
+  void card.offsetWidth;
+  card.classList.add('ma-animate');
+ }
+ el('guestWinReplay').onclick=celebrate;
+ if(playOnOpen)celebrate();
+ el('guestWinnerTitle').focus({preventScroll:true});
+}
+el('showGuestWin').onclick=()=>showGuestWinner();
 el('showGame').onclick=()=>{
  if(!roundActive||guessed)return;
  openGuestFeature('Name That Tune');
@@ -712,9 +890,11 @@ el('showGame').onclick=()=>{
  el('guestGuess').onchange=()=>el('sendGuestGuess').disabled=!el('guestGuess').value;
  el('sendGuestGuess').onclick=()=>{
   if(!roundActive||guessed)return;
-  guessed=true;renderRehearsalRound();
   const correct=el('guestGuess').value==='1';
-  el('featureBody').innerHTML='<p role="status">'+(correct?'You got it! The song was 3am.':'Guess submitted. Thanks for playing!')+'</p><p class="small">Enjoying the show? You can leave an optional tip anytime.</p>';
+  guessed=true;if(correct)roundWin={performer:el('customBrand').textContent.trim()||'Name That Tune host',prize:roundPrize,time:new Date()};
+  renderRehearsalRound();
+  if(correct){showGuestWinner(true);return}
+  el('featureBody').innerHTML='<p role="status">Guess submitted. Thanks for playing!</p><p class="small">Enjoying the show? You can leave an optional tip anytime.</p>';
   el('closeFeature').focus();
  };
  renderGuesses();
@@ -867,4 +1047,3 @@ if(hostMode){
 }
 init();
 </script></body></html>
-<!-- Rehearsal v9 -->

@@ -395,6 +395,19 @@ body.mode-playing .song-stage-controls{display:none}
 #practice-chart{background:#091710;border:1px solid #385e46;border-radius:10px;padding:12px;margin:8px 0 12px;min-height:150px;height:34vh;overflow:auto;white-space:pre;font:19px/1.4 ui-monospace,monospace}
 #practice-chart .chord-line,#practice-chart .chords,#practice-chart .key-chord-note{color:#9be8ae}
 .practice-timer{border-top:1px solid #527760;padding-top:12px}.practice-timer p{margin:6px 0 10px}#practice-clock{margin-left:10px;font:700 23px ui-monospace,monospace}
+</style><style>
+#song-end-actions .song-note-actions{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#song-end-actions #record-song-notes{padding-inline:12px}
+#float-transport .song-note-actions{display:flex;gap:4px;align-items:center;flex:0 0 auto}
+#float-transport .song-note-actions>button{white-space:nowrap}
+#song-notes-dialog{width:min(420px,calc(100% - 24px));max-height:calc(100dvh - 24px);box-sizing:border-box;background:#11241a;color:#edf7ee;border:1px solid #6a9173;border-radius:14px;padding:16px}
+#song-notes-dialog::backdrop{background:#0008}
+#song-notes-dialog h2{margin:0}
+#song-notes-dialog textarea{display:block;width:100%;margin:6px 0;background:#172f21;color:inherit;border:1px solid #72967a;border-radius:8px;padding:8px;font:16px system-ui;box-sizing:border-box}
+#song-notes-dialog .song-note-actions{display:flex;justify-content:space-between;gap:8px}
+#song-notes-dialog button{min-height:44px}
+#song-note-error:empty{display:none}
+#history-song-note-list p{white-space:pre-wrap;overflow-wrap:anywhere}
 </style></head>
 <body>
 <header><div class="performance-brand"><span class="brand-mark" aria-hidden="true">🎸</span><div class="brand-copy"><span class="head-title" id="workspace-name">Performance</span><div class="brand-status"><span id="song-count-status">Your library</span><span id="connection-status" class="connection-pending">● Connecting…</span></div></div></div><div class="actions"><a class="account-top" href="subscriber-signup-test.html">Main menu</a><span id="busy" class="visually-hidden" role="status" aria-live="polite"></span><div class="mode" role="group" aria-label="Performance mode"><button id="playing-btn" type="button" aria-pressed="false">Playing</button><button id="between-btn" type="button" class="chosen" aria-pressed="true">Between Songs</button></div><button id="setlists-btn" hidden="" type="button" title="Choose or edit a setlist">☷ <span>Setlists</span></button><button id="requests-btn" type="button" aria-label="Open incoming requests">◉ <span id="request-button-label">Requests (0)</span></button><button id="volume-btn" type="button" aria-label="View audience volume feedback">🔊 Volume</button><button id="dice-btn" type="button" aria-label="Roll for a random Ready to Play song" title="Random Song"><span class="dice-art" aria-hidden="true">🎲</span></button><button id="settings-btn" type="button" aria-label="Performance settings" title="Settings">⚙</button><button id="songs-btn" type="button" hidden="">Open Songs</button><button id="save-offline" type="button" title="Refresh song library" hidden="">Refresh library</button><label id="font-choice-label" for="ui-font-choice" hidden="">App font</label><select id="ui-font-choice" aria-label="App appearance font" hidden=""><option value="hand">Handwritten</option><option value="modern">Modern</option><option value="classic">Classic</option></select><button id="setlist-prev" type="button" hidden="" title="Previous setlist song">◀ Previous</button><span id="setlist-info" hidden=""></span><button id="setlist-next" type="button" hidden="" title="Next setlist song">Next ▶</button><button id="setlist-resume" type="button" hidden="" title="Return to your current setlist song">↩ Return to Setlist</button><button id="smaller" type="button" hidden="" aria-label="Smaller text">A−</button><button id="larger" type="button" hidden="" aria-label="Larger text">A+</button><button id="hide-controls" type="button" hidden="" aria-label="Hide top toolbar">Hide controls ▴</button></div></header><div id="connection-banner" role="status" aria-live="polite"><span id="connection-copy">Checking your connection…</span> <button id="retry-connection" type="button">Retry connection</button></div><span id="stage-connection" hidden="">Offline · songs available</span>
@@ -404,10 +417,10 @@ body.mode-playing .song-stage-controls{display:none}
 
 
 
-<span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"></path></svg></span><button id="float-library" type="button" title="Open Ready to Play songs" aria-label="Open Ready to Play songs"><span aria-hidden="true">☷</span> SONGS</button><button id="float-between" type="button" title="Between Songs controls">Between</button><button id="float-played" type="button" disabled="">✓ Played</button><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button><button id="float-setlist-prev" type="button" hidden="" title="Previous setlist song">Back</button><button id="float-setlist-next" type="button" hidden="" title="Next setlist song">Next</button><button id="learning-start" type="button" hidden="">▶ Start Timer</button><button id="learning-stop" type="button" hidden="">■ Stop Timer</button><button id="float-smaller" type="button" aria-label="Smaller lyrics">A−</button><button id="float-larger" type="button" aria-label="Larger lyrics">A+</button><button id="toolbar-resize" type="button" aria-label="Drag to resize toolbar" title="Drag to resize; arrow keys adjust size"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M5 10V5h5M14 19h5v-5M5 5l14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div><section id="float-requests" class="float-control" aria-label="Incoming request box"></section></div>
+<span id="transport-grip" class="drag-grip" role="button" tabindex="0" aria-label="Drag toolbar to reposition; move to either side for vertical layout" title="Hold and drag to move controls"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"></path></svg></span><button id="float-library" type="button" title="Open Ready to Play songs" aria-label="Open Ready to Play songs"><span aria-hidden="true">☷</span> SONGS</button><button id="float-between" type="button" title="Between Songs controls">Between</button><div class="song-note-actions" role="group" aria-label="Song actions"><button id="float-song-notes" type="button" aria-haspopup="dialog" disabled>Song Notes</button><button id="float-played" type="button" disabled="">✓ Played</button></div><button id="speed-down" type="button" aria-label="Slower auto-scroll">−</button><button id="scroll-toggle" type="button" aria-label="Start or pause auto-scroll">▶ Scroll</button><button id="speed-up" type="button" aria-label="Faster auto-scroll">+</button><button id="float-setlist-prev" type="button" hidden="" title="Previous setlist song">Back</button><button id="float-setlist-next" type="button" hidden="" title="Next setlist song">Next</button><button id="learning-start" type="button" hidden="">▶ Start Timer</button><button id="learning-stop" type="button" hidden="">■ Stop Timer</button><button id="float-smaller" type="button" aria-label="Smaller lyrics">A−</button><button id="float-larger" type="button" aria-label="Larger lyrics">A+</button><button id="toolbar-resize" type="button" aria-label="Drag to resize toolbar" title="Drag to resize; arrow keys adjust size"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M5 10V5h5M14 19h5v-5M5 5l14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div><section id="float-requests" class="float-control" aria-label="Incoming request box"></section></div>
 <button id="toolbar-recover" type="button">☷ SONGS · Reset controls</button>
 <div id="layout"><aside id="library" hidden=""><div id="browser-top"><div id="setlist-browser-bar" hidden=""><strong id="active-setlist-title">Setlist</strong><button id="toggle-setlist-library" type="button">All Songs</button><button id="exit-setlist" type="button" title="Exit the active setlist">Exit</button></div><input id="search" placeholder="Search song or artist" aria-label="Search songs"><select id="filter" aria-label="Filter songs"><option value="ready">Ready to Play</option><option value="all">All Songs</option><option value="learning">Still learning</option><option value="missing">Needs Chart</option></select><span id="count">Loading…</span></div><div id="song-list-wrap"><div id="song-list"></div><nav id="az-rail" aria-label="Jump to first letter"></nav></div></aside><button id="library-resizer" type="button" aria-label="Drag to resize the song library" title="Drag to resize song list" tabindex="0"></button>
-<main id="stage"><div id="set-break-screen" hidden="" role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div class="song-stage-controls"><div class="show-song-actions"><div class="performance-log-actions"><button id="show-controls-open" type="button">Start / End Show</button><button id="history-open" type="button">Show History</button><span id="record-feedback" role="status" aria-live="polite"></span></div><button id="editor-launch" type="button">✎ Manage songs</button></div><section id="key-controls" hidden="" aria-label="Change song key"><div class="key-control-heading"><strong id="key-change-help">Change key</strong><span id="key-status" role="status" aria-live="polite">Original chart</span></div><div class="key-control-buttons"><button id="practice-open" type="button">Practice Mode</button><button id="key-lower" type="button" aria-label="Lower key by one half step">↓ Lower</button><button id="key-raise" type="button" aria-label="Raise key by one half step">↑ Raise</button><button id="key-reset" type="button">Reset to original</button></div><small>Each tap changes the chords by one half step. Your uploaded chart stays unchanged.</small></section></div><section id="song-editor" hidden="" aria-label="Edit lyrics and chords"><h2>Edit Song</h2><p class="editor-help">Edit the original text, including spaces between chords. Save requires an internet connection. Use Cancel to discard edits.</p><textarea id="editor-text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Song lyrics and chords"></textarea><div class="edit-controls"><button id="editor-save" type="button">Save Changes</button><button id="editor-cancel" type="button">Cancel</button></div><div id="editor-feedback" role="status" aria-live="polite"></div></section><p id="key-playing-status" hidden="" aria-label="Current key change"></p><div id="chart" aria-label="Lyrics and chords"></div><div id="song-end-actions"><button id="record-played" type="button" disabled="">✓ Mark Played</button><p>Record this song in tonight’s performance history.</p></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
+<main id="stage"><div id="set-break-screen" hidden="" role="status" aria-live="polite"><div class="break-symbol">☕</div><h2 id="set-break-heading">End of Set 1</h2><p>Your next set is ready when you are.</p><button id="continue-next-set" type="button">▶ Begin Set 2</button></div><h1 id="song-title">Your Songbook</h1><p id="song-artist">Connect to load your songs</p><p id="song-status"></p><div class="song-stage-controls"><div class="show-song-actions"><div class="performance-log-actions"><button id="show-controls-open" type="button">Start / End Show</button><button id="history-open" type="button">Show History</button><span id="record-feedback" role="status" aria-live="polite"></span></div><button id="editor-launch" type="button">✎ Manage songs</button></div><section id="key-controls" hidden="" aria-label="Change song key"><div class="key-control-heading"><strong id="key-change-help">Change key</strong><span id="key-status" role="status" aria-live="polite">Original chart</span></div><div class="key-control-buttons"><button id="practice-open" type="button">Practice Mode</button><button id="key-lower" type="button" aria-label="Lower key by one half step">↓ Lower</button><button id="key-raise" type="button" aria-label="Raise key by one half step">↑ Raise</button><button id="key-reset" type="button">Reset to original</button></div><small>Each tap changes the chords by one half step. Your uploaded chart stays unchanged.</small></section></div><section id="song-editor" hidden="" aria-label="Edit lyrics and chords"><h2>Edit Song</h2><p class="editor-help">Edit the original text, including spaces between chords. Save requires an internet connection. Use Cancel to discard edits.</p><textarea id="editor-text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Song lyrics and chords"></textarea><div class="edit-controls"><button id="editor-save" type="button">Save Changes</button><button id="editor-cancel" type="button">Cancel</button></div><div id="editor-feedback" role="status" aria-live="polite"></div></section><p id="key-playing-status" hidden="" aria-label="Current key change"></p><div id="chart" aria-label="Lyrics and chords"></div><div id="song-end-actions"><div class="song-note-actions"><button id="record-song-notes" type="button" aria-haspopup="dialog" disabled>Song Notes</button><button id="record-played" type="button" disabled="">✓ Mark Played</button></div><p>Record this song in tonight’s performance history.</p></div><div id="message" role="status" aria-live="polite">Checking your musician account…</div></main></div>
 <dialog id="practice-mode" aria-labelledby="practice-title">
  <div class="practice-header"><h2 id="practice-title">Practice Mode</h2><button id="practice-close" type="button">Close</button></div>
  <p>Play and sing the hardest chorus and the lowest verse line. Try a different pitch, then save what feels right.</p>
@@ -449,7 +462,17 @@ body.mode-playing .song-stage-controls{display:none}
 <details class="settings-group" id="settings-device"><summary>Offline songs &amp; updates</summary><div class="settings-body"><section id="prepare-device-section"><p id="offline-help">Your songs and private charts are saved automatically on this device when you open the app online, and after imports and saved changes while the app is open. Wait for Your songs are ready offline on this device before your first gig. If internet drops, you can keep reading and scrolling your saved songs. Audience requests, volume feedback, show controls and online saves need internet. Prepare each device or Home Screen app you’ll use at gigs while it’s online. Clearing website data removes that device’s copy.</p><p id="device-status" role="status" aria-live="polite">Checking offline readiness…</p><button id="prepare-device" type="button">Retry offline update</button><p class="settings-caption"><strong>For the best experience, connect to Wi-Fi, cellular data or your phone’s personal hotspot.</strong></p></section><section class="app-update-tools"><button class="check-app-update" type="button">Check for app updates</button><p class="app-update-status" role="status" aria-live="polite"></p><button class="reload-app-update" type="button" hidden="">Restart to update</button></section><details class="settings-more"><summary>More library options</summary><button id="settings-update-offline" type="button">Reload online song list</button><p id="settings-offline-status" role="status"></p></details><p class="settings-caption"><a href="subscriber-signup-test.html#home-screen-help">Home Screen instructions →</a></p></div></details>
 <details class="settings-group" id="settings-appearance"><summary>App font</summary><div class="settings-body"><label for="ui-font-choice" id="appearance-font-label">Performer app font</label><div id="settings-font-slot"></div><p class="settings-caption">Changes the performer screens. Your chart font is chosen in Song Library.</p></div></details>
 </section>
-<section id="history-panel" hidden="" role="dialog" aria-modal="true" aria-label="Show history"><div class="panel-head"><strong>Show History</strong><button id="history-close" type="button">Close</button></div><p id="history-note">When tracking is on, each Mark Played press records one performance. Repeat songs appear separately. History starts with this update; older shows may have no recorded songs.</p><button id="history-refresh" type="button">Refresh Shows</button> <button id="history-undo" type="button">Undo last recording</button><button id="history-copy" type="button">Copy Show</button><select id="history-shows" aria-label="Choose a show"></select><button id="history-more-shows" type="button" hidden="">Load older shows</button><label for="history-venue">Venue / location (optional)</label><input id="history-venue" maxlength="160" placeholder="e.g. Lansdowne, Mohegan Sun" style="width:100%;margin:8px 0"><button id="history-save-venue" type="button">Save Venue</button><p id="show-tools-feedback" role="status" aria-live="polite"></p><textarea id="history-copy-text" readonly="" hidden="" aria-label="Copied show text" style="width:100%;min-height:180px"></textarea><div id="history-summary" role="status" aria-live="polite"></div><div id="history-results"></div><button id="history-more-songs" type="button" hidden="">Load more performances</button></section>
+<dialog id="song-notes-dialog" aria-labelledby="song-notes-title">
+ <form id="song-note-form">
+  <h2 id="song-notes-title">Song Notes</h2>
+  <p id="song-note-song"></p>
+  <label for="song-note-text">Note for this show</label>
+  <textarea id="song-note-text" rows="3" maxlength="500" placeholder="e.g. Fix the bridge chords" autofocus required></textarea>
+  <p id="song-note-error" role="status"></p>
+  <div class="song-note-actions"><button id="song-note-cancel" type="button">Cancel</button><button type="submit">Save note</button></div>
+ </form>
+</dialog>
+<section id="history-panel" hidden="" role="dialog" aria-modal="true" aria-label="Show history"><div class="panel-head"><strong>Show History</strong><button id="history-close" type="button">Close</button></div><p id="history-note">When tracking is on, each Mark Played press records one performance. Repeat songs appear separately. History starts with this update; older shows may have no recorded songs.</p><button id="history-refresh" type="button">Refresh Shows</button> <button id="history-undo" type="button">Undo last recording</button><button id="history-copy" type="button">Copy Show</button><select id="history-shows" aria-label="Choose a show"></select><button id="history-more-shows" type="button" hidden="">Load older shows</button><label for="history-venue">Venue / location (optional)</label><input id="history-venue" maxlength="160" placeholder="e.g. Lansdowne, Mohegan Sun" style="width:100%;margin:8px 0"><button id="history-save-venue" type="button">Save Venue</button><p id="show-tools-feedback" role="status" aria-live="polite"></p><textarea id="history-copy-text" readonly="" hidden="" aria-label="Copied show text" style="width:100%;min-height:180px"></textarea><div id="history-summary" role="status" aria-live="polite"></div><div id="history-results"></div><section id="history-song-notes" hidden><h3>Song Notes</h3><p>Saved on this device.</p><ul id="history-song-note-list"></ul></section><button id="history-more-songs" type="button" hidden="">Load more performances</button></section>
 <script>/* Private offline snapshots: only complete, validated downloads replace prior copies. */
 (function(root){'use strict';
 const AUTH_KEY='musician-subscriber-beta-auth-v1',DB_NAME='musician-subscriber-offline-v1',STORE='libraries',VERSION='subscriber-offline-20261109-v19';
@@ -835,6 +858,7 @@ async function connect(){
  try{return await syncingLibrary}finally{syncingLibrary=null}
 }
 function clearPrivateStage(){
+ resetSongNotes();
  closeShowRehearsal(true);
  closePractice();
  clearOwnerVolume();
@@ -1315,8 +1339,9 @@ $('setting-track-history').onchange=()=>{const input=$('setting-track-history');
 const loggedThisTab=new Set();let performanceToastTimer;
 function performanceToast(message){clearTimeout(performanceToastTimer);$('performance-toast').textContent=message;$('performance-toast').hidden=false;performanceToastTimer=setTimeout(()=>{$('performance-toast').hidden=true},5000)}
 function syncRecordButtons(){
+ for(const id of ['record-song-notes','float-song-notes'])$(id).disabled=!currentId||!signedInUserId;
  const disabled=!onlineConnected||!historyTracking||!currentId||!requestShowId||!requestOwner||!navigator.onLine||markingRequest||showActionBusy;
- $('song-end-actions').hidden=!historyTracking||!currentId;
+ $('song-end-actions').hidden=!currentId;
  for(const id of ['record-played','float-played']){$(id).hidden=!historyTracking;$(id).disabled=disabled;$(id).textContent=markingRequest?'Saving…':'✓ Mark Played';}
 }
 async function recordSongPerformance(songId,expectedShow=requestShowId){
@@ -1342,7 +1367,7 @@ $('record-played').onclick=()=>recordSongPerformance(currentId);
 $('float-played').onclick=()=>recordSongPerformance(currentId);
 let historyReturnFocus=null;
 async function openHistory(){historyReturnFocus=document.activeElement;$('history-panel').hidden=false;$('history-close').focus();await loadHistoryShows(false)}
-function closeHistory(){historyEpoch++;$('history-panel').hidden=true;historyReturnFocus?.focus()}
+function closeHistory(){showSongNotesForHistory(null);historyEpoch++;$('history-panel').hidden=true;historyReturnFocus?.focus()}
 $('history-open').onclick=openHistory;$('history-request').onclick=openHistory;$('history-close').onclick=closeHistory;
 $('history-panel').addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory();if(e.key==='Tab'){const nodes=[...$('history-panel').querySelectorAll('button,select,input,textarea')].filter(x=>!x.hidden&&!x.disabled);if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus()}else if(!e.shiftKey&&document.activeElement===nodes.at(-1)){e.preventDefault();nodes[0]?.focus()}}});
 $('history-refresh').onclick=()=>loadHistoryShows(false);$('history-more-shows').onclick=()=>loadHistoryShows(true);$('history-more-songs').onclick=()=>loadHistorySongs(true);$('history-shows').onchange=()=>loadHistorySongs(false);
@@ -1350,7 +1375,7 @@ function historyError(e){$('history-summary').textContent='History unavailable: 
 function showLabel(s){return [s.show_date||new Date(s.created_at).toLocaleDateString(),s.start_time||'',cleanVenue(s.venue_name)||'Venue not entered',s.requests_open?'Active':'Ended'].filter(Boolean).join(' · ')}
 async function loadHistoryShows(more=false){
  const epoch=++historyEpoch;$('history-summary').textContent='Loading shows…';$('history-more-shows').disabled=true;
- if(!more){historyShows=[];historyShowOffset=0;$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-more-songs').hidden=true;}
+ if(!more){showSongNotesForHistory(null);historyShows=[];historyShowOffset=0;$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-more-songs').hidden=true;}
  try{
   const owner=await liveOwner();historyOwner=owner;
   const r=await delayLimit(db.from('shows').select('id,venue_name,show_date,start_time,requests_open,created_at').eq('musician_id',owner).order('created_at',{ascending:false}).order('id').range(historyShowOffset,historyShowOffset+49));
@@ -1363,7 +1388,7 @@ async function loadHistoryShows(more=false){
  }catch(e){if(epoch===historyEpoch)historyError(e)}finally{$('history-more-shows').disabled=false}
 }
 async function loadHistorySongs(more=false){
- const epoch=++historyEpoch,showId=$('history-shows').value;if(!showId)return;
+ const epoch=++historyEpoch,showId=$('history-shows').value;showSongNotesForHistory(showId);if(!showId)return;
  $('history-copy-text').hidden=true;$('history-copy-text').value='';$('show-tools-feedback').textContent='';$('history-venue').value=cleanVenue(historyShows.find(s=>s.id===showId)?.venue_name);
  if(!more){historySongOffset=0;historySongCount=0;$('history-results').replaceChildren()}
  $('history-more-songs').disabled=true;$('history-summary').textContent='Loading performances…';
@@ -1420,7 +1445,7 @@ $('history-copy').onclick=async()=>{
 
 // Remove private history immediately when the signed-in owner is cleared.
 const originalClearLiveRequests=clearLiveRequests;
-clearLiveRequests=function(){originalClearLiveRequests();clearOwnerVolume();historyEpoch++;historyShows=[];historyOwner=null;$('history-copy-text').value='';$('history-copy-text').hidden=true;$('history-venue').value='';$('show-tools-feedback').textContent='';$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-summary').textContent='Sign in to view show history.';syncRecordButtons()};
+clearLiveRequests=function(){showSongNotesForHistory(null);originalClearLiveRequests();clearOwnerVolume();historyEpoch++;historyShows=[];historyOwner=null;$('history-copy-text').value='';$('history-copy-text').hidden=true;$('history-venue').value='';$('show-tools-feedback').textContent='';$('history-shows').replaceChildren();$('history-results').replaceChildren();$('history-summary').textContent='Sign in to view show history.';syncRecordButtons()};
 syncRecordButtons();
 
 function searchKey(value){return String(value||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/['’‘`]/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
@@ -1693,6 +1718,59 @@ $('show-rehearsal-frame').addEventListener('load',()=>{
 $('show-rehearsal-before').addEventListener('click',openShowRehearsal);
 $('show-rehearsal-settings').addEventListener('click',openShowRehearsal);
 $('close-show-rehearsal').addEventListener('click',()=>closeShowRehearsal());
+function songNotesKey(owner,workspace,show){return 'subscriber-song-notes-v1:'+JSON.stringify([owner,workspace,show])}
+function readSongNotes(key){
+ try{const saved=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(saved)?saved:[]}
+ catch{return []}
+}
+function resetSongNotes(){
+ const dialog=$('song-notes-dialog');
+ if(dialog.open)dialog.close();
+ $('song-note-text').value='';$('song-note-error').textContent='';
+ $('history-song-notes').hidden=true;$('history-song-note-list').replaceChildren();
+}
+function showSongNotesForHistory(show){
+ const list=$('history-song-note-list');
+ list.replaceChildren();$('history-song-notes').hidden=true;
+ if(!show||!signedInUserId||!musician?.id||deviceUser()!==signedInUserId||historyOwner!==musician.id)return;
+ const notes=readSongNotes(songNotesKey(signedInUserId,musician.id,show));
+ for(const note of notes){
+  if(typeof note?.title!=='string'||typeof note?.text!=='string')continue;
+  const li=document.createElement('li'),title=document.createElement('strong'),body=document.createElement('p');
+  title.textContent=note.title;body.textContent=note.text;li.append(title,body);list.append(li);
+ }
+ $('history-song-notes').hidden=!list.childElementCount;
+}
+{
+ const dialog=$('song-notes-dialog'),field=$('song-note-text'),error=$('song-note-error');
+ let draft=null;
+ const ready=()=>signedInUserId&&deviceUser()===signedInUserId&&musician?.id;
+ function openSongNote(){
+  const song=songs.find(s=>s.id===currentId);
+  if(!song||!ready())return;
+  if(!requestShowId||requestOwner!==musician.id){performanceToast('Start a show to save a song note in Show History.');return}
+  draft={owner:signedInUserId,workspace:musician.id,show:requestShowId,id:song.id,title:song.title||'Untitled song'};
+  field.value='';error.textContent='';$('song-note-song').textContent=draft.title;
+  dialog.showModal();
+ }
+ for(const id of ['record-song-notes','float-song-notes'])$(id).onclick=openSongNote;
+ $('song-note-cancel').onclick=()=>dialog.close();
+ dialog.addEventListener('close',()=>{draft=null;field.value='';error.textContent=''});
+ $('song-note-form').onsubmit=e=>{
+  e.preventDefault();
+  const note=field.value.trim();
+  if(!note){error.textContent='Enter a note first.';field.focus();return}
+  if(!draft||!ready()||draft.owner!==signedInUserId||draft.workspace!==musician.id){error.textContent='Sign in again before saving this note.';return}
+  const key=songNotesKey(draft.owner,draft.workspace,draft.show);
+  try{
+   const saved=readSongNotes(key);
+   saved.push({songId:draft.id,title:draft.title,text:note,createdAt:new Date().toISOString()});
+   localStorage.setItem(key,JSON.stringify(saved));
+  }catch{error.textContent='Could not save on this device. You can copy your note before closing.';return}
+  dialog.close();performanceToast('Song note saved on this device.');
+ };
+}
+
 startUnifiedPerformance();
 </script>
 <script>
