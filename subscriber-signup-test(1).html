@@ -1,0 +1,2589 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create your musician account · Private beta</title><style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;color:#effaf2;background:#08140d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#20432e,transparent 650px)}main{max-width:600px;padding:32px 20px 80px;margin:auto}.eyebrow{color:#8de8a7;font-weight:750;letter-spacing:.1em;font-size:12px}h1{font-size:32px;line-height:1.15}h2{font-size:23px}p{line-height:1.5;color:#bbd0c1}.card{background:#11231a;border:1px solid #365a43;border-radius:18px;padding:22px;margin:22px 0}label{display:block;font-weight:650;margin:18px 0 7px}input,button{font:inherit;border-radius:10px;padding:13px;width:100%}input{background:#09160e;color:white;border:1px solid #6a8d76;min-width:0}button{background:#69e38e;color:#062310;border:1px solid transparent;font-weight:750;cursor:pointer;margin-top:18px;min-height:48px}button.alt{background:transparent;color:#e0f5e7;border-color:#6a8d76}button:disabled{opacity:.55;cursor:wait}small{display:block;color:#b5cbbd;line-height:1.5;margin-top:7px}.status{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}#status{min-height:24px}textarea{width:100%}a{color:#9cf0b4}[hidden]{display:none!important}input:focus-visible,button:focus-visible{outline:3px solid #a4f3bb;outline-offset:3px}.steps{font-size:13px}.account{overflow-wrap:anywhere}.badge{color:#a1eeb6;font-size:13px;font-weight:700}.confirmation{border-left:3px solid #69e38e;padding:0 0 0 14px;margin:18px 0 25px}.confirmation h2{font-size:22px}.confirmation ol{padding-left:20px;color:#e0f5e7;line-height:1.65}.confirmation li{margin:10px 0}.password-field{display:flex;gap:8px;align-items:stretch}.password-field input{flex:1}.password-field button{width:auto;flex:0 0 auto;margin:0;padding:10px 14px;min-width:75px} .account-destinations{display:grid;gap:12px}.account-destinations a{padding:15px;border:1px solid #6a8d76;border-radius:10px;text-decoration:none}.account-destinations .primary-destination{background:#69e38e;color:#062310;font-weight:750}#share-audience{border-top:1px solid #365a43;margin-top:28px;padding-top:12px;scroll-margin-top:20px}#qr-preview{max-width:280px;margin:20px auto}#qr-preview svg{display:block;width:100%;height:auto;background:white} </style><style id="musician-help-style">.musician-tools{margin:14px 0;padding:12px 14px;border:1px solid #567560;border-radius:12px;color:#e0f5e7;background:#11231a;font:15px/1.5 system-ui;text-align:left}.musician-tools summary{cursor:pointer;font-weight:700;min-height:32px}.musician-tools p{color:#bbd0c1;white-space:normal}.musician-tools a{color:#9cf0b4}.musician-tools label{display:flex;gap:12px;align-items:center;margin:12px 0}.musician-tools input{width:23px!important;height:23px;min-height:23px!important;flex:0 0 23px;padding:0}.musician-help-tip{display:inline-flex!important;align-items:center;justify-content:center;width:32px!important;min-width:32px!important;min-height:32px!important;height:32px;padding:0!important;margin:4px 6px!important;border:1px solid #81bd93!important;border-radius:50%!important;background:#173d26!important;color:#c9f9d6!important;font:700 16px system-ui!important;vertical-align:middle;flex:0 0 32px}.musician-help-off .musician-help-tip,body.mode-playing .musician-help-tip{display:none!important}#musician-help-dialog{color:#effaf2;background:#11231a;border:1px solid #81bd93;border-radius:18px;padding:24px;max-width:min(440px,90vw);font:16px/1.6 system-ui}#musician-help-dialog::backdrop{background:#000a}#musician-help-dialog h2{margin-top:0;font-size:23px}#musician-help-dialog p{color:#d8ebdf;white-space:normal}#musician-help-close{font:inherit;min-height:44px;border-radius:8px;padding:10px 22px;background:#69e38e;color:#062310;cursor:pointer;border:0}.musician-help-entry{font:14px system-ui;margin:10px 0}.musician-help-entry a{color:#9cf0b4}[hidden]{display:none!important}</style><style>.owner-navigation{display:flex;gap:10px;flex-wrap:wrap;padding:10px 0;font:600 15px/1.5 system-ui}.owner-navigation a{display:inline-block;padding:9px 12px;border:1px solid #63816a;border-radius:8px;color:#b1f1c1;background:#11291b;text-decoration:none}.device-copy-panel{margin:18px 0;padding:16px;border:1px solid #63816a;border-radius:12px;background:#11251a;color:#e1f5e7;font:15px/1.5 system-ui}.device-copy-panel h2{font-size:18px}.device-copy-panel button,.app-update-tools button{font:inherit;min-height:44px;padding:8px 14px;border-radius:8px;background:#245836;color:#e1f5e7;border:1px solid #63816a}.device-copy-panel[hidden]{display:none}.app-update-tools{margin:18px 0;border-top:1px solid #63816a;padding-top:14px}.app-update-tools p{font:14px/1.5 system-ui}</style><style>.setup-guide{padding:20px;margin:18px 0;border:1px solid #75aa83;border-radius:14px;background:#112b1c;color:#effaf2;text-align:left;font:16px/1.6 system-ui}.setup-guide h2{font:700 23px system-ui;margin:10px 0}.setup-guide p{color:#d0e5d6}.setup-guide nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;justify-content:flex-start}.setup-guide a,.setup-guide button{display:inline-block;width:auto;min-height:46px;padding:10px 16px;border:1px solid #83bb90;border-radius:9px;background:#245836;color:#effaf2;text-decoration:none;font:600 16px system-ui;margin:0}.setup-guide small{display:block}.setup-guide ol{padding-left:24px}.setup-guide [aria-current=step]{font-weight:750;color:#8eefa7}body.guided-setup>.owner-navigation{display:none}body.guided-setup main>.musician-tools,body.guided-setup main>.device-copy-panel{display:none}</style><style id="performance-shortcut-style">
+@keyframes performanceGlow{0%,100%{box-shadow:0 0 3px #69e38e44}50%{box-shadow:0 0 15px #69e38e99}}
+.owner-navigation a[href="subscriber-performance-test.html"],.account-destinations .primary-destination{background:#69e38e;color:#062310;border-color:#94f7b0;animation:performanceGlow 3s ease-in-out infinite;font-weight:750}
+@media(prefers-reduced-motion:reduce){.owner-navigation a[href="subscriber-performance-test.html"],.account-destinations .primary-destination{animation:none;box-shadow:0 0 4px #69e38e66}}
+
+.owner-navigation #dashboard-history-open{width:auto;margin:0;min-height:44px;padding:10px 14px;border:1px solid #527963;border-radius:9px;background:#12281c;color:#c6f2d5;font:inherit;cursor:pointer}
+#dashboard-history-open[hidden],#dashboard-history [hidden]{display:none!important}
+#dashboard-history{width:min(620px,calc(100% - 24px));max-height:calc(100dvh - 32px);padding:20px;border:1px solid #567f65;border-radius:16px;background:#112219;color:#f1fbf3;box-sizing:border-box;overflow:auto}
+#dashboard-history::backdrop{background:#000a}
+.dashboard-history-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dashboard-history-head h2,.dashboard-history-head form{margin:0}
+#dashboard-history button{width:auto;margin:0;min-height:44px}
+#dashboard-history .dashboard-history-picker{display:grid;gap:8px;margin-top:18px}
+#dashboard-history select{width:100%;min-height:44px;padding:8px;border:1px solid #628a6e;border-radius:8px;color:#f1fbf3;background:#183326;font:inherit}
+#dashboard-history-songs{padding-inline-start:1.65em}
+#dashboard-history-songs li{margin-block:8px;overflow-wrap:anywhere}
+.dashboard-history-requested{display:inline-block;margin-inline-start:8px;padding:2px 6px;border-radius:6px;background:#254f36;color:#c7f6d3;font-size:.8em}
+</style></head><body><main><nav class="owner-navigation" aria-label="Main navigation"><a href="subscriber-signup-test.html">Main menu</a><a href="subscriber-performance-test.html">Performance</a><a href="subscriber-library-test.html">Songs</a><a href="subscriber-shows-test.html">Show Schedule</a><button id="dashboard-history-open" type="button" aria-haspopup="dialog" aria-controls="dashboard-history" hidden>Show History</button><a href="subscriber-signup-test.html#share-audience">QR Code</a></nav><details class="musician-tools"><summary>Help &amp; settings</summary><p><a href="subscriber-performance-test.html#prepare-device">Prepare this device for offline use →</a></p><label><input class="musician-help-toggle" type="checkbox" checked=""> Show help tips</label><small>Tap a ? for a short explanation. This choice is remembered on this device.</small><p><strong>Stay connected at your gig</strong><br>Live requests, volume feedback, saves and show controls need an internet connection: Wi-Fi or cellular. If your tablet has no cellular service, connect it to your phone’s personal hotspot. To read songs without internet, open Performance Settings and prepare this device first.</p><details id="home-screen-help"><summary>Add to your Home Screen</summary><p>For your performer tools, open <a href="subscriber-signup-test.html">your main menu</a> and save that page. Share your audience link with fans instead.</p><p><strong>iPhone · Safari</strong><br>Open the page in Safari. Tap Share (or Page Menu → Share), then Add to Home Screen. If offered, turn on Open as Web App, then tap Add.</p><p><strong>iPad · Safari</strong><br>Open the page in Safari, tap Share, then View More if needed, then Add to Home Screen. If offered, turn on Open as Web App, then tap Add.</p><p><strong>Android · Chrome</strong><br>Open the page in Chrome. Tap the three-dot menu → Install and create shortcut → Create shortcut → Add. Some versions label this Add to Home screen.</p><p>Open the new icon once to check it. You may need to sign in again there. Prepare this device in Performance Settings before using it without internet. Live requests and online saves still need a connection.</p><p><a href="https://support.apple.com/guide/iphone/open-as-web-app-iphea86e5236/ios" target="_blank" rel="noopener">Apple iPhone guide ↗</a> · <a href="https://support.apple.com/guide/ipad/bookmark-a-website-ipadc602b75b/ipados" target="_blank" rel="noopener">Apple iPad guide ↗</a> · <a href="https://support.google.com/chrome/answer/15085120?co=GENIE.Platform%3DAndroid" target="_blank" rel="noopener">Chrome guide ↗</a></p></details></details><div class="eyebrow">MUSICIAN PLATFORM · INVITATION BETA</div><h1>Your music. Your page.</h1><p>Create a space for your songs, audience requests, and show history.</p><p class="steps">1. Create account → 2. Confirm email → 3. Name your page → 4. Customize &amp; add songs</p>
+<section id="auth" class="card" hidden=""><div id="auth-stage" class="badge">STEP 1 · CREATE ACCOUNT</div><div id="verify-help" class="confirmation" hidden=""><h2>Check your email to continue</h2><p id="verify-address"></p><ol><li>Open the confirmation email and tap its confirmation link.</li><li>If it brings you straight to “Name your page,” you’re already signed in.</li><li>If you see a sign-in form, use the <strong>same email and password you just created</strong>.</li></ol><small>Check your spam folder too. You do not need to create a second account or choose another password.</small></div><h2 id="auth-title">Create your account</h2><p id="auth-intro">Choose your email and password. We’ll ask you to confirm your email before you name your musician page.</p><form id="auth-form"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required=""><div id="login-password"><label for="password">Password</label><div class="password-field"><input id="password" type="password" autocomplete="new-password" minlength="12" required="" autocapitalize="none" spellcheck="false"><button id="show-password" class="alt" type="button" aria-controls="password" aria-pressed="false" aria-label="Show password">Show</button></div><small id="password-help">Use at least 12 characters. Choose a password you don’t use elsewhere.</small></div><button id="submit-auth">Create account</button></form><button id="forgot-password" class="alt" type="button" hidden="">Forgot password?</button><button id="toggle-auth" class="alt" type="button">Already have an account? Sign in</button></section>
+<section id="reset" class="card" hidden=""><div class="badge">RESET YOUR PASSWORD</div><h2>Choose a new password</h2><p id="reset-account" class="account"></p><p>This changes the password for your existing account. Your songs, charts and shows stay saved.</p><form id="reset-form"><label for="new-password">New password</label><div class="password-field"><input id="new-password" type="password" autocomplete="new-password" minlength="12" required="" autocapitalize="none" spellcheck="false"><button id="show-new-password" type="button" class="alt" aria-controls="new-password" aria-pressed="false">Show</button></div><small>Use at least 12 characters.</small><label for="confirm-password">Enter new password again</label><div class="password-field"><input id="confirm-password" type="password" autocomplete="new-password" minlength="12" required="" autocapitalize="none" spellcheck="false"><button id="show-confirm-password" type="button" class="alt" aria-controls="confirm-password" aria-pressed="false">Show</button></div><button type="submit">Save new password</button></form><button id="cancel-reset" type="button" class="alt">Cancel and return to sign in</button></section>
+<section id="setup" class="card" hidden=""><div class="badge">STEP 3 · NAME YOUR PAGE</div><h2>Name your musician page</h2><p>Your email is confirmed and you’re signed in. Now choose the name people will see on your page.</p><p class="account" id="setup-email"></p><form id="setup-form"><label for="stage-name">Musician or band name</label><input id="stage-name" required="" minlength="2" maxlength="80" placeholder="e.g. Majestic Fuzz" autocomplete="organization"><label for="page-slug">Page address</label><input id="page-slug" required="" minlength="3" maxlength="60" pattern="[a-z0-9][a-z0-9-]{1,58}[a-z0-9]" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="e.g. majestic-fuzz"><small>Suggested from your name; you can edit it. Use 3–60 lowercase letters, numbers or hyphens. Your QR code will keep using this address.</small><label for="invite-code">Beta invitation code</label><input id="invite-code" required="" placeholder="Paste the code from your invitation" autocapitalize="none" autocorrect="off" spellcheck="false"><small>Paste the invitation code from your welcome email. It activates this musician page and can be used for one account.</small><button id="save-setup">Create my musician page</button></form></section>
+<dialog id="dashboard-history" aria-labelledby="dashboard-history-title">
+ <div class="dashboard-history-head">
+  <h2 id="dashboard-history-title">Show History</h2>
+  <form method="dialog"><button type="submit" autofocus>Close</button></form>
+ </div>
+ <div class="dashboard-history-picker" hidden>
+  <label for="dashboard-history-show">Choose a show</label>
+  <select id="dashboard-history-show"></select>
+  <button type="button" id="dashboard-history-older" hidden>Load older shows</button>
+ </div>
+ <p id="dashboard-history-status" role="status"></p>
+ <button type="button" id="dashboard-history-retry" hidden>Try again</button>
+ <ol id="dashboard-history-songs"></ol>
+ <button type="button" id="dashboard-history-more" hidden>Load more songs</button>
+</dialog>
+<section id="workspace" class="card" hidden=""><div class="badge">YOUR ACCOUNT</div><h2 id="workspace-name"></h2><p id="workspace-address" class="account"></p><p id="workspace-counts"></p><h3>Main menu</h3><section class="device-copy-panel"><h2>Offline songs on this device</h2><p class="device-copy-status" role="status" aria-live="polite">Checking your offline songs…</p><button class="device-copy-retry" type="button">Retry offline update</button><p><strong>For the best experience, connect to Wi-Fi or cellular data, including your phone’s personal hotspot.</strong> Songs are prepared automatically on each device you use. Keep this app open until ready, then test reopening in airplane mode before a gig.</p></section><p id="first-setup" hidden="">Your page is created. Start by customizing your look, then add or import your songs.</p><p><a class="setup-entry" href="subscriber-customization-test.html?setup=1">Start or continue guided setup →</a></p><nav class="account-destinations" aria-label="Your musician tools"><a href="subscriber-customization-test.html">Customize My Page</a><a href="subscriber-library-test.html">Song Library &amp; Import</a><a id="audience-destination" target="_blank" rel="noopener">View Audience Page ↗</a><a class="primary-destination" href="subscriber-performance-test.html">Open Performance →</a><a href="subscriber-shows-test.html">Show Schedule</a><a href="#share-audience">Audience Link &amp; QR Code ↓</a></nav><section id="offline-setup-reminder" style="border:1px solid #6a8d76;border-radius:12px;padding:16px;margin:22px 0"><h3>Before your first gig: check your offline songs</h3><p class="connection-guidance"><strong>For the best experience, connect to Wi-Fi or cellular data, including your phone’s personal hotspot. Live requests and volume feedback need internet; downloaded songs and charts remain available offline.</strong></p><p>Open this app on the phone or tablet you’ll use at gigs. Your songs are prepared automatically; keep the app open and wait for <strong>Ready for offline use</strong>. Test closing and reopening the app with airplane mode on and Wi-Fi off.</p><p>Imports and saved online changes update this device’s copy automatically. Other devices update when you open the app while connected.</p><a href="subscriber-performance-test.html#prepare-device">Prepare this device in Performance Settings →</a></section><section id="share-audience"><h3>Audience Link &amp; QR Code</h3><p>One permanent code for your audience page. Start and end each show to open and close requests. You can print and reuse this code across shows.</p><label for="audience-url">Your audience link</label><input id="audience-url" readonly=""><button id="copy-audience" type="button" class="alt">Copy link</button><div id="qr-preview" role="img" aria-label="QR code for your audience page"></div><button id="download-qr-png" type="button">Download PNG · sharing</button><button id="download-qr-svg" type="button" class="alt">Download SVG · printing</button><p id="qr-status" role="status" aria-live="polite"></p><small>Keep the white border around the code. Scan a test print with another phone before ordering coasters, signs or cards. On iPhone or iPad, downloads may go to Files → Downloads.</small></section></section>
+<p id="signed-in" class="account" hidden=""></p><button id="logout" type="button" class="alt" hidden="">Sign out of this beta account</button><p id="status" class="status" role="status" aria-live="polite">Loading secure signup…</p><p><small>Private beta: this signup page uses its own login session, separate from your existing solo test pages. No payment is collected here.</small></p><section class="app-update-tools"><button class="check-app-update" type="button">Check for app updates</button><p class="app-update-status" role="status" aria-live="polite">Checks for a newer version without interrupting your chart.</p><button class="reload-app-update" type="button" hidden="">Restart to update</button></section></main>
+<script>
+window.SetupFlow=(()=>{
+const active=new URLSearchParams(location.search).has('setup');
+const path=location.pathname.split('/').pop();
+const custom='subscriber-customization-test.html?setup=1',library='subscriber-library-test.html?setup=1',finish='subscriber-signup-test.html?setup=finish';
+function mount(account){
+ if(!active||!account||document.getElementById('setup-guide'))return;
+ document.body.classList.add('guided-setup');
+ const section=document.createElement('section');section.id='setup-guide';section.className='setup-guide';
+ const preview='subscriber-audience-preview.html?setup=1&musician='+encodeURIComponent(account.slug);
+ let step=1,title='Customize your page',body='<p>Make this page yours. Add a photo or logo, choose your appearance and write a welcome message. Social and tip links are optional. The preview updates as you work.</p><p>You can change these choices later. Save &amp; continue moves to your songs.</p>',buttons='';
+ const link=(href,label)=>'<a href="'+href+'">'+label+'</a>';
+ if(path.includes('customization')){
+  buttons='<button type="submit" form="settings-form" data-setup-next="subscriber-signup-test.html">Back · save changes</button><button type="submit" form="settings-form" data-setup-next="'+library+'">Save &amp; continue</button>'+link(library,'Skip for now');
+ }else if(path.includes('library')||path.includes('song-import')){
+  step=2;title='Add your songs';body='<p>Import your library or add songs individually. Your lyrics and chord charts stay private. Mark songs Ready to play to allow audience requests. Still learning songs stay off the audience list. Existing hidden choices stay unchanged until you explicitly change them.</p><details><summary>How to export from BandHelper</summary><ol><li>Open the BandHelper website and choose <strong>Admin → Export</strong>.</li><li>Select your project and uncheck <strong>Include Finance Data</strong>.</li><li>Choose <strong>Continue</strong>, then download the JSON file.</li><li>Return here and choose that file in the BandHelper importer.</li></ol><p>Attached PDFs and recordings are not included in that JSON file.</p></details><p>Duplicates and missing information can be reviewed later. Alternate arrangements can stay separate; you do not have to clean up your library before importing.</p>';
+  buttons=link(custom,'Back: Customize')+link(path.includes('song-import')?library:'subscriber-song-import-test.html?setup=1',path.includes('song-import')?'View saved songs':'Import songs')+link(preview,'Continue: Preview audience page');
+  body+='<p>Finish saving your song edits or importing before continuing. You can also continue with no songs and add them later.</p>';
+ }else if(path.includes('audience-preview')){
+  step=3;title='Preview your audience page';body='<p>This is what fans will see on a phone. Check your branding and the songs you allow audiences to request. Still learnings and private charts are not shown to fans.</p><p>Requests and volume votes in this preview are real. Requests stay closed until you start a show.</p>';
+  buttons=link(library,'Back: Songs')+link(custom,'Edit appearance')+link(finish,'Continue: Get ready to perform');
+ }else{
+  step=4;title='Get ready to perform';body='<p><strong>For the best experience, connect to Wi-Fi, cellular data or your phone’s personal hotspot.</strong></p><ol><li>Open Performance and select a song. Most of your time will be spent in <strong>Playing</strong> or <strong>Between Songs</strong>. Tap a ? for help.</li><li>Wait for <strong>Your songs are ready offline on this device</strong> below. Each device or Home Screen app needs its own preparation.</li><li>On your gig device, test closing and reopening the app without Wi-Fi or cellular service. Reading and scrolling saved charts work offline; requests, volume feedback and show controls need internet.</li></ol><details><summary>Add the app to your Home Screen</summary><p>Open your Main menu in Safari. Tap <strong>Share → Add to Home Screen</strong> (View More if needed), then Add. Open the new icon, sign in if asked, and check offline readiness there too.</p><p>On Android Chrome, choose the three-dot menu → Add to Home screen or Install.</p></details><p>Try a rehearsal before relying on the app at a gig. Your Main menu contains your audience link and printable QR code.</p>';
+  buttons=link(preview,'Back: Audience preview')+link('subscriber-performance-test.html','Open Performance')+link('subscriber-signup-test.html','Finish setup · Main menu');
+ }
+ section.innerHTML='<small>Step '+step+' of 4 · Customize → Songs → Audience preview → Perform</small><h2>'+title+'</h2>'+body+'<nav aria-label="Setup navigation">'+buttons+'</nav>';
+ if(path.includes('library')){const help=document.createElement('details');const summary=document.createElement('summary');summary.textContent='Setup help · importing and song status';help.append(summary);for(const child of [...section.children])if(!['SMALL','H2','NAV'].includes(child.tagName))help.append(child);section.querySelector('nav').before(help)}const parent=path.includes('signup')?document.getElementById('workspace'):document.querySelector('main');parent.prepend(section);
+ if(path.includes('customization'))document.getElementById('save').textContent='Save customization';
+}
+return{active,mount};})();
+</script><script>/* Private offline snapshots: only complete, validated downloads replace prior copies. */
+(function(root){'use strict';
+const AUTH_KEY='musician-subscriber-beta-auth-v1',DB_NAME='musician-subscriber-offline-v1',STORE='libraries',VERSION='subscriber-offline-20261109-v19';
+function identity(storage){try{const s=JSON.parse(storage.getItem(AUTH_KEY)||'null');return typeof s?.user?.id==='string'&&s.access_token?s.user.id:null}catch{return null}}
+function normalize(rows){if(!Array.isArray(rows)||rows.length>20000)throw Error('Library is too large or incomplete.');const seen=new Set();return rows.map(s=>{if(!s||typeof s.id!=='string'||!s.id||seen.has(s.id)||typeof s.title!=='string'||(s.lyrics_chords!==null&&s.lyrics_chords!==undefined&&typeof s.lyrics_chords!=='string'))throw Error('Library data could not be verified.');seen.add(s.id);return{id:s.id,title:s.title,artist:typeof s.artist==='string'?s.artist:'',lyrics_chords:s.lyrics_chords||'',song_status:s.song_status==='ready'?'ready':'learning'}}).sort((a,b)=>a.id.localeCompare(b.id))}
+function validate(snapshot,user){if(!snapshot||snapshot.schema!==1||snapshot.userId!==user||!snapshot.musician?.id||!snapshot.savedAt)throw Error('No verified download for this signed-in account.');normalize(snapshot.songs);return snapshot}
+function open(indexedDB){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(STORE))req.result.createObjectStore(STORE,{keyPath:'userId'})};req.onsuccess=()=>{req.result.onversionchange=()=>req.result.close();resolve(req.result)};req.onerror=()=>reject(req.error||Error('Device storage unavailable.'));req.onblocked=()=>reject(Error('Close other copies of the app and try again.'))})}
+async function read(indexedDB,user){const db=await open(indexedDB);return new Promise((resolve,reject)=>{let value;const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(user);r.onsuccess=()=>value=r.result;tx.oncomplete=()=>{db.close();resolve(value||null)};tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||Error('Could not read device storage.'))}})}
+async function write(indexedDB,snapshot,allowed){validate(snapshot,snapshot.userId);const db=await open(indexedDB);return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.oncomplete=()=>{db.close();resolve(snapshot)};tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||Error('Download was not saved. Your previous copy is unchanged.'))};try{if(!allowed())tx.abort();else tx.objectStore(STORE).put(snapshot)}catch(e){try{tx.abort()}catch{}db.close();reject(e)}})}
+async function remove(indexedDB,user){const db=await open(indexedDB);return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(user);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=tx.onabort=()=>{db.close();reject(tx.error||Error('Could not remove this device copy.'))}})}
+async function collect(client,musicianId,allowed,progress){const rows=[];for(let offset=0;offset<=20000;offset+=500){if(!allowed())throw Error('Account changed. Download cancelled.');const r=await client.from('songs').select('id,title,artist,lyrics_chords,song_status').eq('musician_id',musicianId).eq('is_active',true).order('id').range(offset,offset+499);if(!allowed())throw Error('Account changed. Download cancelled.');if(r.error)throw Error(r.error.message||'Download failed.');if(!Array.isArray(r.data))throw Error('Incomplete download.');rows.push(...r.data);if(rows.length>20000)throw Error('Library exceeds this beta’s 20,000-song download limit.');progress?.(rows.length);if(r.data.length<500)return normalize(rows)}throw Error('Incomplete library.')}
+async function prepare(client,user,allowed,progress){const lookup=await client.rpc('beta_my_workspace');if(lookup.error)throw Error(lookup.error.message);const m=lookup.data;if(!m?.id||!m?.slug)throw Error('Finish setting up your musician account first.');const first=await collect(client,m.id,allowed,progress);const second=await collect(client,m.id,allowed,()=>{});if(JSON.stringify(first)!==JSON.stringify(second))throw Error('Your library changed during the download. Try again when editing is finished.');if(!allowed())throw Error('Account changed. Download cancelled.');return{schema:1,userId:user,musician:{id:m.id,slug:m.slug,display_name:String(m.display_name||'Your library')},savedAt:new Date().toISOString(),songs:first}}
+const api={AUTH_KEY,DB_NAME,STORE,VERSION,identity,normalize,validate,open,read,write,remove,collect,prepare};if(typeof module==='object'&&module.exports)module.exports=api;else root.MusicianOffline=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script><script>// Complete private device copies. A failed or superseded update never deletes the last copy.
+(function(){'use strict';
+const O=window.MusicianOffline,VERSION=O.VERSION;
+let client=null,timer=0,running=null,again=false,generation=0,lastState={state:'waiting',text:'Checking this device’s offline songs…'};
+const listeners=new Set(),uid=()=>O.identity(localStorage),revision=id=>localStorage.getItem('musician-library-revision:'+id)||'';
+function emit(state,text){lastState={state,text};listeners.forEach(fn=>fn(lastState))}
+function limit(p,ms=25000){let t;return Promise.race([p,new Promise((_,reject)=>t=setTimeout(()=>reject(Error('Connection timed out.')),ms))]).finally(()=>clearTimeout(t))}
+async function shell(){
+ if(!isSecureContext||!navigator.serviceWorker)throw Error('Offline access requires HTTPS and a supported browser.');
+ const reg=await navigator.serviceWorker.register(new URL('subscriber-offline-sw.js',location.href),{scope:new URL('subscriber-',location.href).pathname,updateViaCache:'none'});
+ const worker=reg.installing||reg.waiting||reg.active;if(!worker)throw Error('Offline startup is not installed.');
+ if(worker.state!=='activated')await limit(new Promise((resolve,reject)=>{worker.addEventListener('statechange',()=>{if(worker.state==='activated')resolve();if(worker.state==='redundant')reject(Error('Offline startup could not install.'))})}));
+ await limit(new Promise((resolve,reject)=>{const c=new MessageChannel();c.port1.onmessage=e=>{c.port1.close();e.data?.ready&&e.data.version===VERSION?resolve():reject(Error('App update is still publishing. Please retry shortly.'))};(reg.active||worker).postMessage({type:'OFFLINE_READY'},[c.port2])}));
+}
+async function ready(){const id=uid();if(!id)return false;try{const saved=O.validate(await O.read(indexedDB,id),id),reg=await navigator.serviceWorker?.getRegistration(new URL('subscriber-performance-test.html',location.href));return !!saved&&reg?.active?.scriptURL===new URL('subscriber-offline-sw.js',location.href).href&&reg.scope.endsWith('/subscriber-')&&!!await(await caches.open(VERSION)).match(new URL('subscriber-performance-test.html',location.href).href)}catch{return false}}
+async function perform(){
+ const id=uid(),step=generation,rev=id&&revision(id);if(!id||!client)return;
+ const allowed=()=>uid()===id&&generation===step&&revision(id)===rev&&navigator.onLine;
+ let committed=false;
+ try{
+  if(!navigator.onLine){emit('offline',await ready()?'Offline · your downloaded songs are available.':'Offline · connect once to prepare your songs on this device.');return}
+  emit('saving','Preparing your songs for offline use… Keep this app open.');
+  const auth=await limit(client.auth.getUser());if(auth.error||auth.data?.user?.id!==id||!allowed())throw Error('Account or connection changed.');
+  const snapshot=await limit(O.prepare(client,id,allowed,n=>emit('saving','Saving '+n.toLocaleString()+' songs for offline use… Keep this app open.')),180000);
+  await shell();if(!allowed())throw Error('Account or connection changed.');
+  await O.write(indexedDB,snapshot,allowed);committed=true;
+  if(!allowed())return;
+  const stored=O.validate(await O.read(indexedDB,id),id);if(JSON.stringify(stored.songs)!==JSON.stringify(snapshot.songs))throw Error('Device verification failed.');
+  if(!await ready())throw Error('Offline startup could not be verified.');
+  if(!allowed())return;emit('ready','Your songs are ready offline on this device · '+stored.songs.length.toLocaleString()+' songs.');
+ }catch(e){if(uid()!==id)return;if(generation!==step||revision(id)!==rev){again=true;return}emit('error','Your online songs are saved. Offline update needs another try. '+(committed?'Check readiness before a gig.':'Your previous completed offline copy is kept.')+' '+(e.message||String(e)))}
+}
+function run(){clearTimeout(timer);if(running){again=true;return running}again=false;running=perform().finally(()=>{running=null;if(again&&navigator.onLine)schedule()});return running}
+function schedule(){clearTimeout(timer);timer=setTimeout(run,900)}
+function changed(){const id=uid();if(id){localStorage.setItem('musician-library-revision:'+id,Date.now()+':'+Math.random());generation++;schedule()}}
+window.addEventListener('offline',()=>{generation++;emit('offline','Offline · keep using your downloaded songs. Live features need internet.');});
+window.addEventListener('online',schedule);
+window.addEventListener('storage',e=>{if(e.key===O.AUTH_KEY){generation++;clearTimeout(timer);emit('waiting','Checking this account’s offline songs…')}else if(e.key==='musician-library-revision:'+uid()){generation++;schedule()}});
+window.MusicianDevice={attach(c){client=c;if(!c){generation++;clearTimeout(timer);emit('waiting','Offline preparation waits until library changes finish.')}},schedule,changed,run,ready,subscribe(fn){listeners.add(fn);fn(lastState);return()=>listeners.delete(fn)}};
+})();
+</script><script>
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script><script>
+'use strict';
+const $=id=>document.getElementById(id),REDIRECT='https://musician-request-prototype.github.io/musician-request-app/subscriber-signup-test.html';
+let slugEdited=false,createdNow=false,currentQr=null,currentSlug='',currentAudience='';
+let client,user=null,mode='signup',busy=false,epoch=0,awaitingEmail=false,confirmationEmail='';
+const recoveryKey='musician-password-recovery-v1';
+// Read only the link type/error; never log or store recovery tokens ourselves.
+let recovering=new URLSearchParams((location.hash||'').replace(/^#/, '')).get('type')==='recovery',recoveryUserId='',linkFailed=new URLSearchParams((location.hash||'').replace(/^#/, '')).has('error');
+function recoveryMarker(id){try{if(id)sessionStorage.setItem(recoveryKey,id);else sessionStorage.removeItem(recoveryKey)}catch(e){}}
+function rememberedRecovery(id){try{return sessionStorage.getItem(recoveryKey)===id}catch(e){return false}}
+function resetVisibility(id,show){$(id).type=show?'text':'password';$('show-'+id).textContent=show?'Hide':'Show';$('show-'+id).setAttribute('aria-pressed',String(show));$('show-'+id).setAttribute('aria-label',(show?'Hide ':'Show ')+id.replaceAll('-',' '))}
+function concealReset(){resetVisibility('new-password',false);resetVisibility('confirm-password',false)}
+for(const id of ['new-password','confirm-password'])$('show-'+id).onclick=()=>resetVisibility(id,$(id).type==='password');
+
+function passwordVisible(show){$('password').type=show?'text':'password';$('show-password').textContent=show?'Hide':'Show';$('show-password').setAttribute('aria-pressed',String(show));$('show-password').setAttribute('aria-label',show?'Hide password':'Show password')}
+$('show-password').onclick=()=>passwordVisible($('password').type==='password');
+document.addEventListener('visibilitychange',()=>{if(document.hidden){passwordVisible(false);concealReset()}});
+function status(t){$('status').textContent=t}
+const dashboardHistory=(()=>{
+ const open=$('dashboard-history-open'), dialog=$('dashboard-history'), picker=dialog.querySelector('.dashboard-history-picker');
+ const select=$('dashboard-history-show'), message=$('dashboard-history-status'), songs=$('dashboard-history-songs');
+ const older=$('dashboard-history-older'), more=$('dashboard-history-more'), retry=$('dashboard-history-retry');
+ const showPageSize=50, songPageSize=100;
+ let owner=null, generation=0, showOffset=0, songOffset=0;
+ function reset(){
+  generation++;showOffset=0;songOffset=0;
+  select.replaceChildren();songs.replaceChildren();
+  select.disabled=false;older.disabled=false;more.disabled=false;
+  picker.hidden=true;older.hidden=true;more.hidden=true;retry.hidden=true;message.textContent='';
+ }
+ function workspace(id){
+  reset();owner=id||null;open.hidden=!owner;
+  if(dialog.open)dialog.close();
+ }
+ function current(token,id){return token===generation&&owner===id&&dialog.open&&!!user}
+ async function limited(query){
+  let timer;
+  try{return await Promise.race([query,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('History request timed out')),15000)})])}
+  finally{clearTimeout(timer)}
+ }
+ function fail(text,action){
+  message.textContent=text;retry.onclick=action;retry.hidden=false;
+ }
+ function label(show){
+  const date=show.show_date
+   ? new Date(show.show_date+'T12:00:00')
+   : new Date(show.created_at);
+  return [show.venue_name?.trim()||'Venue not entered',Number.isNaN(+date)?show.show_date:date.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}),
+    show.requests_open?'Active':null].filter(Boolean).join(' · ');
+ }
+ async function loadShows(append=false){
+  if(!owner||!dialog.open)return;
+  if(!append)reset();
+  const token=++generation,id=owner;
+  retry.hidden=true;select.disabled=true;older.disabled=true;more.disabled=true;
+  message.textContent=append?'Loading older shows…':'Loading shows…';
+  try{
+   const {data,error}=await limited(client.from('shows')
+    .select('id,venue_name,show_date,requests_open,created_at').eq('musician_id',id)
+    .order('created_at',{ascending:false}).order('id').range(showOffset,showOffset+showPageSize-1));
+   if(!current(token,id))return;if(error)throw error;
+   const rows=data||[];
+   for(const show of rows)select.add(new Option(label(show),show.id));
+   showOffset+=rows.length;older.hidden=rows.length<showPageSize;picker.hidden=!showOffset;
+   if(!showOffset){message.textContent='No shows recorded yet.';return}
+   if(!append){await loadSongs();return}
+   message.textContent=rows.length?'Older shows added to the list.':'No more shows.';
+  }catch(e){if(current(token,id))fail('Couldn’t load shows. Try again.',()=>loadShows(append))}
+  finally{if(current(token,id)){select.disabled=false;older.disabled=false;more.disabled=false}}
+ }
+ async function loadSongs(append=false){
+  const show=select.value,id=owner;if(!id||!show||!dialog.open)return;
+  const token=++generation;
+  if(!append){songOffset=0;songs.replaceChildren();more.hidden=true}
+  select.disabled=false;older.disabled=true;more.disabled=true;retry.hidden=true;
+  message.textContent='Loading songs played…';
+  try{
+   const {data,error}=await limited(client.from('show_performances')
+    .select('id,song_title,song_artist,played_at,was_requested')
+    .eq('musician_id',id).eq('show_id',show).is('voided_at',null).order('played_at').order('id')
+    .range(songOffset,songOffset+songPageSize-1));
+   if(!current(token,id))return;if(error)throw error;
+   const rows=data||[];
+   for(const row of rows){
+    const item=document.createElement('li'),title=document.createElement('strong');
+    title.textContent=row.song_title||'Untitled song';item.append(title);
+    if(row.song_artist)item.append(' — '+row.song_artist);
+    if(row.was_requested){const badge=document.createElement('span');badge.className='dashboard-history-requested';badge.textContent='Requested';item.append(badge)}
+    songs.append(item);
+   }
+   songOffset+=rows.length;more.hidden=rows.length<songPageSize;
+   message.textContent=songOffset?songOffset+' song'+(songOffset===1?'':'s')+' played'+(more.hidden?'.':' so far.'): 'No songs marked played for this show.';
+  }catch(e){if(current(token,id))fail('Couldn’t load songs for this show. Try again.',()=>loadSongs(append))}
+  finally{if(current(token,id)){older.disabled=false;more.disabled=false}}
+ }
+ open.onclick=()=>{if(!owner||!user)return;dialog.showModal();loadShows()};
+ dialog.addEventListener('close',()=>{if(!dialog.open)reset()});
+ select.onchange=()=>loadSongs();older.onclick=()=>loadShows(true);more.onclick=()=>loadSongs(true);
+ return {workspace};
+})();
+
+function hidePrivate(){dashboardHistory.workspace(null);currentQr=null;currentSlug='';currentAudience='';$('qr-preview').replaceChildren();$('audience-url').value='';$('qr-status').textContent='';$('audience-destination').removeAttribute('href');passwordVisible(false);for(const id of ['setup','workspace','signed-in','logout','reset'])$(id).hidden=true;for(const id of ['setup-email','workspace-name','workspace-address','workspace-counts','signed-in'])$(id).textContent=''}
+function modeView(){passwordVisible(false);const signup=mode==='signup',request=mode==='recover',pending=!signup&&!request&&awaitingEmail;
+$('login-password').hidden=request;$('password').required=!request;$('forgot-password').hidden=mode!=='signin';
+$('auth-stage').textContent=request?'PASSWORD RECOVERY':signup?'STEP 1 · CREATE ACCOUNT':pending?'STEP 2 · CONFIRM EMAIL':'SIGN IN TO YOUR ACCOUNT';$('verify-help').hidden=!pending;$('verify-address').textContent=confirmationEmail?'Look for a confirmation email at '+confirmationEmail+'.':'';
+$('auth-title').textContent=request?'Reset your password':signup?'Create your account':pending?'Already confirmed? Sign in':'Sign in to your account';
+$('auth-intro').textContent=request?'Enter your account email. We’ll email you a link to choose a new password for your existing account.':'Enter the same email and password you used to create this account. This signs you in; it does not create another account.';
+if(signup)$('auth-intro').textContent='Choose your email and password. Confirm your email next, then name your musician page.';
+$('submit-auth').textContent=request?'Email me a reset link':signup?'Create account & confirm email':'Sign in & continue';$('toggle-auth').textContent=request?'Back to sign in':signup?'Already created an account? Sign in':'Need a new account? Create one';$('password').autocomplete=signup?'new-password':'current-password';$('password').minLength=signup?12:1;$('password-help').hidden=!signup}
+
+async function run(fn){if(busy)return;busy=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);try{await fn()}catch(e){status(e.message||String(e))}finally{busy=false;document.querySelectorAll('button').forEach(b=>b.disabled=false)}}
+async function refresh(){const token=++epoch;hidePrivate();$('auth').hidden=true;status('Checking your account…');const r=await client.auth.getUser();if(token!==epoch)return;if(r.error||!r.data.user){user=null;const failed=recovering||linkFailed;recovering=false;recoveryMarker('');if(failed)mode='recover';$('auth').hidden=false;modeView();status(failed?'This reset link is invalid or has expired. Request a new link below.':'');return}user=r.data.user;
+ if(linkFailed){recovering=false;recoveryMarker('');mode='recover';$('auth').hidden=false;modeView();status('This reset link is invalid or has expired. Request a new link below.');return}
+ if(recovering||rememberedRecovery(user.id)){recovering=true;recoveryUserId=user.id;recoveryMarker(user.id);$('reset').hidden=false;$('reset-account').textContent='For '+(user.email||'your account');status('Enter your new password twice, then save.');return}
+$('signed-in').textContent='Signed in as '+(user.email||'musician');$('signed-in').hidden=false;$('logout').hidden=false;
+ if(!user.email_confirmed_at){awaitingEmail=true;confirmationEmail=user.email||'';mode='signin';$('auth').hidden=false;modeView();status('Confirm your email using the link in your inbox before continuing.');return}awaitingEmail=false;
+ const own=await client.rpc('beta_my_workspace');if(token!==epoch)return;if(own.error)throw Error('Could not load your workspace: '+own.error.message);if(own.data){$('workspace').hidden=false;dashboardHistory.workspace(own.data.id);$('workspace-name').textContent=own.data.display_name;$('workspace-address').textContent='Page name: '+own.data.slug;$('workspace-counts').textContent=own.data.song_count+' songs · '+own.data.show_count+' shows';$('first-setup').hidden=!createdNow;renderAudienceShare(own.data.slug);SetupFlow.mount(own.data);MusicianDevice.attach(client);MusicianDevice.schedule();status('Your musician account is saved.');return}
+ $('setup').hidden=false;$('setup-email').textContent='Verified email: '+(user.email||'your account');status('Email confirmed. You’re signed in. Name your musician page to continue.');}
+
+function suggestPageAddress(name){return name.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/['’]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60).replace(/-+$/g,'')}
+$('stage-name').oninput=()=>{if(!slugEdited)$('page-slug').value=suggestPageAddress($('stage-name').value)};
+$('page-slug').oninput=()=>{slugEdited=$('page-slug').value!=='';if(!slugEdited)$('page-slug').value=suggestPageAddress($('stage-name').value)};
+function renderAudienceShare(slug){
+ currentSlug=slug;currentAudience=new URL('subscriber-customer-test.html?musician='+encodeURIComponent(slug),REDIRECT).href;
+ $('audience-url').value=currentAudience;$('audience-destination').href='subscriber-audience-preview.html?musician='+encodeURIComponent(slug);
+ try{currentQr=qrcode(0,'M');currentQr.addData(currentAudience);currentQr.make();$('qr-preview').innerHTML=currentQr.createSvgTag({cellSize:8,margin:32,scalable:true});$('qr-status').textContent='Your QR code is ready. It links only to your public audience page.'}catch(e){currentQr=null;$('qr-status').textContent='QR code could not load. Reload this page; your link is still available.'}
+}
+function saveQrBlob(blob,extension){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=currentSlug+'-audience-qr.'+extension;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);$('qr-status').textContent='Download opened. Check your browser downloads or Files → Downloads.'}
+$('copy-audience').onclick=async()=>{if(!currentAudience)return;try{await navigator.clipboard.writeText(currentAudience);$('qr-status').textContent='Audience link copied.'}catch(e){$('audience-url').focus();$('audience-url').select();$('qr-status').textContent='Select and copy the audience link above.'}};
+$('download-qr-svg').onclick=()=>{if(!currentQr)return;$('qr-status').textContent='Preparing SVG…';saveQrBlob(new Blob([currentQr.createSvgTag({cellSize:16,margin:64})],{type:'image/svg+xml'}),'svg')};
+$('download-qr-png').onclick=()=>{if(!currentQr)return;const qr=currentQr,slug=currentSlug,n=qr.getModuleCount(),scale=24,size=(n+8)*scale,canvas=document.createElement('canvas');canvas.width=canvas.height=size;const ctx=canvas.getContext('2d');if(!ctx){$('qr-status').textContent='PNG unavailable. Use Download SVG instead.';return}ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.fillStyle='#000';for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(qr.isDark(y,x))ctx.fillRect((x+4)*scale,(y+4)*scale,scale,scale);canvas.toBlob(blob=>{if(qr!==currentQr||slug!==currentSlug)return;if(blob)saveQrBlob(blob,'png');else $('qr-status').textContent='PNG unavailable. Use Download SVG instead.'},'image/png')};
+
+$('toggle-auth').onclick=()=>{mode=mode==='signup'||mode==='recover'?'signin':'signup';modeView();status('')};
+$('auth-form').onsubmit=e=>{e.preventDefault();run(async()=>{const email=$('email').value.trim(),password=$('password').value;passwordVisible(false);
+if(mode==='recover'){if(!navigator.onLine)throw Error('Connect to the internet to request a reset link.');status('Requesting your reset email…');const r=await client.auth.resetPasswordForEmail(email,{redirectTo:REDIRECT});if(r.error)throw r.error;$('password').value='';status('If an account exists for '+email+', a reset email has been requested. Check your inbox and spam folder. Open the newest reset link to choose a new password.');return}
+status(mode==='signup'?'Creating your login…':'Signing in…');const r=mode==='signup'?await client.auth.signUp({email,password,options:{emailRedirectTo:REDIRECT}}):await client.auth.signInWithPassword({email,password});if(r.error)throw r.error;$('password').value='';if(mode==='signup'&&!r.data.session){awaitingEmail=true;confirmationEmail=email;mode='signin';modeView();status('Next: confirm your email. Then sign in below with the same password if asked.');$('verify-help').scrollIntoView({block:'start'});return}await refresh()})};
+
+$('forgot-password').onclick=()=>{mode='recover';awaitingEmail=false;$('password').value='';modeView();status('');$('email').focus()};
+$('reset-form').onsubmit=e=>{e.preventDefault();run(async()=>{concealReset();const password=$('new-password').value;if(password.length<12)throw Error('Use at least 12 characters.');if(password!==$('confirm-password').value)throw Error('The two passwords do not match. Please enter them again.');if(!navigator.onLine)throw Error('Connect to the internet to save your new password.');if(!recovering||!recoveryUserId)throw Error('Request a new reset link before changing your password.');const expectedId=recoveryUserId;const verified=await client.auth.getUser();if(verified.error||!verified.data.user||verified.data.user.id!==expectedId)throw Error('Your reset session has expired or changed. Request a new reset link.');status('Saving your new password…');const r=await client.auth.updateUser({password});if(r.error)throw r.error;$('reset-form').reset();concealReset();recovering=false;recoveryUserId='';recoveryMarker('');linkFailed=false;await refresh();status('Password updated. Your existing songs, charts and shows are unchanged.')})};
+$('cancel-reset').onclick=()=>run(async()=>{const r=await client.auth.signOut();if(r.error)throw r.error;recovering=false;recoveryUserId='';recoveryMarker('');linkFailed=false;$('reset-form').reset();concealReset();mode='signin';await refresh();status('Password reset cancelled. Sign in or request a new reset link.')});
+
+$('setup-form').onsubmit=e=>{e.preventDefault();run(async()=>{const code=$('invite-code').value.trim();if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(code))throw Error('Paste the complete invitation code, including hyphens.');status('Saving your musician page…');const r=await client.rpc('beta_create_workspace',{p_invite:code,p_name:$('stage-name').value.trim(),p_slug:$('page-slug').value.trim()});if(r.error){const message=r.error.message||'';if(/address.*taken|unique.*slug/i.test(message))throw Error('That page address is already taken. Try '+$('page-slug').value.slice(0,48)+'-music or add your town. These are suggestions; availability is checked when you submit.');throw Error(message+' If the connection failed, retry with the same code.')}createdNow=true;await refresh();$('invite-code').value='';location.assign('subscriber-customization-test.html?setup=1')})};
+$('logout').onclick=()=>run(async()=>{epoch++;hidePrivate();user=null;$('setup-form').reset();slugEdited=false;createdNow=false;status('Signing out…');const r=await client.auth.signOut();if(r.error)throw r.error;await refresh()});
+async function initializeSignup(){
+if(!navigator.onLine){status('Opening your downloaded song library…');location.replace(new URL('subscriber-performance-test.html',location.href).href);return;}
+try{await new Promise((resolve,reject)=>{if(window.supabase?.createClient){resolve();return}const script=document.createElement('script');const timer=setTimeout(()=>reject(Error('Sign-in connection timed out.')),12000);script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';script.onload=()=>{clearTimeout(timer);resolve()};script.onerror=()=>{clearTimeout(timer);reject(Error('Sign-in connection unavailable.'))};document.head.append(script)});if(!window.supabase?.createClient)throw Error('Sign-in could not load.');client=supabase.createClient('https://sluffhedekxnoasndnid.supabase.co','sb_publishable_frGKYqeqHpuww4Y78uvSVQ_SAMLLDk8',{auth:{storageKey:'musician-subscriber-beta-auth-v1',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});client.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){recovering=true;recoveryUserId=session?.user?.id||'';if(recoveryUserId)recoveryMarker(recoveryUserId);if(!busy)setTimeout(()=>run(refresh),0)}else if(event==='SIGNED_OUT'){recovering=false;recoveryUserId='';recoveryMarker('');$('reset-form').reset();concealReset();epoch++;hidePrivate();user=null;$('setup-form').reset();slugEdited=false;createdNow=false;$('auth').hidden=false;status('Signed out.')}else if(event==='SIGNED_IN'&&!busy)setTimeout(()=>run(refresh),0)});run(refresh)}catch(e){status(e.message+' Opening downloaded library…');location.replace(new URL('subscriber-performance-test.html',location.href).href)}
+}
+initializeSignup();
+</script><script>
+(()=>{'use strict';const key='musician-help-tips-v1';let enabled=true,previousFocus=null;try{enabled=localStorage.getItem(key)!=='off'}catch(e){}const toggles=[...document.querySelectorAll('.musician-help-toggle')];function apply(){document.body.classList.toggle('musician-help-off',!enabled);toggles.forEach(t=>t.checked=enabled)}apply();toggles.forEach(t=>t.addEventListener('change',()=>{enabled=t.checked;try{localStorage.setItem(key,enabled?'on':'off')}catch(e){}apply()}));window.addEventListener('storage',e=>{if(e.key===key){enabled=e.newValue!=='off';apply()}});
+const dialog=document.createElement('dialog');dialog.id='musician-help-dialog';dialog.setAttribute('aria-labelledby','musician-help-title');const heading=document.createElement('h2');heading.id='musician-help-title';const text=document.createElement('p'),close=document.createElement('button');close.id='musician-help-close';close.type='button';close.textContent='Close';dialog.append(heading,text,close);document.body.append(dialog);function dismiss(){dialog.close();previousFocus?.focus()}close.onclick=dismiss;dialog.addEventListener('cancel',()=>{previousFocus?.focus()});dialog.addEventListener('click',e=>{if(e.target===dialog)dismiss()});
+function attach(target,title,description){if(!target||target.dataset.musicianHelp)return;target.dataset.musicianHelp='true';const button=document.createElement('button');button.type='button';button.className='musician-help-tip';button.textContent='?';button.setAttribute('aria-label','Help: '+title);button.setAttribute('aria-haspopup','dialog');button.onclick=()=>{previousFocus=button;heading.textContent=title;text.textContent=description;dialog.showModal();close.focus()};const label=target.id&&document.querySelector('label[for="'+target.id+'"]');(label||target).after(button)}
+const tips={"add":["Add song", "Creates a new song in your own library. Fill in its title, artist and private chart, then save. New songs start as Still learning."],"save":["Save song", "Saves the song title, artist, private chart, readiness and audience request setting. An internet connection is required."],"apply":["Apply selected changes", "Applies the chosen change to all selected matching songs. Check the selected count before applying."],"history-stage":["Show History", "Review songs you recorded for each live show. Upcoming advertised dates are kept separately in Show Schedule."],"float-mark-played":["Mark Played", "Records one performance of the current song when history tracking is on, and marks matching requests played. Repeated performances appear separately."],"settings-btn":["Settings", "Adjust performance appearance and chart controls, or turn help tips off and on."],"schedule-btn":["Show Schedule", "Manage upcoming advertised dates. This is separate from starting a live show or recording songs played."],"save-stage-speed":["Save chart speed", "Remembers the selected scrolling speed for this song. Opening a chart never starts auto-scroll automatically."],"download-qr-png":["PNG download", "Downloads a sharp black-on-white QR image for sharing. Keep its white border and test a print before ordering items."],"download-qr-svg":["SVG download", "Downloads a scalable QR file for printers and designers. Keep its white border; do not stretch or crop it."],"readiness": ["Readiness", "Choosing Ready to play turns audience requests on when you save. Still learning turns requests off. Use Hide from audience requests in Song options for exceptions. Your lyrics and charts always stay private."], "requestable": ["Allow audience requests", "Check this for each Ready song you want on your public request list, then save. Ready songs can remain private with this off."], "chart-font": ["Chart font", "Choose the font that matches your original chart. A different font changes the width of letters and can shift manually spaced chords. Compare the preview before performing."], "chart-text": ["Lyrics and chords", "Your lyrics and chord charts are private. Keep each chord line immediately above its lyric line; spacing is preserved."], "bulk-action": ["Change selected songs", "Select Ready to play to enable audience requests for the selected songs, or Still learning to turn requests off. Check the selected count and confirm before applying."], "select-all": ["Select matching songs", "Selects every song matching your current search and filter. Check the selected count before applying a change."], "scroll-toggle": ["Auto-scroll", "Starts or pauses the private chart. Touch the chart to pause; use Start auto-scroll to resume."], "scroll-speed": ["Scroll speed", "Move right for faster chart scrolling. Save speed for this song remembers its speed; opening the song does not start scrolling."], "playing-btn": ["Playing", "Gives the chart most of the screen. Incoming requests stay visible and cannot replace your current song. Volume feedback is hidden until Between Songs."], "between-btn": ["Between Songs", "Browse and open your next song, review requests, or check audience volume feedback. Opening a song does not mark it played."], "requests-btn": ["Incoming requests", "See audience requests, names and notes for the active show. Requests need an internet connection."], "volume-btn": ["Volume feedback", "Review audience feedback between songs. Each browser has one current vote per show; a changed vote replaces its earlier choice."], "dice-btn": ["Random song", "Suggests a Ready to Play song from your library. It does not mark the song played."], "start-show": ["Start show", "Opens audience requests and starts a live show. Upcoming dates in Show Schedule do not open requests automatically."], "end-show": ["End show", "Closes audience requests and ends this live show. Recorded songs remain in Show History."], "history-request": ["Show History", "View recorded songs for a show, including repeats. Show Schedule is separate and advertises upcoming dates."], "setting-learning": ["Learning Mode · Song stopwatch", "Time yourself playing the song, then Stop & save. Only total duration is remembered; manual scrolling is ignored. Press Scroll in Playing for a steady speed based on that time. Edit the duration, time again or clear it in Settings. Saved times stay on this device and work offline."], "setting-track-history": ["Track songs played", "When enabled, Mark Played saves each performance in show order. Repeating a song creates another entry."], "stage-scroll-speed": ["Chart scroll speed", "Adjusts scrolling for the current private chart. Save speed for this song remembers it. Touching the chart pauses scrolling."], "published": ["Publish this show", "Published dates appear on your audience Shows tab. Drafts are visible only to you. Publishing a date does not open live requests."], "paste-open": ["Paste monthly schedule", "Paste your post, review the detected dates, venues and times, then save drafts or publish. Nothing is saved just by reviewing."], "default-period": ["Missing AM or PM", "Choose a PM start default only if it fits your shows. Review every converted start and end time, including shows that end after midnight."], "town-names": ["Town names", "Enter town names separated by commas. A matching town at the end of a venue line moves to Town / location. Check both fields in the review."], "start": ["Start time", "Time choices use half-hour steps. New shows default to three hours long. Once you change or clear the end time, it stays as you set it."], "end": ["End time", "You can shorten or extend the show, or clear the optional end time. Editing an existing show preserves its saved end time."], "page-slug": ["Page address", "Suggested from your artist name. You can edit it before creating your page. This address becomes the destination of your permanent audience QR code."], "invite-code": ["Invitation code", "Paste the full code from your invitation. It activates one musician account; you do not need it again when signing back in."], "stage-name": ["Artist name", "The musician or band name shown on your audience page. We suggest an editable page address from this name."]};Object.entries(tips).forEach(([id,[title,description]])=>attach(document.getElementById(id),title,description));const labelTips={"Logo or band photo": "Upload your own image. The whole image stays visible; use Logo size to adjust its display size.", "Button color": "Changes your public page accents. Check the preview for readability.", "Background color": "Changes the background of your public page. Check text and buttons in the preview.", "Welcome message": "The short message below your artist name on your public audience page.", "Beta invitation code": "Paste the full code from your invitation. It activates one musician account; you do not need it again when signing back in."};document.querySelectorAll('label[for]').forEach(label=>{const title=label.textContent.trim();if(labelTips[title])attach(document.getElementById(label.htmlFor),title,labelTips[title])});
+})();</script><script>MusicianDevice.subscribe(v=>{document.querySelectorAll('.device-copy-status').forEach(e=>e.textContent=v.text);document.querySelectorAll('.device-copy-retry').forEach(e=>e.hidden=v.state!=='error')});document.querySelectorAll('.device-copy-retry').forEach(b=>b.onclick=()=>MusicianDevice.run());</script><script>(function(){'use strict';
+const current=window.MusicianOffline.VERSION;
+document.querySelectorAll('.check-app-update').forEach(button=>button.onclick=async()=>{
+ const box=button.closest('.app-update-tools'),message=box.querySelector('.app-update-status'),reload=box.querySelector('.reload-app-update');
+ if(!navigator.onLine){message.textContent='Connect to Wi-Fi or cellular data to check for updates.';return}button.disabled=true;reload.hidden=true;
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+ try{message.textContent='Checking for app updates…';const response=await fetch(new URL('subscriber-performance-test.html',location.href),{cache:'no-store',signal:controller.signal});if(!response.ok)throw Error('App update is unavailable.');const text=await response.text(),found=text.match(/subscriber-offline-\d{8}-v\d+/)?.[0];if(!found)throw Error('Update version could not be checked.');
+  if(found!==current){message.textContent='An update is available. Finish your song and save any edits, then tap Restart to update.';reload.hidden=false}else message.textContent='You have the latest published version.';
+ }catch(e){message.textContent='Could not check for updates. Please try again when connected.'}finally{clearTimeout(timer);button.disabled=false}
+ reload.onclick=()=>{if(document.body.classList.contains('mode-playing')){message.textContent='Switch to Between Songs before restarting.';return}if(!confirm('Restart the app to update? Save any edits first.'))return;location.reload()};
+});
+})();
+</script><script>if(location.hash==='#home-screen-help'){const h=document.getElementById('home-screen-help');if(h){h.open=true;let p=h.parentElement;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}h.scrollIntoView({block:'start'})}}</script>
+</body></html>
