@@ -156,6 +156,20 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav,body.recap-view>.wrap,body.rec
 #stageRequestSwitch [aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:inset 0 0 0 1px currentColor}
 #stageRequestSwitch{display:flex;gap:8px;flex-wrap:wrap}
 #stageGameControls{margin-top:16px;padding-top:14px;border-top:1px solid #395343}
+#stageGameControls select{display:block;width:100%;min-height:44px;padding:8px;background:#0b100d;color:#fff;border:1px solid #668471;border-radius:8px;font:inherit;margin:4px 0 12px}
+#stageGameControls .simulate-late{display:flex;align-items:center;gap:9px;margin-top:12px}
+#stageGameControls .simulate-late input{width:19px;height:19px;flex:none}
+.guess-result{text-align:center;padding:18px 12px;border:1px solid #7d6546;border-radius:16px;background:#251d19;color:#fff1df}
+.guess-result h3{margin:6px 0 0;font-size:1.2rem}
+.guess-result p{margin:8px 0 0}
+.guess-race{width:min(220px,100%);height:auto;display:block;margin:auto;color:#f5bc70;overflow:hidden}
+.guess-race .runner{animation:guess-short .73s ease-out both}
+@keyframes guess-short{0%{transform:translateX(-47px);opacity:0}54%{transform:translateX(4px);opacity:1}75%{transform:translateX(-4px)}100%{transform:translateX(0);opacity:1}}
+.guess-result.is-wrong{border-color:#a65457;background:#321b22;color:#ffeced}
+.guess-stamp-wrap{padding:12px 0}
+.guess-stamp{display:inline-block;color:#ff9297;border:4px double currentColor;border-radius:8px;padding:5px 14px;font-size:clamp(26px,8vw,42px);font-weight:850;letter-spacing:.12em;transform:rotate(-9deg);animation:guess-stamp-in .5s ease-out both}
+@keyframes guess-stamp-in{0%{transform:scale(1.7) rotate(-17deg);opacity:0}55%{transform:scale(.91) rotate(-9deg);opacity:1}76%{transform:scale(1.05) rotate(-9deg)}100%{transform:rotate(-9deg)}}
+@media(prefers-reduced-motion:reduce){.guess-race .runner,.guess-stamp{animation:none}}
 #stageRecapPage{max-width:760px;margin:0 auto;padding:20px 14px 40px}
 #stageRecapPage section{margin:14px 0;padding:14px;background:#121b15;border:1px solid #395343;border-radius:12px}
 #stageRecapPage section h2{margin:0 0 8px}
@@ -276,7 +290,10 @@ Chorus · 2x
 <button type="button" class="btn secondary" id="stageSampleFront">Moved to front</button></div></details>
 <div id="stageSpecialSlot"></div><details id="stageSetRecap"><summary>Show Recap · Songs</summary><p class="small">Rehearsal only.</p><p id="stageSetEmpty">No interrupted songs yet.</p><ol id="stageSetLog"></ol></details>
 <section id="stageGameControls" aria-labelledby="stageGameTitle"><h3 id="stageGameTitle">Name That Tune</h3>
+<label for="stageCorrectSong">Correct song (performer only)</label>
+<select id="stageCorrectSong"></select>
 <label for="stagePrize">Prize (optional)</label><input id="stagePrize" type="text" maxlength="120" placeholder="Example: Dessert from the venue">
+<label class="simulate-late"><input type="checkbox" id="stageOtherWinner"> Rehearsal: simulate someone else winning first</label>
 <div class="actions"><button class="btn secondary" id="stageRound">Start round</button></div></section></section></div>
 <button class="btn secondary" id="stageRequestBox" aria-controls="stageRequests" aria-expanded="false">Requests</button>
 <section id="stageRequests" aria-labelledby="stageRequestsTitle" hidden><h2 id="stageRequestsTitle" tabindex="-1">Requests</h2>
@@ -561,7 +578,7 @@ let stageSongId='';
 function requestsAreOpen(now=Date.now()){
  return requestOverride===null?(requestStart===null||now>=requestStart)&&(requestEnd===null||now<requestEnd):requestOverride;
 }
-let boostedSong='', guessed=false, roundActive=false, previousFeatureFocus=null, roundWin=null, guessMode=false;
+let boostedSong='', guessed=false, roundActive=false, previousFeatureFocus=null, roundWin=null, guessMode=false, roundAnswerId='', otherGuestWon=false;
 function isGuessing(){return roundActive&&!guessed&&guessMode}
 function renderRehearsalRound(){
  const invite=roundActive&&!guessed;
@@ -577,12 +594,18 @@ function renderRehearsalRound(){
  render();
  el('rehearsalRound').textContent=roundActive?'End rehearsal round':'Start rehearsal round';
  el('stageRound').textContent=roundActive?'End round':'Start round';
+ for(const id of ['stageCorrectSong','stagePrize','stageOtherWinner'])el(id).disabled=roundActive;
 }
 if(hostMode){
  el('rehearsalHost').hidden=false;
  el('rehearsalRound').onclick=()=>{
   roundActive=!roundActive;guessMode=false;
-  if(roundActive){guessed=false;roundWin=null;roundPrize=el('stagePrize').value.trim().slice(0,120)}
+  if(roundActive){
+   guessed=false;roundWin=null;
+   roundAnswerId=el('stageCorrectSong').value;
+   roundPrize=el('stagePrize').value.trim().slice(0,120);
+   otherGuestWon=el('stageOtherWinner').checked;
+  }
   if(!roundActive&&el('featureTitle').textContent==='Name That Tune'&&el('guestFeature').classList.contains('open')){
    closeGuestFeature();
    el('rehearsalRound').focus();
@@ -863,13 +886,14 @@ function showGuestWinner(playOnOpen=false){
   </div>
   <h3 id="guestWinnerTitle" tabindex="-1">You Won!</h3>
   <p class="ma-line">It’s a major award!</p>
-  <p class="ma-song">The song was <strong>3am</strong>.</p>
+  <p class="ma-song">The song was <strong id="guestWinAnswer"></strong>.</p>
   <div class="ma-prize"><small>Your prize</small><strong id="guestWinPrize"></strong></div>
   <time id="guestWinTime"></time>
   <p class="ma-claim">Rehearsal · No real prize. At a live show, show this screen to staff during the show.</p>
   <button id="guestWinReplay" class="ma-replay" type="button">Replay kick &amp; confetti</button>
  </article>`;
  el('guestWinBrand').textContent=roundWin.performer;
+ el('guestWinAnswer').textContent=roundWin.song;
  el('guestWinPrize').textContent=roundWin.prize||'No prize announced';
  const stamp=el('guestWinTime');stamp.dateTime=roundWin.time.toISOString();
  stamp.textContent=new Intl.DateTimeFormat(undefined,{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(roundWin.time);
@@ -895,14 +919,33 @@ el('exitGuessMode').onclick=()=>{
 };
 function submitGuestGuess(id){
  if(!isGuessing())return;
- const correct=String(id)==='1';
+ const correct=String(id)===roundAnswerId;
  guessed=true;guessMode=false;
- if(correct)roundWin={performer:el('customBrand').textContent.trim()||'Name That Tune host',prize:roundPrize,time:new Date()};
+ if(correct&&!otherGuestWon)roundWin={performer:el('customBrand').textContent.trim()||'Name That Tune host',song:songName(roundAnswerId),prize:roundPrize,time:new Date()};
  renderRehearsalRound();
- if(correct){showGuestWinner(true);previousFeatureFocus=el('showGuestWin');return}
+ if(roundWin){showGuestWinner(true);previousFeatureFocus=el('showGuestWin');return}
  openGuestFeature('Name That Tune');
  previousFeatureFocus=document.querySelector('[data-tab="songs"]');
- el('featureBody').innerHTML='<p role="status">Guess submitted. Thanks for playing!</p>';
+ const result=el('featureBody');
+ if(correct){
+  result.innerHTML=`<section class="guess-result">
+   <svg class="guess-race" viewBox="0 0 210 88" aria-hidden="true" focusable="false">
+    <path d="M12 75h185" fill="none" stroke="#9d7658" stroke-width="2"/>
+    <path d="M158 20v54m32-54v54" fill="none" stroke="#fff1df" stroke-width="2"/>
+    <path d="M158 24h32v17h-32Z" fill="#fff1df"/>
+    <path d="M158 24h8v8h-8Zm16 0h8v8h-8Zm-8 8h8v9h-8Zm16 0h8v9h-8Z" fill="#4d372a"/>
+    <g class="runner" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
+     <circle cx="112" cy="26" r="7" fill="currentColor" stroke="none"/>
+     <path d="m109 37-16 16 17 7 18 8m-35-15-15 13-19 3m47-32 16 8 14-5m-30-2-20 1-11 11"/>
+    </g>
+   </svg>
+   <h3 id="guestGuessResult" tabindex="-1">Correct answer, but someone beat you to it!</h3>
+   <p>You guessed <strong id="guestLateAnswer"></strong>. Thanks for playing!</p></section>`;
+  el('guestLateAnswer').textContent=songName(roundAnswerId);
+ }else{
+  result.innerHTML='<section class="guess-result is-wrong"><div class="guess-stamp-wrap" aria-hidden="true"><span class="guess-stamp">WRONG</span></div><h3 id="guestGuessResult" tabindex="-1">Not quite!</h3><p>That wasn’t the song. Thanks for playing!</p></section>';
+ }
+ el('guestGuessResult').focus({preventScroll:true});
 }
 function stageSignal(type,id,preview=false){
  if(!hostMode)return;
@@ -950,16 +993,20 @@ function goToStageSong(alert){
   const row=document.createElement('li');row.textContent=outgoing+' · Partially played';
   el('stageSetLog').append(row);el('stageSetEmpty').hidden=true;
  }
- stageSongId=alert.id;
  const song=demoSongs.find(entry=>entry.id===alert.id);
- el('stageSongTitle').textContent=song.title;
- el('stageChartLabel').textContent='Requested song · Rehearsal';
- el('stageSongMeta').textContent=song.artist;
- el('stageChartBody').textContent='Your saved chart for this song would open here in live Performance.';
  stageAlerts=stageAlerts.filter(entry=>entry!==alert);
- stageMode='playing';renderStageMode();stageRequestPanel(false);
+ openStageChart(song,'Requested song · Rehearsal');
  el('stageAnnouncement').textContent='Opened '+song.title+(interrupted?'. '+outgoing+' logged as Partially played.':'.');
  window.scrollTo(0,0);el('stageSongTitle').focus({preventScroll:true});
+}
+function openStageChart(song,label){
+ if(!song)return;
+ stageSongId=song.id;
+ el('stageSongTitle').textContent=song.title;
+ el('stageChartLabel').textContent=label;
+ el('stageSongMeta').textContent=song.artist;
+ el('stageChartBody').textContent='Your saved chart for this song would open here in live Performance.';
+ stageMode='playing';renderStageMode();stageRequestPanel(false);
 }
 function stageRequestPanel(open){
  el('stageRequests').hidden=!open;
@@ -1002,7 +1049,18 @@ if(hostMode){
  el('stagePlay').onclick=()=>{stageMode='playing';renderStageMode()};
  el('stageBetween').onclick=()=>{stageMode='between';renderStageMode()};
  el('stageShowTools').onclick=()=>{showToolsOpen=!showToolsOpen;renderStageMode();if(showToolsOpen)el('stageControlsTitle').focus()};
- el('stageRound').onclick=()=>el('rehearsalRound').click();
+ const answer=el('stageCorrectSong');
+ answer.replaceChildren(...demoSongs.map(song=>new Option(song.title+' — '+song.artist,song.id)));
+ answer.value='1';
+ el('stageRound').onclick=()=>{
+  const starting=!roundActive;
+  el('rehearsalRound').click();
+  if(starting&&roundActive){
+   const song=demoSongs.find(entry=>entry.id===roundAnswerId);
+   openStageChart(song,'Name That Tune · Performer only');
+   window.scrollTo(0,0);el('stageSongTitle').focus({preventScroll:true});
+  }
+ };
  for(const [button,type,song] of [['stageSampleSpecial','special','7'],['stageSampleFront','front','4']]){
   el(button).onclick=()=>{
    stageAlerts=stageAlerts.filter(alert=>!alert.label.startsWith('Preview · '));
