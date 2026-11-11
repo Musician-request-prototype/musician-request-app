@@ -146,7 +146,16 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .social-badge[data-network="instagram"]{right:0;background:linear-gradient(35deg,#b93c00,#a9145c 52%,#5d28b7)}
 .social-links:empty{display:none}
 #stageRehearsal[hidden],#stageControls[hidden],#stageRequests[hidden]{display:none!important}
-body.stage-view>.wrap,body.stage-view>.bottom-nav{display:none!important}
+body.stage-view>.wrap,body.stage-view>.bottom-nav,body.recap-view>.wrap,body.recap-view>.bottom-nav,body.recap-view>#stageRehearsal{display:none!important}
+#stageRequestState[data-open="true"]{color:color-mix(in srgb,var(--accent) 84%,white)}
+#stageRequestState[data-open="false"]{color:inherit}
+#stageRequestSwitch [aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:inset 0 0 0 1px currentColor}
+#stageRequestSwitch{display:flex;gap:8px;flex-wrap:wrap}
+#stageGameControls{margin-top:16px;padding-top:14px;border-top:1px solid #395343}
+#stageRecapPage{max-width:760px;margin:0 auto;padding:20px 14px 40px}
+#stageRecapPage section{margin:14px 0;padding:14px;background:#121b15;border:1px solid #395343;border-radius:12px}
+#stageRecapPage section h2{margin:0 0 8px}
+#stageRecapPage li{margin-bottom:8px}
 #stageRehearsal{min-height:100dvh;background:#0b100d;color:#eff8ef;padding:12px 12px 114px}
 #stageRehearsal button{min-height:44px}
 .stage-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 auto 14px;max-width:1000px}
@@ -177,7 +186,7 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav{display:none!important}
 <button class="btn secondary" id="stagePlay" aria-pressed="true">Playing</button>
 <button class="btn secondary" id="stageBetween" aria-pressed="false">Between Songs</button>
 <button class="btn secondary" id="stageShowTools" hidden aria-expanded="false" aria-controls="stageControls">Show Controls</button>
-<button class="btn secondary" id="stageBack">Guest view</button></div>
+<button class="btn secondary" id="stageRecapLink">Show Recap</button><button class="btn secondary" id="stageBack">Guest view</button></div>
 <div id="stageLayout" class="stage-layout">
 <section class="stage-chart" aria-label="Sample song chart"><p class="small" id="stageChartLabel">Sample chart · Set 1</p><h2 id="stageSongTitle" tabindex="-1">Soundcheck Groove</h2><p id="stageSongMeta">Key: G · 96 BPM</p><pre id="stageChartBody">Intro · 2x
 | G    | C    | Em   | D    |
@@ -189,29 +198,39 @@ Chorus · 2x
 | C    | G    | D    | Em   |</pre></section>
 <section id="stageControls" hidden aria-labelledby="stageControlsTitle">
 <h2 id="stageControlsTitle" tabindex="-1">Show Controls</h2>
-<p id="stageRequestStatus" role="status"></p>
-<button class="btn secondary" id="stageRequestToggle">Close requests</button>
+<p id="stageRequestStatus" role="status">Requests are <strong id="stageRequestState"></strong><span id="stageRequestMode"></span></p>
+<div id="stageRequestSwitch" role="group" aria-label="Request status">
+<button type="button" class="btn secondary" id="stageRequestOpen" aria-pressed="false">Open requests</button>
+<button type="button" class="btn secondary" id="stageRequestClose" aria-pressed="false">Close requests</button>
+</div>
 <form id="stageScheduleForm">
-<label><input id="stageScheduleEnabled" type="checkbox"> Use a request schedule</label>
+<label><input id="stageScheduleEnabled" type="checkbox"> Set Request Hours</label>
 <div id="stageScheduleFields" hidden><label for="stageStart">Open at (optional)</label><input id="stageStart" type="datetime-local">
 <label for="stageEnd">Close at (optional)</label><input id="stageEnd" type="datetime-local"></div>
-<div class="actions"><button class="btn secondary" type="submit">Apply request schedule</button></div>
+<div class="actions"><button class="btn secondary" type="submit">Apply request hours</button></div>
 <p id="stageScheduleNote" class="small" role="status"></p>
 </form>
-<h3>Name That Tune</h3>
-<label for="stagePrize">Prize (optional)</label><input id="stagePrize" type="text" maxlength="120" placeholder="Example: Dessert from the venue">
-<div class="actions"><button class="btn secondary" id="stageRound">Start round</button></div>
 <details><summary>Preview request alerts</summary><div class="actions">
 <button type="button" class="btn secondary" id="stageSampleSpecial">Special goal reached</button>
 <button type="button" class="btn secondary" id="stageSampleFront">Moved to front</button></div></details>
-<div id="stageSpecialSlot"></div><details id="stageSetRecap"><summary>Show Recap · Songs</summary><p class="small">Rehearsal only.</p><p id="stageSetEmpty">No interrupted songs yet.</p><ol id="stageSetLog"></ol></details></section></div>
+<div id="stageSpecialSlot"></div><details id="stageSetRecap"><summary>Show Recap · Songs</summary><p class="small">Rehearsal only.</p><p id="stageSetEmpty">No interrupted songs yet.</p><ol id="stageSetLog"></ol></details>
+<section id="stageGameControls" aria-labelledby="stageGameTitle"><h3 id="stageGameTitle">Name That Tune</h3>
+<label for="stagePrize">Prize (optional)</label><input id="stagePrize" type="text" maxlength="120" placeholder="Example: Dessert from the venue">
+<div class="actions"><button class="btn secondary" id="stageRound">Start round</button></div></section></section></div>
 <button class="btn secondary" id="stageRequestBox" aria-controls="stageRequests" aria-expanded="false">Requests</button>
 <section id="stageRequests" aria-labelledby="stageRequestsTitle" hidden><h2 id="stageRequestsTitle" tabindex="-1">Requests</h2>
 <div id="stageAlerts"></div><p id="stageJumpHint" class="small" hidden></p><ol id="stageRequestList"></ol><button class="btn secondary" id="stageDismiss">Dismiss alerts</button> <button class="btn secondary" id="stageRequestsClose">Back to chart</button></section>
 <div id="stageAnnouncement" role="status" class="small" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"></div></main>
+<main id="stageRecapPage" hidden aria-labelledby="stageRecapTitle">
+<button type="button" class="btn secondary" id="stageRecapBack">Back</button>
+<h1 id="stageRecapTitle" tabindex="-1">Show Recap</h1>
+<p>Current rehearsal · No live gig history is loaded here.</p>
+<section aria-labelledby="recapSongsTitle"><h2 id="recapSongsTitle">Songs</h2><p id="stageRecapEmpty">No interrupted songs yet.</p><ol id="stageRecapSongs"></ol></section>
+<section aria-labelledby="recapSpecialsTitle"><h2 id="recapSpecialsTitle">Specials</h2><div id="stageRecapSpecials"></div></section>
+</main>
 <div class="wrap">
 <header class="hero"><div id="cornerSocial"></div><div id="brandArt" class="brand-art" hidden><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
-<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="rehearsalHost" hidden><button type="button" id="rehearsalRound" class="btn secondary">Start rehearsal round</button> <button type="button" class="btn primary" id="stageLaunch">Performance screen</button> <button type="button" class="btn secondary" id="specialsHostToggle" aria-controls="performanceSpecials" aria-expanded="false">Performance · Specials</button>
+<div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice">Guest rehearsal · No real requests or payments</div><div id="rehearsalHost" hidden><button type="button" id="rehearsalRound" class="btn secondary">Start rehearsal round</button> <button type="button" class="btn primary" id="stageLaunch">Performance screen</button> <button type="button" class="btn secondary" id="hostRecapLink">Show Recap</button> <button type="button" class="btn secondary" id="specialsHostToggle" aria-controls="performanceSpecials" aria-expanded="false">Performance · Specials</button>
 <section id="performanceSpecials" aria-labelledby="specialsHostTitle" hidden>
 <h2 id="specialsHostTitle" tabindex="-1">Specials in Performance</h2><p class="small">Rehearsal only · No real money moves.</p>
 <div id="specialHostBody"></div><p id="specialNotice" role="status"></p>
@@ -714,8 +733,9 @@ function renderStageRequests(){
  const box=el('stageRequestBox'),latest=stageAlerts.at(-1);
  box.dataset.signal=latest?.type||'';
  box.textContent=latest?latest.label+(stageAlerts.length>1?' · '+stageAlerts.length+' alerts':''):'Requests · '+demoQueue.length+' in queue';
- const canJump=alert=>alert.id!==stageSongId&&(alert.preview||
-  (alert.type==='special'?queuedSpecial===alert.id:boostedSong===alert.id&&demoQueue.includes(alert.id)));
+ const isAvailable=alert=>alert.preview||
+  (alert.type==='special'?queuedSpecial===alert.id:boostedSong===alert.id&&demoQueue.includes(alert.id));
+ const canJump=alert=>alert.id!==stageSongId&&isAvailable(alert);
  el('stageAlerts').replaceChildren(...stageAlerts.map(alert=>{
   const item=document.createElement('div'), label=document.createElement('p');
   item.className='stage-alert-entry';label.textContent=alert.label;item.append(label);
@@ -723,6 +743,8 @@ function renderStageRequests(){
    const button=document.createElement('button');button.type='button';button.className='btn primary';
    button.textContent='Go to song';button.setAttribute('aria-label','Go to song: '+songName(alert.id));
    button.onclick=()=>{if(canJump(alert)&&stageAlerts.includes(alert))goToStageSong(alert)};item.append(button);
+  }else if(alert.id===stageSongId&&isAvailable(alert)){
+   const current=document.createElement('p');current.className='small';current.textContent='Already on this song';item.append(current);
   }
   return item;
  }));
@@ -771,8 +793,12 @@ function renderStageMode(){
 }
 function refreshStageStatus(){
  const open=requestsAreOpen();
- el('stageRequestStatus').textContent=(open?'Requests are open':'Requests are closed')+(requestOverride===null?' · Scheduled':' · Manual');
- el('stageRequestToggle').textContent=open?'Close requests':'Open requests';
+ const status=el('stageRequestState'), mode=el('stageRequestMode');
+ const word=open?'open':'closed', modeLabel=requestOverride===null?' · Scheduled':' · Manual';
+ if(status.textContent!==word){status.textContent=word;status.dataset.open=String(open)}
+ if(mode.textContent!==modeLabel)mode.textContent=modeLabel;
+ el('stageRequestOpen').setAttribute('aria-pressed',String(open));
+ el('stageRequestClose').setAttribute('aria-pressed',String(!open));
  if(v4LiveSongs&&state.open!==open){setStatus(open);render()}
 }
 if(hostMode){
@@ -802,10 +828,26 @@ if(hostMode){
  el('stageRequestBox').onclick=()=>stageRequestPanel(el('stageRequests').hidden);
  el('stageRequestsClose').onclick=()=>stageRequestPanel(false);
  el('stageDismiss').onclick=()=>{stageAlerts=[];renderStageRequests();el('stageRequestsClose').focus()};
- el('stageRequestToggle').onclick=()=>{
-  requestOverride=!requestsAreOpen();
-  el('stageScheduleNote').textContent='Manual setting stays in effect until you apply the schedule again.';
+ const setRequests=open=>{
+  requestOverride=open;
+  el('stageScheduleNote').textContent=el('stageScheduleEnabled').checked?'Manual setting stays in effect until you apply request hours again.':'';
   refreshStageStatus();
+ };
+ el('stageRequestOpen').onclick=()=>setRequests(true);
+ el('stageRequestClose').onclick=()=>setRequests(false);
+ let recapReturn=null,recapScroll=0;
+ function openRecap(button){
+  recapReturn=button;recapScroll=window.scrollY;
+  el('stageRecapSongs').replaceChildren(...[...el('stageSetLog').children].map(row=>row.cloneNode(true)));
+  el('stageRecapEmpty').hidden=el('stageSetLog').childElementCount>0;
+  el('stageRecapSpecials').replaceChildren(...[...el('specialRecapBody').children].map(row=>row.cloneNode(true)));
+  document.body.classList.add('recap-view');el('stageRecapPage').hidden=false;
+  window.scrollTo(0,0);el('stageRecapTitle').focus({preventScroll:true});
+ }
+ for(const id of ['hostRecapLink','stageRecapLink'])el(id).onclick=()=>openRecap(el(id));
+ el('stageRecapBack').onclick=()=>{
+  el('stageRecapPage').hidden=true;document.body.classList.remove('recap-view');
+  window.scrollTo(0,recapScroll);recapReturn?.focus({preventScroll:true});
  };
  el('stageScheduleEnabled').onchange=()=>{el('stageScheduleFields').hidden=!el('stageScheduleEnabled').checked};
  el('stageScheduleForm').onsubmit=e=>{
