@@ -174,6 +174,10 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav,body.recap-view>.wrap,body.rec
 #stageRecapPage section{margin:14px 0;padding:14px;background:#121b15;border:1px solid #395343;border-radius:12px}
 #stageRecapPage section h2{margin:0 0 8px}
 #stageRecapPage li{margin-bottom:8px}
+#suggestSongBox{margin:14px 0;text-align:center}
+#suggestSongForm{max-width:420px;margin:12px auto;text-align:left}
+#suggestSongForm input{display:block;width:100%;margin-bottom:10px}
+#suggestSongStatus{margin:8px 0}
 #stageRehearsal{min-height:100dvh;background:#0b100d;color:#eff8ef;padding:12px 12px 114px}
 #stageRehearsal button{min-height:44px}
 .stage-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 auto 14px;max-width:1000px}
@@ -306,6 +310,8 @@ Chorus · 2x
 <h1 id="stageRecapTitle" tabindex="-1">Show Recap</h1>
 <p>Current rehearsal · No live gig history is loaded here.</p>
 <section aria-labelledby="recapSongsTitle"><h2 id="recapSongsTitle">Songs</h2><p id="stageRecapEmpty">No interrupted songs yet.</p><ol id="stageRecapSongs"></ol></section>
+<section aria-labelledby="recapSuggestionsTitle"><h2 id="recapSuggestionsTitle">Suggested Songs</h2>
+<p id="recapSuggestionsStatus" role="status"></p><ul id="recapSuggestionsList"></ul></section>
 <section aria-labelledby="recapSpecialsTitle"><h2 id="recapSpecialsTitle">Specials</h2><div id="stageRecapSpecials"></div></section>
 </main>
 <div class="wrap">
@@ -317,7 +323,13 @@ Chorus · 2x
 <details id="specialRecap"><summary>Show Recap · Specials</summary><div id="specialRecapBody"></div></details>
 </section></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><div id="filters" class="filters"></div></div>
-<div class="sortbar"><section id="guessModeBanner" aria-labelledby="guessModeTitle" hidden><div><strong id="guessModeTitle" tabindex="-1">Name That Tune</strong><p>Search or browse, then tap Guess on a song.</p><p id="guessModePrize" hidden></p></div><button type="button" id="exitGuessMode" class="btn secondary">Back to requests</button></section><button type="button" class="btn secondary" id="showGuestWin" hidden>View winner card</button><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab">Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
+<div class="sortbar"><section id="guessModeBanner" aria-labelledby="guessModeTitle" hidden><div><strong id="guessModeTitle" tabindex="-1">Name That Tune</strong><p>Search or browse, then tap Guess on a song.</p><p id="guessModePrize" hidden></p></div><button type="button" id="exitGuessMode" class="btn secondary">Back to requests</button></section><button type="button" class="btn secondary" id="showGuestWin" hidden>View winner card</button><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab">Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div><section id="suggestSongBox" hidden aria-label="Suggest a song">
+<button type="button" id="openSuggestion" class="btn secondary" aria-expanded="false" aria-controls="suggestSongForm">Suggest a Song</button>
+<form id="suggestSongForm" hidden>
+<label for="suggestTitle">Song title</label><input id="suggestTitle" maxlength="120" required>
+<label for="suggestArtist">Artist</label><input id="suggestArtist" maxlength="120" required>
+<button type="submit" id="sendSuggestion" class="btn primary">Send suggestion</button>
+</form><p id="suggestSongStatus" role="status"></p></section></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestHeading"><div class="sheet">
 <div id="formView"><h2 id="requestHeading">Request this song</h2><div id="selected" class="selected"></div>
@@ -441,6 +453,8 @@ function render(){const guessing=isGuessing();const q=searchKey(document.getElem
  else if(sortBy==='artist')arr.sort((a,b)=>a.artist.localeCompare(b.artist,undefined,{sensitivity:'base'})||cmpTitle(a,b));
  else arr.sort(cmpTitle);
  currentDisplayed=arr;updateAlphabetRail(arr);document.getElementById("count").textContent=arr.length+" songs";const empty=document.getElementById("empty");empty.style.display=arr.length?"none":"block";empty.textContent=guessing?'No matching songs. Try a different search or decade.':'No matching songs available for requests.';
+ el('suggestSongBox').hidden=hostMode||!uuidPattern.test(sharedRoom||'')||guessing||!q||arr.length>0
+   ||songs.some(song=>searchKey(song.song+" "+song.artist+" "+song.decade).includes(q));
  const list=document.getElementById("list");list.replaceChildren();const fragment=document.createDocumentFragment();
  arr.forEach((x,i)=>{const k=key(x),c=Number(state.counts?.[k]||0),p=Boolean(state.played?.[k]);const el=document.createElement("div");el.className="song";el.dataset.index=String(i);
  el.innerHTML=`<div class="song-icon" aria-hidden="true">♫</div><div class="info"><div class="title">${esc(x.song)}</div><div class="artist">${esc(x.artist)}</div><div class="decade">${esc(x.decade)}</div>${(c||p)?`<div class="badge">${c?c+" request"+(c===1?"":"s"):""}${p?(c?" · ":"")+"played":""}</div>`:""}</div><button type="button" class="req" ${!guessing&&!state.open?"disabled":""}>${guessing?'Guess':'REQUEST'}</button>`;
@@ -596,6 +610,65 @@ async function tuneCall(method,args){
  if(!response.ok)throw Error('The shared test is unavailable. Check the connection and Supabase setup.');
  return response.json();
 }
+function hostSuggestions(){
+ return tuneCall('suggestions',{p_room:sharedRoom,p_token:hostToken});
+}
+
+let pendingSuggestion=null;
+el('openSuggestion').onclick=()=>{
+ const form=el('suggestSongForm');
+ form.hidden=!form.hidden;
+ el('openSuggestion').setAttribute('aria-expanded',String(!form.hidden));
+ el('suggestSongStatus').textContent='';
+ if(!form.hidden){
+  if(!el('suggestTitle').value)el('suggestTitle').value=el('search').value.trim().slice(0,120);
+  el('suggestTitle').focus();
+ }
+};
+el('suggestSongForm').onsubmit=async event=>{
+ event.preventDefault();
+ const button=el('sendSuggestion'), status=el('suggestSongStatus');
+ if(button.disabled||el('suggestSongBox').hidden)return;
+ const title=el('suggestTitle').value.trim(), artist=el('suggestArtist').value.trim();
+ if(!title||!artist){status.textContent='Enter a song title and artist.';return}
+ if(!pendingSuggestion||pendingSuggestion.title!==title||pendingSuggestion.artist!==artist){
+  pendingSuggestion={title,artist,id:crypto.randomUUID()};
+ }
+ button.disabled=true;
+ status.textContent='Sending suggestion…';
+ try{
+  const reply=await tuneCall('suggest',{p_room:sharedRoom,p_submission:pendingSuggestion.id,p_title:title,p_artist:artist});
+  if(!reply.ok){
+   status.textContent=reply.reason==='room'?'Ask the performer for a current guest link.':'Check the song title and artist.';
+   return;
+  }
+  pendingSuggestion=null;
+  event.target.reset();
+  el('openSuggestion').focus();
+  event.target.hidden=true;
+  el('openSuggestion').setAttribute('aria-expanded','false');
+  status.textContent='Thanks! Your suggestion was sent.';
+ }catch{
+  status.textContent='Could not send your suggestion. Try again.';
+ }finally{button.disabled=false}
+};
+
+async function loadRecapSuggestions(){
+ const status=el('recapSuggestionsStatus'), list=el('recapSuggestionsList');
+ status.textContent='Loading suggestions…';
+ list.replaceChildren();
+ try{
+  const reply=await hostSuggestions();
+  if(!reply.ok)throw Error('Room unavailable');
+  for(const song of reply.songs){
+   const row=document.createElement('li');
+   row.textContent=`${song.title} — ${song.artist} · ${song.count} suggestion${song.count===1?'':'s'}`;
+   list.append(row);
+  }
+  status.textContent=reply.songs.length?'':'No song suggestions yet.';
+ }catch{status.textContent='Could not load suggestions. Reopen Show Recap to try again.'}
+}
+
 async function syncSharedRound(){
  if(hostMode||sharedSyncBusy||sharedBusy||!uuidPattern.test(sharedRoom||''))return;
  sharedSyncBusy=true;
@@ -644,6 +717,7 @@ if(hostMode){
  link.href=guestUrl.href;
  link.hidden=false;
  el('sharedStageStatus').textContent='Share the guest link with both phones, then start a round.';
+ hostSuggestions().catch(()=>{});
 
 }
 function showGuestBoost(id){
@@ -1138,6 +1212,7 @@ if(hostMode){
   el('stageRecapSpecials').replaceChildren(...[...el('specialRecapBody').children].map(row=>row.cloneNode(true)));
   document.body.classList.add('recap-view');el('stageRecapPage').hidden=false;
   window.scrollTo(0,0);el('stageRecapTitle').focus({preventScroll:true});
+  loadRecapSuggestions();
  }
  for(const id of ['hostRecapLink','stageRecapLink'])el(id).onclick=()=>openRecap(el(id));
  el('stageRecapBack').onclick=()=>{
