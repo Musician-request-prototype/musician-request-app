@@ -121,8 +121,6 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 #performanceSpecials input,#performanceSpecials select{min-height:44px;width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid #777;border-radius:8px;padding:8px}
 #performanceSpecials .actions{flex-wrap:wrap;margin:10px 0}
 #performanceSpecials progress{width:100%;accent-color:var(--accent)}
-#specialRecap{margin-top:15px}
-#specialRecap li{margin-bottom:10px}
 #specialNotice:empty{display:none}
 #performanceSpecials summary{cursor:pointer;padding:8px 0;font-weight:700}
 .modal .sheet{max-height:calc(100dvh - 12px);overflow:auto;overscroll-behavior:contain}
@@ -264,7 +262,7 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav,body.recap-view>.wrap,body.rec
 <button class="btn secondary" id="stagePlay" aria-pressed="true">Playing</button>
 <button class="btn secondary" id="stageBetween" aria-pressed="false">Between Songs</button>
 <button class="btn secondary" id="stageShowTools" hidden aria-expanded="false" aria-controls="stageControls">Show Controls</button>
-<button class="btn secondary" id="stageRecapLink">Show Recap</button><button class="btn secondary" id="stageBack">Guest view</button></div>
+<button type="button" class="btn secondary" id="stageRecapLink" hidden>Show Recap</button></div>
 <div id="stageLayout" class="stage-layout">
 <section class="stage-chart" aria-label="Sample song chart"><p class="small" id="stageChartLabel">Sample chart · Set 1</p><h2 id="stageSongTitle" tabindex="-1">Soundcheck Groove</h2><p id="stageSongMeta">Key: G · 96 BPM</p><pre id="stageChartBody">Intro · 2x
 | G    | C    | Em   | D    |
@@ -291,7 +289,7 @@ Chorus · 2x
 <details><summary>Preview request alerts</summary><div class="actions">
 <button type="button" class="btn secondary" id="stageSampleSpecial">Special goal reached</button>
 <button type="button" class="btn secondary" id="stageSampleFront">Moved to front</button></div></details>
-<div id="stageSpecialSlot"></div><details id="stageSetRecap"><summary>Show Recap · Songs</summary><p class="small">Rehearsal only.</p><p id="stageSetEmpty">No interrupted songs yet.</p><ol id="stageSetLog"></ol></details>
+<div id="stageSpecialSlot"></div>
 <section id="stageGameControls" aria-labelledby="stageGameTitle"><h3 id="stageGameTitle">Name That Tune</h3>
 <label for="stageCorrectSong">Correct song (performer only)</label>
 <select id="stageCorrectSong"></select>
@@ -319,7 +317,7 @@ Chorus · 2x
 <section id="performanceSpecials" aria-labelledby="specialsHostTitle" hidden>
 <h2 id="specialsHostTitle" tabindex="-1">Specials in Performance</h2><p class="small">Rehearsal only · No real money moves.</p>
 <div id="specialHostBody"></div><p id="specialNotice" role="status"></p>
-<details id="specialRecap"><summary>Show Recap · Specials</summary><div id="specialRecapBody"></div></details>
+
 </section></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search songs or artists" autocomplete="off" aria-label="Search songs"></div><section id="suggestSongBox" hidden aria-label="Suggest a song">
 <button type="button" id="openSuggestion" class="btn secondary" aria-expanded="false" aria-controls="suggestSongForm">Suggest a Song</button>
@@ -907,14 +905,15 @@ function renderSpecialHost(){
    if(g!==special||g.status!=='open')return;
    const notice=action==='played'?'Marked played and saved to Show Recap.':'Closed and saved to Show Recap. No online pledges were charged.';
    if(await changeSpecial(action,{goal:g.id,notice})){
-    el('specialRecap').open=true;el('specialRecap').querySelector('summary').focus();
+    const recapLink=document.body.classList.contains('stage-view')?el('stageRecapLink'):el('hostRecapLink');
+    recapLink.focus({preventScroll:true});
    }
   }
   if(remaining===0)el('specialPlayed').onclick=()=>finish('played');
   el('specialClose').onclick=()=>finish('close');
   el('viewSpecialGuest').onclick=()=>el('showGoal').click();
  }
- const recap=el('specialRecapBody');
+ const recap=el('stageRecapSpecials');
  if(!specialRecap.length){recap.innerHTML='<p>No completed Specials yet.</p>';return}
  recap.innerHTML='<ul>'+specialRecap.map(row=>{
   const cash=cashTotal(row),played=row.status==='played';
@@ -1141,7 +1140,7 @@ function goToStageSong(alert){
  const interrupted=stageMode==='playing';
  if(interrupted){
   const row=document.createElement('li');row.textContent=outgoing+' · Partially played';
-  el('stageSetLog').append(row);el('stageSetEmpty').hidden=true;
+  el('stageRecapSongs').append(row);el('stageRecapEmpty').hidden=true;
  }
  const song=demoSongs.find(entry=>entry.id===alert.id);
  stageAlerts=stageAlerts.filter(entry=>entry!==alert);
@@ -1168,6 +1167,7 @@ function renderStageMode(){
  el('stageBetween').setAttribute('aria-pressed',String(between));
  el('stagePlay').setAttribute('aria-pressed',String(!between));
  el('stageShowTools').hidden=!between;
+ el('stageRecapLink').hidden=!between;
  el('stageShowTools').setAttribute('aria-expanded',String(controls));
  el('stageControls').hidden=!controls;
  el('stageLayout').classList.toggle('with-controls',controls);
@@ -1184,17 +1184,12 @@ function refreshStageStatus(){
  if(v4LiveSongs&&state.open!==open){setStatus(open);render()}
 }
 if(hostMode){
- const panel=el('performanceSpecials'), home=panel.parentElement;
+ const panel=el('performanceSpecials');
  el('stageLaunch').onclick=()=>{
   el('stageSpecialSlot').append(panel);panel.hidden=false;
   el('stageRehearsal').hidden=false;document.body.classList.add('stage-view');
   renderStageMode();refreshStageStatus();renderStageRequests();
   window.scrollTo(0,0);el(stageMode==='between'?'stageBetween':'stagePlay').focus();
- };
- el('stageBack').onclick=()=>{
-  home.append(panel);panel.hidden=el('specialsHostToggle').getAttribute('aria-expanded')!=='true';
-  document.body.classList.remove('stage-view');el('stageRehearsal').hidden=true;
-  el('stageLaunch').focus();
  };
  el('stagePlay').onclick=()=>{stageMode='playing';renderStageMode()};
  el('stageBetween').onclick=()=>{stageMode='between';renderStageMode()};
@@ -1242,9 +1237,6 @@ if(hostMode){
  let recapReturn=null,recapScroll=0;
  function openRecap(button){
   recapReturn=button;recapScroll=window.scrollY;
-  el('stageRecapSongs').replaceChildren(...[...el('stageSetLog').children].map(row=>row.cloneNode(true)));
-  el('stageRecapEmpty').hidden=el('stageSetLog').childElementCount>0;
-  el('stageRecapSpecials').replaceChildren(...[...el('specialRecapBody').children].map(row=>row.cloneNode(true)));
   document.body.classList.add('recap-view');el('stageRecapPage').hidden=false;
   window.scrollTo(0,0);el('stageRecapTitle').focus({preventScroll:true});
   loadRecapSuggestions();
