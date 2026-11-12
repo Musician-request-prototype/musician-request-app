@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src https://sluffhedekxnoasndnid.supabase.co; form-action 'none'; base-uri 'none'">
 <title>Majestic Fuzz · Guest Rehearsal</title>
 <!-- Audience naming: Specials is the current label; Song Pot is the alternate. -->
 <style>
@@ -1162,4 +1162,3 @@ if(hostMode){
 }
 init().then(()=>{if(!hostMode){if(uuidPattern.test(sharedRoom||'')){syncSharedRound();setInterval(()=>{if(!document.hidden)syncSharedRound()},2000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncSharedRound()})}else v4Message('Open the guest link shared from the host iPad.',true)}});
 </script></body></html>
-    <!-- Retry Pages deployment -->
