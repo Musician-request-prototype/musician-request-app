@@ -109,6 +109,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 #guestBoost[hidden],#showGame[hidden],#rehearsalHost[hidden],#guestBrowseTools[hidden]{display:none}
 #guestBrowseTools{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;width:100%}
 #guestBrowseTools .sorttabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:min(100%,340px);gap:2px;flex-shrink:0}
+#guestBrowseTools:has(#showGoal[hidden]) .sorttabs{grid-template-columns:repeat(3,minmax(0,1fr))}
 #guestBrowseTools .sorttab{padding:6px 2px;min-height:40px;font-size:clamp(11px,3.4vw,14px);white-space:nowrap}
 #showGoal{color:var(--fg);background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
 #showGame{width:100%;min-height:44px;border:1px solid var(--accent)}
@@ -175,7 +176,7 @@ body.stage-view>.wrap,body.stage-view>.bottom-nav,body.recap-view>.wrap,body.rec
 #stageRecapPage section h2{margin:0 0 8px}
 #stageRecapPage li{margin-bottom:8px}
 #suggestSongBox{margin:8px 0 10px}
-#openSuggestion{background:none;border-color:transparent;color:var(--accent);padding:9px 0;white-space:normal;text-align:left}
+#openSuggestion{border:1px solid var(--accent);min-height:44px;white-space:normal;text-align:left}
 #suggestSongForm{max-width:420px;margin:10px 0;text-align:left}
 #suggestSongForm input{display:block;width:100%;margin-bottom:10px}
 #suggestSongStatus{margin:8px 0}
@@ -324,13 +325,14 @@ Chorus · 2x
 <details id="specialRecap"><summary>Show Recap · Specials</summary><div id="specialRecapBody"></div></details>
 </section></div><div id="notice"></div>
 <div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><section id="suggestSongBox" hidden aria-label="Suggest a song">
-<button type="button" id="openSuggestion" class="btn secondary" aria-expanded="false" aria-controls="suggestSongForm">Suggest a song for a future show</button>
+<button type="button" id="openSuggestion" class="btn secondary" aria-expanded="false" aria-controls="suggestSongForm">Suggest a Song</button>
 <form id="suggestSongForm" hidden>
+<p>Suggest something you’d like to hear at a future show.</p>
 <label for="suggestTitle">Song title</label><input id="suggestTitle" maxlength="120" required>
 <label for="suggestArtist">Artist</label><input id="suggestArtist" maxlength="120" required>
 <button type="submit" id="sendSuggestion" class="btn primary">Send suggestion</button>
 </form><p id="suggestSongStatus" role="status"></p></section><div id="filters" class="filters"></div></div>
-<div class="sortbar"><section id="guessModeBanner" aria-labelledby="guessModeTitle" hidden><div><strong id="guessModeTitle" tabindex="-1">Name That Tune</strong><p>Search or browse, then tap Guess on a song.</p><p id="guessModePrize" hidden></p></div><button type="button" id="exitGuessMode" class="btn secondary">Back to requests</button></section><button type="button" class="btn secondary" id="showGuestWin" hidden>View winner card</button><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab">Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
+<div class="sortbar"><section id="guessModeBanner" aria-labelledby="guessModeTitle" hidden><div><strong id="guessModeTitle" tabindex="-1">Name That Tune</strong><p>Search or browse, then tap Guess on a song.</p><p id="guessModePrize" hidden></p></div><button type="button" id="exitGuessMode" class="btn secondary">Back to requests</button></section><button type="button" class="btn secondary" id="showGuestWin" hidden>View winner card</button><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab" hidden>Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestHeading"><div class="sheet">
 <div id="formView"><h2 id="requestHeading">Request this song</h2><div id="selected" class="selected"></div>
@@ -701,7 +703,7 @@ function renderRehearsalRound(){
  el('guessModeBanner').hidden=!guessing;
  el('guessModePrize').hidden=!roundPrize;
  el('guessModePrize').textContent=roundPrize?'Prize: '+roundPrize:'';
- el('showGoal').hidden=guessing;
+ renderSpecialVisibility();
  el('diceOpen').hidden=guessing;
  if(guessing)el('dicePanel').hidden=true;
  render();
@@ -753,25 +755,82 @@ function openGuestFeature(title){
 el('closeFeature').onclick=closeGuestFeature;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el('guestFeature').classList.contains('open'))closeGuestFeature()});
 const dollars=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
-const rehearsalSpecialKey='majestic-fuzz-rehearsal-specials-v1';
-let special=hostMode?null:{songId:'7',target:5000,online:2500,cash:[],status:'open'}, specialRecap=[], queuedSpecial='';
+let special=null, specialRecap=[], queuedSpecial='';
+let specialBusy=false, specialReading=false, specialGeneration=0, pendingSpecialAction=null;
 const songName=id=>demoSongs.find(song=>song.id===id)?.title||'Song';
 const cashTotal=g=>g.cash.reduce((sum,amount)=>sum+amount,0);
 const goalTotal=g=>cashTotal(g)+g.online;
 const goalRemaining=g=>g.target-goalTotal(g);
-function validSpecial(g){
- return g&&demoSongs.some(song=>song.id===g.songId)&&['open','played','closed'].includes(g.status)&&Number.isSafeInteger(g.target)&&g.target>0&&g.target<=100000&&Number.isSafeInteger(g.online)&&g.online>=0&&Array.isArray(g.cash)&&g.cash.every(x=>Number.isSafeInteger(x)&&x>0)&&goalTotal(g)<=g.target&&(g.status!=='played'||goalRemaining(g)===0);
+
+function parseSpecial(goal){
+ if(!goal)return null;
+ return {id:goal.id,revision:goal.revision,songId:String(goal.song_id),
+  target:goal.target,online:goal.online,cash:goal.cash,status:goal.status};
 }
-if(hostMode){
+function renderSpecialVisibility(){
+ el('showGoal').hidden=isGuessing()||special?.status!=='open';
+}
+function applySpecialStatus(reply){
+ const current=parseSpecial(reply.current);
+ const changed=current?.id!==special?.id||current?.revision!==special?.revision;
+ const recap=reply.recap.map(parseSpecial);
+ const recapChanged=JSON.stringify(recap)!==JSON.stringify(specialRecap);
+ if(changed)special=current;
+ if(recapChanged)specialRecap=recap;
+ renderSpecialVisibility();
+ if(!changed&&!recapChanged)return;
+
+ if(hostMode){
+  const before=queuedSpecial, cashField=el('customCash');
+  const cashDraft=cashField?.value, cashOpen=el('addSpecialCash')?.open;
+  const cashFocused=document.activeElement===cashField;
+  syncSpecialQueue();
+  if(before!==queuedSpecial&&queuedSpecial)stageSignal('special',queuedSpecial);
+  else renderStageRequests();
+  renderSpecialHost();
+  if(cashOpen&&el('addSpecialCash'))el('addSpecialCash').open=true;
+  if(cashDraft&&el('customCash'))el('customCash').value=cashDraft;
+  if(cashFocused)el('customCash')?.focus({preventScroll:true});
+ }
+ if(el('guestFeature').classList.contains('open')&&el('featureTitle').textContent==='Specials'){
+  if(!special){closeGuestFeature();return}
+  const field=el('guestAmount'), draft=field?.value, focused=document.activeElement===field;
+  renderGoal();
+  if(draft&&el('guestAmount'))el('guestAmount').value=draft;
+  if(focused)el('guestAmount')?.focus({preventScroll:true});
+ }
+}
+const readSpecial=()=>tuneCall('special_status',{p_room:sharedRoom,p_token:hostToken});
+async function syncSharedSpecial(){
+ if(!uuidPattern.test(sharedRoom||'')||specialReading||specialBusy)return;
+ specialReading=true;
+ const generation=specialGeneration;
  try{
-  const saved=JSON.parse(localStorage.getItem(rehearsalSpecialKey)||'null');
-  if(validSpecial(saved?.current))special=saved.current;
-  if(Array.isArray(saved?.recap))specialRecap=saved.recap.filter(g=>validSpecial(g)&&g.status!=='open').slice(-50);
+  const reply=await readSpecial();
+  if(!specialBusy&&generation===specialGeneration)applySpecialStatus(reply);
  }catch{}
+ finally{specialReading=false}
 }
-function saveSpecial(){
- if(!hostMode)return;
- try{localStorage.setItem(rehearsalSpecialKey,JSON.stringify({current:special,recap:specialRecap}))}catch{}
+async function changeSpecial(action, {goal=special?.id, song=null, amount=null, notice=''}={}){
+ if(specialBusy)return false;
+ const requestKey=JSON.stringify([action,goal,song,amount]);
+ if(pendingSpecialAction?.key!==requestKey){
+  pendingSpecialAction={key:requestKey,goal:goal??crypto.randomUUID(),id:crypto.randomUUID()};
+ }
+ specialBusy=true;
+ specialGeneration++;
+ const statusId=hostMode&&action!=='pledge'?'specialNotice':'pledgeError';
+ try{
+  const reply=await tuneCall('special_action',{p_room:sharedRoom,p_token:hostToken,
+   p_goal:pendingSpecialAction.goal,p_id:pendingSpecialAction.id,p_action:action,p_song:song,p_amount:amount});
+  applySpecialStatus(await readSpecial());
+  pendingSpecialAction=null;
+  if(el(statusId))el(statusId).textContent=reply.ok?notice:'The goal changed. Check the latest total and try again.';
+  return reply.ok;
+ }catch{
+  if(el(statusId))el(statusId).textContent='Could not confirm the update. Check the current goal or try again.';
+  return false;
+ }finally{specialBusy=false}
 }
 function syncSpecialQueue(){
  const waiting=special?.status==='open'&&goalRemaining(special)===0?special.songId:'';
@@ -789,14 +848,6 @@ function moneyCents(raw){
  return Number.isSafeInteger(cents)?cents:0;
 }
 function limitMessage(max){return 'Enter an amount between $0.01 and '+dollars(max)+'.'}
-function specialChanged(message=''){
- const before=queuedSpecial;
- syncSpecialQueue();saveSpecial();
- if(before!==queuedSpecial&&queuedSpecial)stageSignal('special',queuedSpecial);
- else renderStageRequests();
- if(hostMode){renderSpecialHost();el('specialNotice').textContent=message}
-}
-syncSpecialQueue();
 function renderGoal(){
  const body=el('featureBody'), g=special;
  if(!g){body.innerHTML='<p>No special is open right now.</p>';return}
@@ -804,18 +855,16 @@ function renderGoal(){
  const summary=g.status==='closed'?'Closed without playing. No online pledges were charged.':g.status==='played'?'Played! Thanks for making it happen.':'Goal reached! '+name+' joined the rehearsal queue.';
  body.innerHTML=`<h3>Tonight’s Special: ${name}</h3><progress value="${goalTotal(g)}" max="${g.target}" aria-label="${name} pledge progress"></progress>
  <p role="status">${dollars(goalTotal(g))}${cashTotal(g)?'':' pledged'} toward ${dollars(g.target)}</p>
- ${g.status==='open'&&remaining>0?`<p>Can this room make it happen? Pitch in any amount toward ${dollars(g.target)}. You’d only be charged if it’s played.</p>
+ ${g.status==='open'&&remaining>0?`<p>Add a test pledge toward ${dollars(g.target)}. No real money moves.</p>
  <div id="goalPresets"></div><label for="guestAmount">Choose your own amount ($)</label>
  <input id="guestAmount" type="number" inputmode="decimal" min="0.01" max="${remaining/100}" step="0.01">
  <button class="btn primary" id="pledgeGuest">Add to the pot</button><p id="pledgeError" role="alert"></p>`:`<p>${summary}</p>`}`;
  if(g.status!=='open'||remaining<=0)return;
- const pledge=amount=>{
+ const pledge=async amount=>{
   if(g!==special||g.status!=='open')return;
   const cents=moneyCents(amount), max=goalRemaining(g);
   if(cents<1||cents>max){el('pledgeError').textContent=limitMessage(max);return}
-  g.online+=cents;
-  specialChanged('Test online pledge added.');
-  renderGoal();focusGuestFeatureTop();
+  await changeSpecial('pledge',{goal:g.id,amount:cents,notice:'Test pledge added.'});
  };
  for(const cents of [500,1000].filter(n=>n<remaining).concat(remaining)){
   const b=document.createElement('button');b.className='btn secondary';
@@ -831,12 +880,12 @@ function renderSpecialHost(){
   <label for="specialSong">Song</label><select id="specialSong">${demoSongs.map(song=>`<option value="${song.id}"${song.id==='7'?' selected':''}>${esc(song.title)} — ${esc(song.artist)}</option>`).join('')}</select>
   <label for="specialTarget">Goal amount ($)</label><input id="specialTarget" type="number" value="50" min="0.01" max="1000" step="0.01" inputmode="decimal">
   <div class="actions"><button class="btn primary" type="submit">Open goal</button></div></form>`;
-  el('openSpecialForm').onsubmit=e=>{
+  el('openSpecialForm').onsubmit=async e=>{
    e.preventDefault();if(special?.status==='open')return;
    const target=moneyCents(el('specialTarget').value), songId=el('specialSong').value;
    if(target<1||target>100000){el('specialNotice').textContent=limitMessage(100000);return}
-   special={songId,target,online:0,cash:[],status:'open'};
-   specialChanged('Goal open. Guests can now pitch in.');el('specialActiveTitle').focus();
+   if(await changeSpecial('open',{song:Number(songId),amount:target,notice:'Goal open. Guests can now pitch in.'}))
+    el('specialActiveTitle')?.focus();
   };
  }else{
   const total=goalTotal(g), remaining=goalRemaining(g);
@@ -853,11 +902,12 @@ function renderSpecialHost(){
    <button type="button" class="btn secondary" id="specialClose">Close without playing</button>
   </div>
   <button type="button" class="btn secondary" id="viewSpecialGuest">Preview guest goal</button>`;
-  function addCash(amount){
+  async function addCash(amount){
    if(g!==special||g.status!=='open')return;
    const max=goalRemaining(g), cents=moneyCents(amount);
    if(cents<1||cents>max){el('specialNotice').textContent=limitMessage(max);return}
-   g.cash.push(cents);specialChanged(dollars(cents)+' cash added.');el('specialActiveTitle').focus();
+   if(await changeSpecial('cash',{goal:g.id,amount:cents,notice:dollars(cents)+' cash added.'}))
+    el('specialActiveTitle')?.focus();
   }
   if(remaining>0){
    for(const cents of [500,1000,2000].filter(n=>n<=remaining)){
@@ -865,18 +915,20 @@ function renderSpecialHost(){
    }
    el('cashForm').onsubmit=e=>{e.preventDefault();addCash(el('customCash').value)};
   }
-  if(g.cash.length)el('undoCash').onclick=()=>{
+  if(g.cash.length)el('undoCash').onclick=async()=>{
    if(g!==special||g.status!=='open'||!g.cash.length)return;
-   const amount=g.cash.pop();specialChanged('Removed the last '+dollars(amount)+' cash entry.');el('specialActiveTitle').focus();
+   if(await changeSpecial('undo',{goal:g.id,notice:'Removed the last cash entry.'}))
+    el('specialActiveTitle')?.focus();
   };
-  function finish(status){
-   if(g!==special||g.status!=='open'||(status==='played'&&goalRemaining(g)!==0))return;
-   g.status=status;specialRecap.push({...g,cash:[...g.cash]});specialRecap=specialRecap.slice(-50);
-   specialChanged(status==='played'?'Marked played and saved to Show Recap.':'Closed and saved to Show Recap. No online pledges were charged.');
-   el('specialRecap').open=true;el('specialRecap').querySelector('summary').focus();
+  async function finish(action){
+   if(g!==special||g.status!=='open')return;
+   const notice=action==='played'?'Marked played and saved to Show Recap.':'Closed and saved to Show Recap. No online pledges were charged.';
+   if(await changeSpecial(action,{goal:g.id,notice})){
+    el('specialRecap').open=true;el('specialRecap').querySelector('summary').focus();
+   }
   }
   if(remaining===0)el('specialPlayed').onclick=()=>finish('played');
-  el('specialClose').onclick=()=>finish('closed');
+  el('specialClose').onclick=()=>finish('close');
   el('viewSpecialGuest').onclick=()=>el('showGoal').click();
  }
  const recap=el('specialRecapBody');
@@ -1236,4 +1288,9 @@ if(hostMode){
  setInterval(refreshStageStatus,1000);
 }
 init().then(()=>{if(!hostMode){if(uuidPattern.test(sharedRoom||'')){syncSharedRound();setInterval(()=>{if(!document.hidden)syncSharedRound()},2000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncSharedRound()})}else v4Message('Open the guest link shared from the host iPad.',true)}});
+if(uuidPattern.test(sharedRoom||'')){
+ syncSharedSpecial();
+ setInterval(()=>{if(!document.hidden)syncSharedSpecial()},2000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncSharedSpecial()});
+}
 </script></body></html>
