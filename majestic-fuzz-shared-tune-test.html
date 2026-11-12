@@ -22,7 +22,7 @@ body{background:radial-gradient(ellipse at 50% 0%,#14311d 0,#080e0a 440px,#05080
 .dot{background:var(--accent);box-shadow:0 0 7px var(--accent)}
 .off .dot{background:#929b93;box-shadow:none}
 .controls{background:transparent;padding:10px 0 0}
-.search-wrap{position:relative}.search-wrap::before{content:'⌕';position:absolute;left:15px;top:2px;color:var(--accent);font-size:35px;pointer-events:none}
+.search-wrap{position:relative}.search-wrap::before{content:'⌕';position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:26px;line-height:1;pointer-events:none}
 .search{padding:16px 15px 16px 49px;border:1px solid var(--accent);box-shadow:0 0 8px color-mix(in srgb,var(--accent) 22%,transparent);background:#0b120eee}
 .search:focus{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 60%,transparent)}
 .filters{scrollbar-width:none;margin-top:13px;gap:7px}.filters::-webkit-scrollbar{display:none}
@@ -47,16 +47,13 @@ body{background:radial-gradient(ellipse at 50% 0%,#14311d 0,#080e0a 440px,#05080
 /* V2 customer layout: compact header, bottom tabs and safe quick-jump lane */
 .wrap{padding-bottom:calc(95px + env(safe-area-inset-bottom))}
 .hero{padding:5px 0 2px}.logo{max-height:165px;width:min(100%,440px)}.custom-brand{padding:18px 8px 10px;font-size:clamp(24px,6vw,44px)}.status{font-size:12px;padding:6px 11px;margin-bottom:5px}
-.preview-ribbon{padding:7px 9px;margin:5px 0 8px;font-size:11px}.controls{padding-top:4px}.search{padding-top:13px;padding-bottom:13px}.filters{margin-top:8px}.sortbar{margin:9px 0}.sorttabs{flex-wrap:wrap}.sorttab{padding:8px 9px}
+.preview-ribbon{padding:7px 9px;margin:5px 0 8px;font-size:11px}.controls{padding-top:4px}.search{box-sizing:border-box;height:44px;padding:0 12px 0 38px;font-size:16px}.filters{margin-top:8px}.sortbar{margin:9px 0}.sorttabs{flex-wrap:wrap}.sorttab{padding:8px 9px}
 #songBrowser{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0;gap:0;align-items:start}
 #songBrowser.has-rail{grid-template-columns:minmax(0,1fr) 29px;gap:9px}
 #azRail{display:none;position:sticky;top:4px;height:min(76dvh,620px);max-height:calc(100dvh - 105px);border:1px solid #315b3d;background:#132619;border-radius:10px;touch-action:none;user-select:none;-webkit-user-select:none;padding:3px 0;flex-direction:column;justify-content:space-around;align-items:center}
 #songBrowser.has-rail #azRail{display:flex}#azRail button{display:block;flex:1;width:100%;min-height:0;padding:0;border:0;background:transparent;color:#92dbaa;font-size:clamp(9px,1.6vh,12px);font-weight:800;line-height:1;touch-action:none}
 #azRail button:focus-visible,#azRail button.selected{background:#306943;color:#fff}.song{scroll-margin-top:8px}.req{min-width:76px;margin-right:3px}.song-icon{flex-shrink:0}
-#diceOpen{border:1px solid #63a776;border-radius:11px;background:#173925;color:#ddffe5;padding:9px 11px;font-weight:800;font-size:13px;white-space:nowrap}
-#dicePanel[hidden],.tab-page[hidden],.controls[hidden],.sortbar[hidden],#songBrowser[hidden],#notice[hidden]{display:none!important}.tab-page{min-height:50vh;padding:20px 8px 40px}.tab-page h2{margin:5px 0 8px}.tab-note{font-size:14px;color:#b5cab9;line-height:1.55}
-#dicePanel{margin:11px 0;border:1px solid #43815a;background:linear-gradient(145deg,#14321d,#0d1d14);border-radius:16px;padding:15px;text-align:center}
-#diceSong{font-weight:850;font-size:20px;margin:12px 0 3px}#diceArtist{color:#bdd2c2;margin-bottom:14px}#dicePanel button{border-radius:11px;padding:12px;border:1px solid #67b883;font-weight:800;background:#205b34;color:#fff}#dicePanel .primary-dice{background:var(--accent);color:var(--accent-ink)}.dice-actions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}.dice-actions button{flex:1;min-width:115px}
+.tab-page[hidden],.controls[hidden],.sortbar[hidden],#songBrowser[hidden],#notice[hidden]{display:none!important}.tab-page{min-height:50vh;padding:20px 8px 40px}.tab-page h2{margin:5px 0 8px}.tab-note{font-size:14px;color:#b5cab9;line-height:1.55}
 .bottom-nav{position:fixed;z-index:12;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#0a170eeF;border-top:1px solid #38764a;box-shadow:0 -7px 23px #000b;padding:6px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));gap:3px;backdrop-filter:blur(14px)}
 .bottom-nav button{background:transparent;border:0;border-radius:12px;padding:7px 1px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#b8c8bc;min-height:58px;font-size:11px;line-height:1.12;font-weight:750;text-align:center}
 .bottom-nav button.active{background:#1e4c2c;color:#9ef2ac}.bottom-nav .nav-icon{font-size:20px;line-height:1}
@@ -92,11 +89,11 @@ body{background:var(--bg);color:var(--fg)}
 .custom-brand{font-size:clamp(26px,6vw,44px);margin:8px 0;padding:8px 6px;line-height:1.2;overflow-wrap:anywhere}
 .logo{width:auto;max-width:100%;object-fit:contain;margin:12px auto 6px}
 .social-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:8px 0 16px}.social-links a{color:var(--fg);border:1px solid color-mix(in srgb,var(--fg) 28%,transparent);border-radius:999px;padding:8px 12px;font-size:12px;text-decoration:none}
-.song,.sheet,.tipbox,.notice,.volume-card,#volumePage .volume-card,#dicePanel,.search,.sheet input,.sheet textarea,.sorttabs,.filter,#azRail{background:color-mix(in srgb,var(--fg) 5%,var(--bg));color:var(--fg);border-color:color-mix(in srgb,var(--fg) 25%,transparent)}
-.status{background:var(--bg);color:var(--fg)}.artist,.decade,.badge,.count,.selected,.small,.tab-note,#diceArtist,.volume-card p,#volumePage .volume-feedback{color:color-mix(in srgb,var(--fg) 78%,var(--bg))}
-.song-icon,.sorttab.active,.bottom-nav button.active,#diceOpen,#dicePanel button,.tip-link,.volume-votes button{background:color-mix(in srgb,var(--accent) 18%,var(--bg));color:var(--fg);border-color:color-mix(in srgb,var(--accent) 65%,var(--fg))}
+.song,.sheet,.tipbox,.notice,.volume-card,#volumePage .volume-card,.search,.sheet input,.sheet textarea,.sorttabs,.filter,#azRail{background:color-mix(in srgb,var(--fg) 5%,var(--bg));color:var(--fg);border-color:color-mix(in srgb,var(--fg) 25%,transparent)}
+.status{background:var(--bg);color:var(--fg)}.artist,.decade,.badge,.count,.selected,.small,.tab-note,.volume-card p,#volumePage .volume-feedback{color:color-mix(in srgb,var(--fg) 78%,var(--bg))}
+.song-icon,.sorttab.active,.bottom-nav button.active,.tip-link,.volume-votes button{background:color-mix(in srgb,var(--accent) 18%,var(--bg));color:var(--fg);border-color:color-mix(in srgb,var(--accent) 65%,var(--fg))}
 .sorttab,.bottom-nav button{color:var(--fg)}.bottom-nav{background:var(--bg);border-color:var(--accent)}
-.req,.primary,.filter.active,#dicePanel .primary-dice{background:var(--accent);color:var(--accent-ink)}.req:disabled{opacity:.5;background:color-mix(in srgb,var(--fg) 12%,var(--bg));color:var(--fg);border-color:color-mix(in srgb,var(--fg) 20%,transparent)}
+.req,.primary,.filter.active{background:var(--accent);color:var(--accent-ink)}.req:disabled{opacity:.5;background:color-mix(in srgb,var(--fg) 12%,var(--bg));color:var(--fg);border-color:color-mix(in srgb,var(--fg) 20%,transparent)}
 .volume-votes button:disabled{opacity:.45;cursor:default}.equalizer span{background:var(--accent)}
 #request-error{color:var(--fg);font-weight:650;line-height:1.4}#request-error:empty{display:none}#brandLogo[hidden]{display:none}
 .sheet{padding-bottom:calc(25px + env(safe-area-inset-bottom))}.sheet input,.sheet textarea{font-family:inherit}.sheet button{min-height:46px}
@@ -112,7 +109,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 #guestBrowseTools .sorttab{padding:6px 2px;min-height:40px;font-size:clamp(11px,3.4vw,14px);white-space:nowrap}
 #showGoal{color:var(--fg);background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
 #showGame{width:100%;min-height:44px;border:1px solid var(--accent)}
-#guessModeBanner[hidden],#diceOpen[hidden],#showGoal[hidden],#showGuestWin[hidden]{display:none!important}
+#guessModeBanner[hidden],#showGoal[hidden],#showGuestWin[hidden]{display:none!important}
 #guessModeBanner{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--accent);border-radius:11px;background:color-mix(in srgb,var(--accent) 14%,var(--bg));color:var(--fg);display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
 #guessModeBanner p{margin:3px 0;font-size:.89em}
 #guessModeBanner button{min-height:44px}
@@ -324,7 +321,7 @@ Chorus · 2x
 <div id="specialHostBody"></div><p id="specialNotice" role="status"></p>
 <details id="specialRecap"><summary>Show Recap · Specials</summary><div id="specialRecapBody"></div></details>
 </section></div><div id="notice"></div>
-<div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search song, artist/band, or decade…" autocomplete="off" aria-label="Search songs"></div><section id="suggestSongBox" hidden aria-label="Suggest a song">
+<div class="controls"><div class="search-wrap"><input id="search" class="search" placeholder="Search songs or artists" autocomplete="off" aria-label="Search songs"></div><section id="suggestSongBox" hidden aria-label="Suggest a song">
 <button type="button" id="openSuggestion" class="btn secondary" aria-expanded="false" aria-controls="suggestSongForm">Suggest a Song</button>
 <form id="suggestSongForm" hidden>
 <p>Suggest something you’d like to hear at a future show.</p>
@@ -332,7 +329,7 @@ Chorus · 2x
 <label for="suggestArtist">Artist</label><input id="suggestArtist" maxlength="120" required>
 <button type="submit" id="sendSuggestion" class="btn primary">Send suggestion</button>
 </form><p id="suggestSongStatus" role="status"></p></section><div id="filters" class="filters"></div></div>
-<div class="sortbar"><section id="guessModeBanner" aria-labelledby="guessModeTitle" hidden><div><strong id="guessModeTitle" tabindex="-1">Name That Tune</strong><p>Search or browse, then tap Guess on a song.</p><p id="guessModePrize" hidden></p></div><button type="button" id="exitGuessMode" class="btn secondary">Back to requests</button></section><button type="button" class="btn secondary" id="showGuestWin" hidden>View winner card</button><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab" hidden>Specials</button></div><button id="diceOpen" type="button">🎲 Surprise Me</button><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><section id="dicePanel" hidden aria-label="Random song suggestion"><strong>🎲 Surprise Me!</strong><div id="diceSong"></div><div id="diceArtist"></div><div class="dice-actions"><button id="diceAgain" type="button">🎲 Roll Again</button><button id="diceRequest" class="primary-dice" type="button">Request Song</button><button id="diceClose" type="button">Close</button></div></section><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
+<div class="sortbar"><section id="guessModeBanner" aria-labelledby="guessModeTitle" hidden><div><strong id="guessModeTitle" tabindex="-1">Name That Tune</strong><p>Search or browse, then tap Guess on a song.</p><p id="guessModePrize" hidden></p></div><button type="button" id="exitGuessMode" class="btn secondary">Back to requests</button></section><button type="button" class="btn secondary" id="showGuestWin" hidden>View winner card</button><div id="guestBrowseTools"><div class="sorttabs" role="group" aria-label="Song browsing tools"><button class="sorttab active" data-sort="az">A–Z</button><button class="sorttab" data-sort="artist">Artist</button><button class="sorttab" data-sort="popular">Popular</button><button type="button" id="showGoal" class="sorttab" hidden>Specials</button></div><div id="count" class="count"></div></div><button type="button" id="showGame" class="btn primary" hidden>🎵 Name That Tune · Play now</button></div><div id="songBrowser"><div><div id="list" class="list"></div><div id="empty" class="count" style="display:none;text-align:center">No matching songs available for requests.</div></div><nav id="azRail" aria-label="Jump to letter"></nav></div><section id="volumePage" class="tab-page" hidden><section class="volume-card" aria-label="Audience volume feedback"><h2>🔊 How’s My Volume?</h2><p>Help me get the sound just right!</p><div class="equalizer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="volume-votes"><button data-volume="quiet">🔉 Too Quiet</button><button data-volume="good">👌 Just Right</button><button data-volume="loud">🔊 Too Loud</button></div><div class="volume-feedback" id="volumeFeedback" role="status" aria-live="polite"></div></section></section><section id="showsPage" class="tab-page" hidden><h2>📅 Upcoming Shows</h2><p id="schedule-status" class="tab-note" role="status">Loading upcoming shows…</p><button id="refresh-shows" type="button" class="btn secondary">Refresh shows</button><div id="public-shows"></div></section><section id="tipsPage" class="tab-page" hidden><h2>♥ Support the Music</h2><p class="tab-note">Enjoying the show? Tips are always appreciated, never required. </p><div class="tip-links" id="pageTipLinks"></div></section>
 </div><nav class="bottom-nav" aria-label="Customer navigation"><button type="button" data-tab="songs" class="active"><span class="nav-icon">♫</span><span>Song<br>Requests</span></button><button type="button" data-tab="shows"><span class="nav-icon">▦</span><span>Shows</span></button><button type="button" data-tab="volume"><span class="nav-icon">🔊</span><span>How’s My<br>Volume?</span></button><button type="button" data-tab="tips"><span class="nav-icon">♥</span><span>Tips</span></button></nav>
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="requestHeading"><div class="sheet">
 <div id="formView"><h2 id="requestHeading">Request this song</h2><div id="selected" class="selected"></div>
@@ -448,14 +445,14 @@ async function refresh(){
  try{return await refreshPromise}finally{refreshPromise=null}
 }
 async function autoRefresh(){if(document.hidden||!v4LiveSongs)return;await refresh();render();if(activeTab==='shows')await loadPublicSchedule()}
-function setStatus(open){state.open=open;syncAudienceVolume();document.getElementById('diceRequest').disabled=!open||!diceChoice;const el=document.getElementById("status"),t=document.getElementById("statusText"),n=document.getElementById("notice");el.classList.toggle("off",!open);t.textContent=open?"Song requests are OPEN":"Song requests are CLOSED";n.innerHTML=open?"":'<div class="notice"><strong>Song requests are closed</strong>Check back when the show starts.</div>'}
+function setStatus(open){state.open=open;syncAudienceVolume();const el=document.getElementById("status"),t=document.getElementById("statusText"),n=document.getElementById("notice");el.classList.toggle("off",!open);t.textContent=open?"Song requests are OPEN":"Song requests are CLOSED";n.innerHTML=open?"":'<div class="notice"><strong>Song requests are closed</strong>Check back when the show starts.</div>'}
 function renderFilters(){const f=document.getElementById("filters");f.replaceChildren();["All","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"].forEach(x=>{const b=document.createElement("button");b.className="filter"+(x===filter?" active":"");b.textContent=x;b.onclick=()=>{filter=x;renderFilters();render()};f.appendChild(b)})}
 function render(){const guessing=isGuessing();const q=searchKey(document.getElementById("search").value);const arr=songs.filter(x=>(filter==="All"||x.decade===filter)&&(searchKey(x.song+" "+x.artist+" "+x.decade).includes(q)));
  const cmpTitle=(a,b)=>a.song.localeCompare(b.song,undefined,{sensitivity:'base'});
  if(sortBy==='popular')arr.sort((a,b)=>(Number(state.counts?.[key(b)]||0)-Number(state.counts?.[key(a)]||0))||cmpTitle(a,b));
  else if(sortBy==='artist')arr.sort((a,b)=>a.artist.localeCompare(b.artist,undefined,{sensitivity:'base'})||cmpTitle(a,b));
  else arr.sort(cmpTitle);
- currentDisplayed=arr;updateAlphabetRail(arr);document.getElementById("count").textContent=arr.length+" songs";const empty=document.getElementById("empty");empty.style.display=arr.length?"none":"block";empty.textContent=guessing?'No matching songs. Try a different search or decade.':'No matching songs available for requests.';
+ updateAlphabetRail(arr);document.getElementById("count").textContent=arr.length+" songs";const empty=document.getElementById("empty");empty.style.display=arr.length?"none":"block";empty.textContent=guessing?'No matching songs. Try a different search or decade.':'No matching songs available for requests.';
  el('suggestSongBox').hidden=hostMode||!uuidPattern.test(sharedRoom||'')||guessing;
  const list=document.getElementById("list");list.replaceChildren();const fragment=document.createDocumentFragment();
  arr.forEach((x,i)=>{const k=key(x),c=Number(state.counts?.[k]||0),p=Boolean(state.played?.[k]);const el=document.createElement("div");el.className="song";el.dataset.index=String(i);
@@ -494,30 +491,18 @@ function buildTipLinks(){
   for(const [name,url] of methods){const b=document.createElement('button');b.type='button';b.className='tip-link';b.textContent=name+' ↗';b.onclick=()=>{if(config.demoMode){alert('Preview only. In beta, '+name+' will open this musician’s payment link.');return}window.open(url,'_blank','noopener,noreferrer')};host.append(b)}
  }
 }
-let currentDisplayed=[],diceChoice=null,lastDiceIndex=-1,activeTab='songs';
+let activeTab='songs';
 function setTab(tab){
  activeTab=tab;if(tab==='shows')loadPublicSchedule();
  for(const name of ['shows','volume','tips'])document.getElementById(name+'Page').hidden=tab!==name;
  for(const id of ['notice'])document.getElementById(id).hidden=tab!=='songs';
- for(const el of document.querySelectorAll('.controls,.sortbar,#songBrowser,#dicePanel')){
-  if(el.id==='dicePanel'){if(tab!=='songs')el.hidden=true;continue}
+ for(const el of document.querySelectorAll('.controls,.sortbar,#songBrowser')){
   el.hidden=tab!=='songs';
  }
  document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.setAttribute('aria-current',b.dataset.tab===tab?'page':'false')});
  window.scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
-function rollDice(){
- const pool=songs.filter(x=>filter==='All'||x.decade===filter);
- if(!pool.length){document.getElementById('diceSong').textContent='No songs available in this decade';document.getElementById('diceArtist').textContent='Try another decade';diceChoice=null;document.getElementById('diceRequest').disabled=true;return}
- let i=Math.floor(Math.random()*pool.length);
- if(pool.length>1){let attempts=0;while(i===lastDiceIndex&&attempts++<12)i=Math.floor(Math.random()*pool.length);if(i===lastDiceIndex)i=(i+1)%pool.length}
- document.getElementById('diceRequest').disabled=!state.open;lastDiceIndex=i;diceChoice=pool[i];document.getElementById('diceSong').textContent=diceChoice.song;document.getElementById('diceArtist').textContent=diceChoice.artist;
-}
-document.getElementById('diceOpen').onclick=()=>{document.getElementById('dicePanel').hidden=false;rollDice();document.getElementById('dicePanel').scrollIntoView({behavior:'smooth',block:'nearest'})};
-document.getElementById('diceAgain').onclick=rollDice;
-document.getElementById('diceClose').onclick=()=>{document.getElementById('dicePanel').hidden=true};
-document.getElementById('diceRequest').onclick=()=>{if(diceChoice)openRequest(diceChoice)};
 function updateAlphabetRail(arr){
  const rail=document.getElementById('azRail'),browser=document.getElementById('songBrowser');rail.replaceChildren();
  const enabled=(sortBy==='az'||sortBy==='artist')&&arr.length>0;browser.classList.toggle('has-rail',enabled);if(!enabled)return;
@@ -704,8 +689,6 @@ function renderRehearsalRound(){
  el('guessModePrize').hidden=!roundPrize;
  el('guessModePrize').textContent=roundPrize?'Prize: '+roundPrize:'';
  renderSpecialVisibility();
- el('diceOpen').hidden=guessing;
- if(guessing)el('dicePanel').hidden=true;
  render();
  el('rehearsalRound').textContent=roundActive?'End rehearsal round':'Start rehearsal round';
  el('stageRound').textContent=roundActive?'End round':'Start round';
