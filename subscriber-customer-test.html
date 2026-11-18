@@ -114,7 +114,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .social-art[data-style="brand"] .social-icon[data-network="instagram"]{background:linear-gradient(35deg,#b93c00,#a9145c 52%,#5d28b7);border-color:transparent}
 
 .social-links:empty{display:none}
-</style></head><body>
+</style><style>[hidden]{display:none!important}</style></head><body>
 <div class="wrap">
 <header class="hero"><div id="brandArt" class="social-art" hidden><img id="brandLogo" class="logo" alt="Musician logo" hidden></div><h1 id="customBrand" class="custom-brand"></h1><div class="tagline"><span id="taglineText">Request a song for today’s show</span></div><div id="status" class="status"><span class="dot"></span><span id="statusText">Checking request status…</span></div></header><div id="socialLinks" class="social-links"></div>
 <div id="connectionDiagnostic" role="status" aria-live="polite">Connecting to the song library…</div><div id="previewNotice" hidden></div><div id="notice"></div>
@@ -174,8 +174,8 @@ async function loadConfig(){
  const fonts={system:'system-ui,-apple-system,sans-serif',serif:'Georgia,serif',rounded:'ui-rounded,system-ui,sans-serif',avenir:'"Avenir Next",Avenir,sans-serif',palatino:'Palatino,"Palatino Linotype",serif',baskerville:'Baskerville,Georgia,serif',didot:'Didot,"Bodoni MT",serif',typewriter:'"American Typewriter",Courier,monospace',mono:'"Courier New",monospace',copperplate:'Copperplate,"Copperplate Gothic Light",fantasy',marker:'"Marker Felt","Comic Sans MS",cursive',chalkboard:'"Chalkboard SE",Chalkboard,cursive',script:'"Snell Roundhand","Brush Script MT",cursive'};
  document.title=config.musicianName+' — Song Requests';document.getElementById('taglineText').textContent=config.tagline;
  const logo=document.getElementById('brandLogo'),brand=document.getElementById('customBrand');
- brand.textContent=config.musicianName;brand.style.fontFamily=fonts[s.font]||fonts.system;brand.hidden=false;
- logo.hidden=!config.logo;if(config.logo){logo.src=config.logo;logo.alt=config.musicianName+' logo';logo.style.maxHeight=Math.max(80,Math.min(320,Number(s.logo_size)||190))+'px'}
+ brand.textContent=config.musicianName;brand.style.fontFamily=fonts[s.font]||fonts.system;brand.hidden=!!config.logo;
+ document.querySelector('.tagline').hidden=!config.tagline||/^Request a song for today.s show[.!]?$/i.test(config.tagline.trim());logo.onerror=()=>{logo.hidden=true;brand.hidden=false};logo.hidden=!config.logo;if(config.logo){logo.src=config.logo;logo.alt=config.musicianName+' logo';logo.style.maxHeight=Math.max(80,Math.min(320,Number(s.logo_size)||190))+'px'}
  const host=document.getElementById('socialLinks');host.replaceChildren();
  renderSocialIcons(document.getElementById('brandArt'),logo,s,safeLink);
  for(const key of ['website'])if(safeLink(s[key])){const link=document.createElement('a');link.href=s[key];link.target='_blank';link.rel='noopener noreferrer';link.textContent={website:'Website',facebook:'Facebook',instagram:'Instagram'}[key];host.append(link)}

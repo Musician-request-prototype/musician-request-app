@@ -5,22 +5,5 @@ function decode(s){return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z][a-z0-9]+);/gi,(all
 function textChart(raw){raw=typeof raw==='string'?raw:'';raw=raw.replace(/\\+(?=['’])/g,'');if(!/<\/?(?:p|div|span|br|font|pre|b|i|strong|em|table|h[1-6])\b/i.test(raw))return decode(raw).replace(/\r\n?/g,'\n');
  return decode(raw.replace(/\r\n?/g,'\n').replace(/<(script|style|iframe|object)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,'').replace(/<!--[\s\S]*?-->/g,'').replace(/<br\s*\/?\s*>[ \t]*\n?/gi,'\n').replace(/<\/(p|div|h[1-6]|tr)>[ \t]*\n?/gi,'\n').replace(/<(p|div|h[1-6])\b[^>]*>/gi,'').replace(/<\/?(?:td|th)\b[^>]*>/gi,'\t').replace(/<[^>]*>/g,'')).replace(/^\n+|\n+$/g,'');}
 function parseBandHelper(data){if(!data||typeof data!=='object'||Array.isArray(data)||!data.song||typeof data.song!=='object'||Array.isArray(data.song))throw Error('Choose the BandHelper project export JSON from Admin → Export.');const entries=Object.entries(data.song);if(!entries.length)throw Error('No songs were found in this export.');if(entries.length>20000)throw Error('This file contains more than 20,000 songs.');const songs=entries.map(([id,r])=>{if(!r||typeof r!=='object'||typeof r.name!=='string'||!r.name.trim()||typeof r.account!=='string'||!r.account)throw Error('A song is missing its title or source account. No import has started.');const rawLyrics=typeof r.lyrics==='string'?r.lyrics:'',rawChords=typeof r.chords==='string'?r.chords:'',lyrics=textChart(rawLyrics),chords=textChart(rawChords);const docs=String(r.documents||'').split(',').filter(v=>v&&v!=='0');return{source_account:r.account,source_song_id:id,title:r.name.trim(),artist:typeof r.artist==='string'?r.artist:'',chart:[chords,lyrics].filter(v=>v.trim()).join('\n\n'),raw_lyrics:rawLyrics,raw_chords:rawChords,notes:typeof r.notes==='string'?r.notes:'',document_ids:docs,original_key:r.key||'',duration:r.duration||''}});const seen=new Map();let repeats=0;for(const s of songs){const key=s.title.toLowerCase()+'\0'+s.artist.trim().toLowerCase();if(seen.has(key))repeats++;seen.set(key,true)}return{songs,summary:{total:songs.length,with_chart:songs.filter(s=>s.chart.trim()).length,without_chart:songs.filter(s=>!s.chart.trim()).length,without_artist:songs.filter(s=>!s.artist.trim()).length,repeated_titles:repeats,with_attachments:songs.filter(s=>s.document_ids.length).length}}}
-function songMatchKey(song){
- const normalize=value=>String(value||'').normalize('NFKD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’‘ʼ]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
- const title=normalize(song.title),artist=normalize(song.artist).replace(/^the /,'');
- return title&&artist?title+'\0'+artist:'';
-}
-function planImport(incoming,saved){
- const groups=new Map(),existing=new Map(),repeats=new Map();
- for(const song of saved){const k=songMatchKey(song);if(k&&!existing.has(k))existing.set(k,song)}
- for(const song of incoming){const k=songMatchKey(song);if(k){if(!groups.has(k))groups.set(k,[]);groups.get(k).push(song)}}
- for(const [k,group] of groups){
-  const match=existing.get(k);
-  if(match){for(const song of group)repeats.set(song,match);continue}
-  const best=group.find(song=>song.chart?.trim())||group[0];
-  for(const song of group){if(song!==best)repeats.set(song,best)}
- }
- return {songs:incoming.filter(song=>!repeats.has(song)),repeats:[...repeats].map(([song,match])=>({song,match}))};
-}
-const api={decode,textChart,parseBandHelper,planImport};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.SongImportCore=api;
+const api={decode,textChart,parseBandHelper};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.SongImportCore=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
