@@ -88,7 +88,7 @@ window.addEventListener('online',schedule);
 window.addEventListener('storage',e=>{if(e.key===O.AUTH_KEY){generation++;clearTimeout(timer);emit('waiting','Checking this account’s offline songs…')}else if(e.key==='musician-library-revision:'+uid()){generation++;schedule()}});
 window.MusicianDevice={attach(c){client=c;if(!c){generation++;clearTimeout(timer);emit('waiting','Offline preparation waits until library changes finish.')}},schedule,changed,run,ready,subscribe(fn){listeners.add(fn);fn(lastState);return()=>listeners.delete(fn)}};
 })();
-</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="song-import-core.js?v=20261118-repeat-review-1"></script><script>
+</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="song-import-core.js?v=20261118-chart-spacing-2"></script><script>
 'use strict';const $=id=>document.getElementById(id);let db,account=null,authId=null,songs=[],filtered=[],busy=false,stop=false,epoch=0,added=0,kept=0,deleted=0;
 function status(t){$('status').textContent=t}
 function lock(v){busy=v;for(const id of ['file','requestable','import'])$(id).disabled=v||(id==='import'&&!songs.length);$('stop').hidden=!v}
